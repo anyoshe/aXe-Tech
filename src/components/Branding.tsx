@@ -35,7 +35,7 @@ export default function BrandingHero() {
       <div className="max-w-6xl mx-auto text-center">
         <h1 className="text-5xl font-bold mb-6 text-[var(--color-primary)]">Branding That Builds Trust</h1>
         <p className="text-lg text-[var(--color-text-subtle)] mb-12 max-w-2xl mx-auto">
-          Whether you're a solo creator or an enterprise team, our branding services are built to elevate your identity, captivate your audience, and spark connection.
+          Whether you&apos;re a solo creator or an enterprise team, our branding services are built to elevate your identity, captivate your audience, and spark connection.
         </p>
 
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -58,7 +58,7 @@ export default function BrandingHero() {
             href="#contact"
             className="inline-block bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-[var(--color-text-main)] font-medium py-3 px-6 rounded-full transition"
           >
-            Let's Build Your Brand
+            Let&apos;s Build Your Brand
           </a>
         </div>
       </div>
