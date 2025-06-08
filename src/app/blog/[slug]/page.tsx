@@ -36,10 +36,10 @@
 //   );
 // }
 
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
-import { compileMDX } from 'next-mdx-remote/rsc';
+// import fs from 'fs';
+// import path from 'path';
+// import matter from 'gray-matter';
+// import { compileMDX } from 'next-mdx-remote/rsc';
 
 
 // interface PageProps {
@@ -83,14 +83,23 @@ import { compileMDX } from 'next-mdx-remote/rsc';
 //   );
 // }
 
-type Props = {
-  params: { slug: string };
-};
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
+import { compileMDX } from 'next-mdx-remote/rsc';
 
-export default async function BlogPost(props: Props) {
-  const { slug } = props.params;
-  const filePathMdx = path.join(process.cwd(), 'content', 'blog', `${slug}.mdx`);
-  const filePathMd = path.join(process.cwd(), 'content', 'blog', `${slug}.md`);
+export async function generateStaticParams() {
+  const files = fs.readdirSync(path.join(process.cwd(), 'content', 'blog'));
+  return files
+    .filter((filename) => filename.endsWith('.mdx') || filename.endsWith('.md'))
+    .map((filename) => ({
+      slug: filename.replace(/\.mdx?$/, ''),
+    }));
+}
+
+export default async function BlogPost({ params }: { params: { slug: string } }) {
+  const filePathMdx = path.join(process.cwd(), 'content', 'blog', `${params.slug}.mdx`);
+  const filePathMd = path.join(process.cwd(), 'content', 'blog', `${params.slug}.md`);
   let rawContent = '';
 
   if (fs.existsSync(filePathMdx)) {
