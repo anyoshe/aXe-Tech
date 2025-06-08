@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import Link from 'next/link';
-import { Menu, X, PenTool, Palette, Code2, Megaphone } from "lucide-react";
+// import Link from 'next/link';
+import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "../../styles/Hero.module.css";
 
