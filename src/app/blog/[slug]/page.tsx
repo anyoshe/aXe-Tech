@@ -13,13 +13,19 @@ type BlogPostType = {
   slug: string;
 };
 
-export default async function BlogPostPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
+// Define props type with params as a Promise
+interface BlogPostPageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export default async function BlogPostPage({ params }: BlogPostPageProps) {
   await dbConnect();
-  const post = await BlogPost.findOne({ slug: params.slug }).lean<BlogPostType>();
+  
+  // Await params to resolve the Promise
+  const { slug } = await params;
+  
+  // Fetch the blog post using the resolved slug
+  const post = await BlogPost.findOne({ slug }).lean<BlogPostType>();
   if (!post) return notFound();
 
   return (
@@ -34,7 +40,7 @@ export default async function BlogPostPage({
       <h1 className="text-4xl font-bold mb-2">{post.title}</h1>
       <p className="text-gray-500 mb-4">
         {new Date(post.date).toLocaleDateString()}
-        {post.author && <> &middot; By {post.author}</>}
+        {post.author && <> · By {post.author}</>}
       </p>
       <div className="prose prose-lg">
         <ReactMarkdown>{post.content}</ReactMarkdown>
