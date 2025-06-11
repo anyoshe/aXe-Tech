@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+// import Image from "next/image";
 
 type PortfolioItem = {
   title: string;
@@ -60,7 +60,7 @@ export default function Portfolio() {
             key={idx}
             className="bg-[var(--color-bg-dark)] border border-[var(--color-primary)] rounded-2xl overflow-hidden shadow-xl group hover:shadow-2xl transition-all duration-300"
           >
-            <Image
+            <img
               src={item.image}
               alt={item.title}
               width={600}

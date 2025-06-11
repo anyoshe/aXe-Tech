@@ -1,9 +1,11 @@
 
-import { getAllPosts } from '@/lib/getAllPosts';
+import { dbConnect } from '@/lib/mongodb';
+import BlogPost from '@/models/BlogPost';
 import Link from 'next/link';
 
 export default async function BlogPage() {
-  const posts = await getAllPosts();
+  await dbConnect();
+  const posts = await BlogPost.find().sort({ date: -1 }).lean();
 
   return (
     <main className="bg-[var(--color-bg-dark)] text-[var(--color-text-main)] py-20 px-4">
@@ -25,7 +27,6 @@ export default async function BlogPage() {
                   className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               )}
-
               <div className="p-6">
                 <h2 className="text-2xl font-semibold mb-2 group-hover:text-[var(--color-accent)] transition-colors">
                   {post.title}
