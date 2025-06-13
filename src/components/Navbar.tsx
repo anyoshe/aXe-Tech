@@ -80,7 +80,7 @@ export default function Navbar() {
               {['branding', 'content', 'designing', 'development', 'marketing'].map((item) => (
                 <li key={item}>
                   <a
-                    href={`#${item}`}
+                    href={`/${item}`}
                     onClick={toggleMenu}
                     className="block py-1 hover:text-[var(--color-accent)] transition-colors duration-200"
                   >
