@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { PenTool, Palette, Code2, Megaphone } from "lucide-react";
 
 
@@ -40,12 +40,16 @@ const services = [
 ];
 
 
-const fadeInUp = {
+const fadeInUp: Variants = {
   hidden: { opacity: 0, y: 20 },
-  visible: (i: number) => ({
+  visible: (i = 1) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.2, duration: 0.6, ease: "easeOut" },
+    transition: {
+      delay: i * 0.2,
+      duration: 0.6,
+      ease: "easeOut", // ✅ Use string easing
+    },
   }),
 };
 
