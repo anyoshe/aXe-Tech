@@ -3,16 +3,19 @@
 import React, { use, useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { motion } from 'framer-motion';
+import CTA from '@/components/CTA';
 
-type CommentType = {
+// Types
+interface CommentType {
   name: string;
   text: string;
   date: string;
   likes?: number;
   replies?: CommentType[];
-};
+}
 
-type BlogPostType = {
+interface BlogPostType {
   coverImage?: string;
   title: string;
   subtitle?: string;
@@ -21,27 +24,28 @@ type BlogPostType = {
   description?: string;
   author?: string;
   slug: string;
+  tags?: string[];
   likes?: number;
   comments?: CommentType[];
-};
+}
 
-function RecursiveComment({
-  comment,
-  path,
-  onAction,
-}: {
+interface RecursiveCommentProps {
   comment: CommentType;
   path: number[];
   onAction: (action: string, path: number[], replyObj?: { name: string; text: string }) => void;
-}) {
+}
+
+const RecursiveComment: React.FC<RecursiveCommentProps> = ({ comment, path, onAction }) => {
   const [replying, setReplying] = useState(false);
   const [replyName, setReplyName] = useState('');
   const [replyText, setReplyText] = useState('');
 
   return (
-    <li className="mb-2 text-sm text-gray-300">
-      <strong className="text-white">{comment.name}</strong>: {comment.text}
-      <div className="flex gap-3 mt-1 text-sm text-indigo-400">
+    <li className="p-4 rounded-lg bg-gray-800 text-gray-200">
+      <p className="text-sm">
+        <span className="font-semibold text-white">{comment.name}</span>: {comment.text}
+      </p>
+      <div className="flex gap-4 mt-2 text-xs text-indigo-400">
         <button onClick={() => onAction('like-comment', path)}>👍 {comment.likes || 0}</button>
         <button onClick={() => setReplying(!replying)}>Reply</button>
       </div>
@@ -54,39 +58,43 @@ function RecursiveComment({
             setReplyText('');
             setReplying(false);
           }}
-          className="mt-2"
+          className="mt-3 space-y-2"
         >
           <input
             value={replyName}
             onChange={e => setReplyName(e.target.value)}
             placeholder="Your name"
-            className="border rounded px-2 py-1 mr-2 bg-gray-800 text-white"
+            className="w-full border rounded px-2 py-1 bg-gray-700 text-white"
             required
           />
           <input
             value={replyText}
             onChange={e => setReplyText(e.target.value)}
             placeholder="Your reply"
-            className="border rounded px-2 py-1 mr-2 bg-gray-800 text-white"
+            className="w-full border rounded px-2 py-1 bg-gray-700 text-white"
             required
           />
-          <button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-1 rounded">
+          <button
+            type="submit"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded"
+          >
             Reply
           </button>
         </form>
       )}
-      {(comment.replies?.length ?? 0) > 0 && (
-        <ul className="ml-6 mt-2">
-          {(comment.replies ?? []).map((r, i) => (
-            <RecursiveComment key={i} comment={r} path={[...path, i]} onAction={onAction} />
+      {comment.replies && comment.replies.length > 0 && (
+        <ul className="ml-4 mt-0 space-y-0 border-l border-gray-700 pl-3">
+          {comment.replies.map((reply, idx) => (
+            <RecursiveComment key={idx} comment={reply} path={[...path, idx]} onAction={onAction} />
           ))}
         </ul>
       )}
-
     </li>
   );
-}
+};
 
+// export default function BlogPostPage({ params }: { params: { slug: string } }) {
+//   const { slug } = params;
 export default function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
   const [post, setPost] = useState<BlogPostType | null>(null);
@@ -132,10 +140,11 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
   };
 
   const handleShare = () => {
+    if (!post) return;
     const shareData = {
-      title: post?.title,
-      text: post?.description,
-      url: typeof window !== 'undefined' ? window.location.href : '',
+      title: post.title,
+      text: post.description,
+      url: window.location.href,
     };
     if (navigator.share) {
       navigator.share(shareData);
@@ -148,63 +157,55 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
   if (!post) return <div className="text-white p-4">Loading...</div>;
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-gray-900 text-white">
-      {/* Main content */}
-      <article className="flex-1 px-6 py-10 max-w-3xl mx-auto">
+    <div className="bg-gray-900 text-white grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-10 px-6 py-10 min-h-screen">
+      <motion.article
+        className="max-w-3xl"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
         {post.coverImage && (
           <img
             src={post.coverImage}
             alt={post.title}
-            className="rounded mb-6 w-full h-96 object-cover"
+            className="rounded mb-6 w-full h-96 object-cover object-center"
           />
-
         )}
-        <h1 className="text-4xl font-bold mb-2">{post.title}</h1>
-        {post.subtitle && (
-          <h2 className="text-xl text-lime-400 font-semibold mb-4">{post.subtitle}</h2>
-        )}
+        <h1 className="text-4xl font-bold mb-2 text-white">{post.title}</h1>
+        {post.subtitle && <h2 className="text-2xl text-indigo-300 font-medium mb-4 italic">{post.subtitle}</h2>}
         <p className="text-gray-400 mb-4">
-          {new Date(post.date).toLocaleDateString()}
-          {post.author && <> · By {post.author}</>}
+          {new Date(post.date).toLocaleDateString()} {post.author && <>· By {post.author}</>}
         </p>
+        {post.tags && (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {post.tags.map((tag, i) => (
+              <span key={i} className="bg-indigo-700 px-2 py-1 rounded text-sm text-white">#{tag}</span>
+            ))}
+          </div>
+        )}
+        <div className="prose prose-invert prose-lg mb-6
+                  first-letter:text-5xl first-letter:font-bold first-letter:text-indigo-400
+                  [&_ul]:list-disc [&_ul]:pl-5 
+                  [&_ol]:list-decimal [&_ol]:pl-5 
+                  [&_h2]:text-2xl [&_h2]:text-indigo-300 [&_h2]:mt-6 [&_h2]:mb-2 
+                  [&_h3]:text-xl [&_h3]:text-indigo-400 [&_h3]:mt-4 [&_h3]:mb-1
+                  [&_img]:rounded-xl [&_img]:my-6 [&_img]:mx-auto [&_img]:shadow-lg
+                  [&_img]:w-full [&_img]:max-w-[600px] [&_img]:h-[380px] [&_img]:object-cover
+                  [&_figure]:text-center [&_figcaption]:text-sm [&_figcaption]:text-gray-400"
+        >
 
-        <div className="prose prose-invert prose-lg mb-6">
-          <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
-            components={{
-              h2: (props) => <h2 className="text-lime-400 font-bold mt-6 mb-2" {...props} />,
-              ul: (props) => <ul className="list-disc pl-5 text-white" {...props} />,
-              li: (props) => <li className="mb-1" {...props} />,
-              img: (props) => (
-                <img
-                  {...props}
-                  className=" max-h-100 object-contain rounded-md my-4 mx-auto"
-                />
-              ),
-            }}
-          >
-            {post.content}
-          </ReactMarkdown>
 
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.content}</ReactMarkdown>
         </div>
 
         <div className="flex flex-wrap gap-4 my-6">
-          <button
-            onClick={() => handleAction('like')}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded"
-          >
+          <button onClick={() => handleAction('like')} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">
             👍 {likes}
           </button>
-          <button
-            onClick={handleShare}
-            className="bg-lime-400 text-black px-4 py-2 rounded hover:brightness-90"
-          >
+          <button onClick={handleShare} className="bg-lime-400 text-black px-4 py-2 rounded hover:brightness-90">
             Share
           </button>
-          <button
-            onClick={() => setShowCommentBox(prev => !prev)}
-            className="border border-indigo-600 text-indigo-300 px-4 py-2 rounded"
-          >
+          <button onClick={() => setShowCommentBox(prev => !prev)} className="border border-indigo-600 text-indigo-300 px-4 py-2 rounded">
             {showCommentBox ? 'Hide Comment Box' : 'Comment'}
           </button>
         </div>
@@ -232,10 +233,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
               rows={3}
               required
             />
-            <button
-              type="submit"
-              className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded"
-            >
+            <button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">
               Post Comment
             </button>
           </form>
@@ -243,26 +241,31 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
 
         <div className="my-6">
           <h3 className="text-2xl font-bold mb-4">Comments</h3>
-          <ul className="space-y-4">
+          <ul className="space-y-2">
             {comments.map((c, i) => (
               <RecursiveComment key={i} comment={c} path={[i]} onAction={handleAction} />
             ))}
           </ul>
         </div>
-      </article>
+      </motion.article>
 
-      {/* Sidebar */}
-      <aside className="w-full lg:w-72 px-6 py-10 flex flex-col items-center bg-gray-800 lg:min-h-screen">
-        <div className="text-center">
-          <h3 className="text-lime-400 font-bold text-xl mb-3">Sponsored</h3>
-          <img
-            src="/ad-placeholder.jpg"
-            alt="Advertisement"
-            className="rounded-lg mb-4 w-full object-cover h-60"
-          />
-          <p className="text-sm text-gray-300">Looking to grow your audience? Try our service now.</p>
-        </div>
+      <aside className="w-full lg:w-72 px-4 py-6 bg-gray-800 rounded-xl sticky top-6 self-start">
+        <h3 className="text-lime-400 font-bold text-xl mb-4">Sponsored</h3>
+        <img src="/samples/social-media.jpg" alt="Advertisement" className="rounded-lg mb-4 w-full object-cover h-60" />
+        <p className="text-sm text-gray-300">
+          Looking to grow your audience?{' '}
+          <a href="/your-service-link" className="text-lime-400 underline hover:text-lime-300">
+            Try our service now
+          </a>.
+        </p>
+
       </aside>
+
+      <div className="max-w-3xl w-full mt-10 border-t border-gray-700 pt-10">
+  <CTA />
+</div>
+
     </div>
+   
   );
-}
+};
