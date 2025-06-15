@@ -27,7 +27,7 @@ export default function LatestPosts() {
     <section className="bg-[var(--color-bg-dark)] py-24 px-4">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-5xl font-extrabold text-[var(--color-primary)] mb-16 text-center">
-          From the Blog
+          Decode the Digital — One Insight at a Time.
         </h2>
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => (
