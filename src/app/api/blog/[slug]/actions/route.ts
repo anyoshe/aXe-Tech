@@ -2,49 +2,91 @@ import { NextRequest, NextResponse } from 'next/server';
 import BlogPost from '@/models/BlogPost';
 import { dbConnect } from '@/lib/mongodb';
 
+// Helpers to build MongoDB dot paths for nested comment fields
 function buildDotPath(path: number[], field: string) {
-  let dot = 'comments';
-  for (let i = 0; i < path.length; i++) {
-    dot += `.${path[i]}`;
-    if (i < path.length - 1) dot += '.replies';
-  }
-  return `${dot}.${field}`;
+  return path.reduce((acc, curr, idx) => {
+    return `${acc}.${curr}${idx < path.length - 1 ? '.replies' : ''}`;
+  }, 'comments') + `.${field}`;
 }
 
 function buildRepliesPath(path: number[]) {
-  let dot = 'comments';
-  for (let i = 0; i < path.length; i++) {
-    dot += `.${path[i]}`;
-    if (i < path.length - 1) dot += '.replies';
-  }
-  return `${dot}.replies`;
+  return path.reduce((acc, curr, idx) => {
+    return `${acc}.${curr}${idx < path.length - 1 ? '.replies' : ''}`;
+  }, 'comments') + '.replies';
 }
 
-export async function POST(req: NextRequest, { params }: { params: { slug: string } }) {
+export async function POST(req: NextRequest) {
   await dbConnect();
-  const { action, name, text, path = [], reply } = await req.json();
 
-  if (action === 'like') {
-    await BlogPost.updateOne({ slug: params.slug }, { $inc: { likes: 1 } });
-  } else if (action === 'comment' && name && text) {
-    await BlogPost.updateOne(
-      { slug: params.slug },
-      { $push: { comments: { name, text, date: new Date(), likes: 0, replies: [] } } }
-    );
-  } else if (action === 'like-comment' && Array.isArray(path)) {
-    const dot = buildDotPath(path, 'likes');
-    await BlogPost.updateOne(
-      { slug: params.slug },
-      { $inc: { [dot]: 1 } }
-    );
-  } else if (action === 'reply-comment' && Array.isArray(path) && reply && reply.name && reply.text) {
-    const dot = buildRepliesPath(path);
-    await BlogPost.updateOne(
-      { slug: params.slug },
-      { $push: { [dot]: { ...reply, date: new Date(), likes: 0, replies: [] } } }
-    );
+const segments = req.nextUrl.pathname.split('/');
+const slugIndex = segments.indexOf('blog') + 1;
+const slug = segments[slugIndex] || null;
+
+  if (!slug) {
+    return NextResponse.json({ error: 'Slug not found in URL' }, { status: 400 });
   }
 
-  const post = await BlogPost.findOne({ slug: params.slug });
-  return NextResponse.json(post);
+  const { action, name, text, path = [], reply } = await req.json();
+
+  try {
+    switch (action) {
+      case 'like':
+        await BlogPost.updateOne({ slug }, { $inc: { likes: 1 } });
+        break;
+
+      case 'comment':
+        if (name && text) {
+          await BlogPost.updateOne(
+            { slug },
+            {
+              $push: {
+                comments: {
+                  name,
+                  text,
+                  date: new Date(),
+                  likes: 0,
+                  replies: [],
+                },
+              },
+            }
+          );
+        }
+        break;
+
+      case 'like-comment':
+        if (Array.isArray(path)) {
+          const dot = buildDotPath(path, 'likes');
+          await BlogPost.updateOne({ slug }, { $inc: { [dot]: 1 } });
+        }
+        break;
+
+      case 'reply-comment':
+        if (Array.isArray(path) && reply?.name && reply?.text) {
+          const dot = buildRepliesPath(path);
+          await BlogPost.updateOne(
+            { slug },
+            {
+              $push: {
+                [dot]: {
+                  ...reply,
+                  date: new Date(),
+                  likes: 0,
+                  replies: [],
+                },
+              },
+            }
+          );
+        }
+        break;
+
+      default:
+        return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
+    }
+
+    const post = await BlogPost.findOne({ slug });
+    return NextResponse.json(post);
+  } catch (error) {
+    console.error('POST error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
 }

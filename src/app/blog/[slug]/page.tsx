@@ -172,12 +172,10 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
-              h2: ({ node, ...props }) => (
-                <h2 className="text-lime-400 font-bold mt-6 mb-2" {...props} />
-              ),
-              ul: ({ node, ...props }) => <ul className="list-disc pl-5 text-white" {...props} />,
-              li: ({ node, ...props }) => <li className="mb-1" {...props} />,
-              img: ({ node, ...props }) => (
+              h2: (props) => <h2 className="text-lime-400 font-bold mt-6 mb-2" {...props} />,
+              ul: (props) => <ul className="list-disc pl-5 text-white" {...props} />,
+              li: (props) => <li className="mb-1" {...props} />,
+              img: (props) => (
                 <img
                   {...props}
                   className=" max-h-100 object-contain rounded-md my-4 mx-auto"
