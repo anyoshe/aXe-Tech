@@ -18,7 +18,6 @@ export default async function Home() {
       <Portfolio />
       <LatestPosts />
       <Testimonials />
-     
       <CTA />
       <Footer />
     </main>

@@ -93,8 +93,7 @@ const RecursiveComment: React.FC<RecursiveCommentProps> = ({ comment, path, onAc
   );
 };
 
-// export default function BlogPostPage({ params }: { params: { slug: string } }) {
-//   const { slug } = params;
+
 export default function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
   const [post, setPost] = useState<BlogPostType | null>(null);
@@ -157,7 +156,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
   if (!post) return <div className="text-white p-4">Loading...</div>;
 
   return (
-    <div className="bg-gray-900 text-white grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-10 px-6 py-10 min-h-screen">
+    <div className="bg-gray-900 text-white grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-10 px-6 py-10 min-h-screen">
       <motion.article
         className="max-w-3xl"
         initial={{ opacity: 0, y: 30 }}
@@ -248,22 +247,35 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
           </ul>
         </div>
       </motion.article>
-
-      <aside className="w-full lg:w-72 px-4 py-6 bg-gray-800 rounded-xl sticky top-6 self-start">
-        <h3 className="text-lime-400 font-bold text-xl mb-4">Sponsored</h3>
-        <img src="/samples/social-media.jpg" alt="Advertisement" className="rounded-lg mb-4 w-full object-cover h-60" />
-        <p className="text-sm text-gray-300">
-          Looking to grow your audience?{' '}
-          <a href="/your-service-link" className="text-lime-400 underline hover:text-lime-300">
-            Try our service now
-          </a>.
-        </p>
-
-      </aside>
-
-      <div className="max-w-3xl w-full mt-10 border-t border-gray-700 pt-10">
+      {/* CTA for Mobile */}
+<div className="block lg:hidden mt-10 bg-gradient-to-br from-indigo-700 to-indigo-900 rounded-xl p-6 text-center shadow-lg border border-indigo-500">
   <CTA />
 </div>
+
+
+      <aside className="w-full lg:w-96 px-4 py-6 bg-gray-800 rounded-xl sticky top-6 self-start space-y-8">
+  {/* Ad Section */}
+  <div>
+    <h3 className="text-lime-400 font-bold text-xl mb-4">Sponsored</h3>
+    <img
+      src="/samples/social-media.jpg"
+      alt="Advertisement"
+      className="rounded-lg mb-4 w-full object-cover h-60"
+    />
+    <p className="text-sm text-gray-300">
+      Looking to grow your audience?{' '}
+      <a href="/your-service-link" className="text-lime-400 underline hover:text-lime-300">
+        Try our service now
+      </a>.
+    </p>
+  </div>
+
+  {/* CTA for Desktop */}
+  <div className="hidden lg:block bg-gradient-to-br from-indigo-700 to-indigo-900 rounded-xl p-2 text-center shadow-lg border border-indigo-500">
+    <CTA />
+  </div>
+</aside>
+
 
     </div>
    

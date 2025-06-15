@@ -24,7 +24,7 @@ export default function Hero() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <section className={`${styles.heroSection} w-full min-h-screen flex flex-col md:flex-row items-start text-center md:text-left relative`}>
+    <section id="hero" className={`${styles.heroSection} w-full min-h-screen flex flex-col md:flex-row items-start text-center md:text-left relative`}>
       {/* Background Video */}
       <video
         autoPlay
@@ -65,8 +65,8 @@ export default function Hero() {
               transition={{ duration: 0.3 }}
               className="absolute top-full right-0 mt-2 w-[90vw] sm:w-[280px] bg-black bg-opacity-90 text-[var(--color-text-main)] rounded-lg shadow-lg p-6 space-y-4 z-40"
             >
-              <a href="#" className="block hover:underline">Home</a>
-              <a href="#projects" className="block hover:underline">What We Do</a>
+              <a href="#hero" className="block hover:underline">Home</a>
+              <a href="#services" className="block hover:underline">What We Do</a>
               <a href="#contact" className="block hover:underline">Contact Us</a>
               <a href="/digital-talk" className="block hover:underline">Digital Talk</a>
             </motion.div>

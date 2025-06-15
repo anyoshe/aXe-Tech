@@ -12,35 +12,53 @@ type PortfolioItem = {
 };
 
 const portfolioItems: PortfolioItem[] = [
+  
   {
-    title: "SaaS Dashboard UI",
-    image: "/samples/portfolio2.jpg",
-    description: "Admin dashboard design for a SaaS product — focused on clean layout and dark mode UX.",
-    status: "Concept",
-    type: "Design",
-  },
+  title: "Brand Identity Design",
+  image: "/samples/sda.jpg",
+  description: "A cohesive brand identity concept featuring a bold logo, intentional color palette, and modern typography that reflect the startup’s innovative spirit and trust-first values. Includes hero section, feature highlights, and CTA layout.",
+  link: "/brand-gallary",
+  status: "Live",
+  type: "Design",
+},
   {
-    title: "Fashion E-Commerce Store",
-    image: "/samples/portfolio1.jpg",
-    description: "Complete landing + product detail page for a boutique fashion brand. Built with Next.js and Tailwind.",
-    link: "#", // Replace with live link
+    title: "E-Commerce Store",
+    image: "/samples/ecommerce1.jpg",
+    description: "A visually engaging e-commerce experience built to inspire trust and drive sales — featuring a clean layout, seamless navigation, and design that reflects a deep understanding of user behavior and brand storytelling.",
+    link: "ecommerce",
     status: "Live",
     type: "E-commerce",
   },
   {
-    title: "Startup Landing Page",
-    image: "/samples/portfolio3.jpg",
-    description: "Hero section, feature highlights, and CTA layout for a stealth-mode startup (unpublished).",
-    status: "Unpublished",
-    type: "Landing Page",
-  },
+  title: "Startup Landing Page",
+  image: "/samples/landpage.jpg",
+  description: "A high-converting landing page featuring a bold hero section, clear feature highlights, and a compelling CTA — crafted to attract leads and showcase the startup’s value with clarity and impact.",
+  link: "/landing-showcase",
+  status: "Live",
+  type: "Landing Page",
+},
   {
     title: "Anyoka Eats – Food Delivery Platform",
-    image: "/samples/anyoka-eats.jpg",
+    image: "/samples/my-logo.png",
     description: "A modern food ordering platform with menu browsing, checkout, and admin dashboard built using React and Firebase.",
     status: "Unpublished",
     type: "Full-Stack Web App",
     link: "https://github.com/anyoshe/anyoka_eats",
+  },
+{
+    title: "SaaS Dashboard UI",
+    image: "/samples/social.jpg",
+    description: "A sleek, intuitive SaaS dashboard UI designed for seamless productivity — featuring smart visualizations, modular layouts, and a dark mode interface optimized for decision-making.",
+    status: "Concept",
+    type: "Design",
+  },
+  {
+    title: "Digital Marketing",
+    image: "/samples/socialmarket.jpg",
+    description: "Distinctive digital marketing solutions offering content creation, tailored posts, and scroll-stopping videos — all crafted to generate more leads.",
+    link: "/marketingshowcase",
+    status: "Concept",
+    type: "Design",
   },
 ];
 

@@ -1,0 +1,99 @@
+'use client';
+
+import Image from 'next/image';
+import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
+import CTA from './CTA';
+
+const landingPageImages = [
+  '/samples/landpage.jpg',
+  '/samples/landing2.jpg',
+  '/samples/landing1.jpg',
+//   '/samples/landing4.jpg',
+//   '/samples/landing5.jpg',
+//   '/samples/landing6.jpg',
+];
+
+export default function LandingPageShowcase() {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  return (
+    <div className="bg-gray-950 min-h-screen px-6 py-12 text-white">
+      <div className="max-w-6xl mx-auto">
+        <Link href="/" className="text-lime-400 hover:text-lime-300 transition mb-6 inline-block">
+          ← Back to Home
+        </Link>
+
+        <motion.h1
+          className="text-4xl lg:text-5xl font-bold text-center mb-10 text-lime-400"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          Landing Page Designs
+        </motion.h1>
+
+        <motion.p
+          className="text-center text-gray-400 max-w-2xl mx-auto mb-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.6 }}
+        >
+          High-impact landing pages crafted to capture attention, guide users through key features,
+          and convert visitors into leads with clear CTAs and intentional layout.
+        </motion.p>
+
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          initial="hidden"
+          animate="visible"
+          variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
+        >
+          {landingPageImages.map((src, index) => (
+            <motion.div
+              key={index}
+              className="overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition duration-300 border border-gray-800 cursor-pointer"
+              whileHover={{ scale: 1.03 }}
+              onClick={() => setSelectedImage(src)}
+            >
+              <Image
+                src={src}
+                alt={`Landing Page ${index + 1}`}
+                width={600}
+                height={400}
+                className="w-full h-64 object-cover"
+              />
+            </motion.div>
+          ))}
+        </motion.div>
+
+        <div className="text-center mt-12">
+          <CTA />
+        </div>
+      </div>
+
+      {/* ✅ Fullscreen Image Modal */}
+      <AnimatePresence>
+        {selectedImage && (
+          <motion.div
+            className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedImage(null)}
+          >
+            <motion.img
+              src={selectedImage}
+              alt="Full view"
+              className="max-w-full max-h-full object-contain p-4 cursor-zoom-out"
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.8 }}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
