@@ -8,7 +8,7 @@ import CTA from './CTA';
 
 const marketingImages = [
   '/samples/market.jpg',
-  '/samples/poster7.png',
+  '/samples/poster7.jpg',
   '/samples/poster8.png',
   '/samples/post1.jpg',
   '/samples/post2.jpg',
