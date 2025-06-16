@@ -64,7 +64,7 @@ const portfolioItems: PortfolioItem[] = [
 
 export default function Portfolio() {
   return (
-    <section className="py-24 bg-[var(--color-bg-dark)] text-center text-[var(--color-text-main)]">
+    <section id="projects" className="py-24 bg-[var(--color-bg-dark)] text-center text-[var(--color-text-main)]">
       <div className="max-w-6xl mx-auto px-4 mb-12">
         <h2 className="text-4xl md:text-5xl font-bold mb-4">Recent Work</h2>
         <p className="text-lg text-[var(--color-text-subtle)]">

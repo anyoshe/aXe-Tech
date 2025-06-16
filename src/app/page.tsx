@@ -7,13 +7,15 @@ import LatestPosts from '../components/LatestPosts';
 import Testimonials from '../components/Testmonials';
 import CTA from '../components/CTA';
 import Footer from '../components/Footer';
+import WhyChooseUs from '../components/WhyChooseUs';
 
 export default async function Home() {
 
   return (
     <main className="bg-white text-black">
       <Hero />
-       <Navbar />
+      <Navbar />
+      <WhyChooseUs />
       <Services />
       <Portfolio />
       <LatestPosts />

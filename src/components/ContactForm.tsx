@@ -44,7 +44,7 @@ export default function ContactForm() {
             <div className="w-full max-w-5xl flex flex-col items-center gap-6">
                 {/* Shared Header */}
                 <h1 className="text-3xl md:text-5xl font-extrabold text-center mb-4 max-w-md md:max-w-none">
-                    Choose a Way to Reach Us
+                    Launch the Conversation
                 </h1>
                 <div className="w-full flex flex-col md:flex-row items-stretch gap-8">
                     {/* Left Section: Contact Form */}
