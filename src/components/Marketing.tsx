@@ -91,7 +91,7 @@ export default function MarketingHero() {
 
         <div className="mt-16">
           <a
-            href="#contact"
+            href="/contactus"
             className="inline-block bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-[var(--color-text-main)] font-medium py-3 px-8 rounded-full transition-colors duration-300"
           >
             Talk to Our Marketing Experts

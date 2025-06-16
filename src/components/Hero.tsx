@@ -67,7 +67,7 @@ export default function Hero() {
             >
               <a href="#hero" className="block hover:underline">Home</a>
               <a href="#services" className="block hover:underline">What We Do</a>
-              <a href="#contact" className="block hover:underline">Contact Us</a>
+              <a href="/contactus" className="block hover:underline">Contact Us</a>
               <a href="/digital-talk" className="block hover:underline">Digital Talk</a>
             </motion.div>
           )}
@@ -115,7 +115,7 @@ export default function Hero() {
           custom={4}
         >
           <motion.a
-            href="#contact"
+            href="/contactus"
             className={`ctaButton px-12 py-3 bg-[var(--color-primary)] text-[var(--color-text-main)] rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition`}
           >
             Let’s Talk

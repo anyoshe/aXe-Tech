@@ -1,6 +1,6 @@
 'use client';
 
-import { FaTwitter, FaLinkedin, FaGithub, FaInstagram, FaWhatsapp, FaFacebook } from 'react-icons/fa';
+import { FaTwitter, FaLinkedin, FaTiktok, FaInstagram, FaWhatsapp, FaFacebook } from 'react-icons/fa';
 import Link from 'next/link';
 
 const socials = [
@@ -16,12 +16,14 @@ const socials = [
     color: 'text-[#0077B5]',
     label: 'LinkedIn',
   },
-  {
-    href: 'https://github.com/yourusername',
-    icon: FaGithub,
-    color: 'text-white',
-    label: 'GitHub',
-  },
+  
+ {
+  href: 'https://www.tiktok.com/@yourusername',
+  icon: FaTiktok,
+  color: 'text-white',
+  label: 'TikTok',
+},
+
   {
     href: 'https://instagram.com/yourprofile',
     icon: FaInstagram,
@@ -45,7 +47,7 @@ const socials = [
 export default function SocialNavbar() {
   return (
     <div className="fixed bottom-0 left-1/2 -translate-x-1/2 z-50 bg-gray-900/80 backdrop-blur-md px-6 py-3 rounded-full shadow-lg">
-      <div className="flex items-center justify-center space-x-8">
+      <div className="flex items-center justify-center space-x-7">
         {socials.map(({ href, icon: Icon, color, label }, index) => (
           <Link
             key={index}
