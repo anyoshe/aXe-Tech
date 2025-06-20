@@ -6,6 +6,8 @@ import remarkGfm from 'remark-gfm';
 import { motion } from 'framer-motion';
 import CTA from '@/components/CTA';
 import Navbar from '@/components/Navbar';
+import Image from "next/image";
+
 
 // Types
 interface CommentType {
@@ -168,11 +170,22 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
           transition={{ duration: 0.6 }}
         >
           {post.coverImage && (
-            <img
-              src={post.coverImage}
-              alt={post.title}
-              className="rounded mb-6 w-full h-96 object-cover object-center"
-            />
+            // <img
+            //   src={post.coverImage}
+            //   alt={post.title}
+            //   className="rounded mb-6 w-full h-96 object-cover object-center"
+            // />
+            <div className="relative w-full h-96 mb-6 rounded overflow-hidden">
+              <Image
+                src={post.coverImage}
+                alt={post.title}
+                fill
+                className="object-cover object-center"
+                sizes="(max-width: 768px) 100vw, 768px"
+                priority
+              />
+            </div>
+
           )}
           <h1 className="text-4xl font-bold mb-2 text-white">{post.title}</h1>
           {post.subtitle && <h2 className="text-2xl text-indigo-300 font-medium mb-4 italic">{post.subtitle}</h2>}
@@ -261,11 +274,17 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
           {/* Ad Section */}
           <div>
             <h3 className="text-lime-400 font-bold text-xl mb-4">Sponsored</h3>
-            <img
-              src="/samples/social-media.jpg"
-              alt="Advertisement"
-              className="rounded-lg mb-4 w-full object-cover h-60"
-            />
+
+            <div className="relative w-full h-60 mb-4 rounded-lg overflow-hidden">
+              <Image
+                src="/samples/social-media.jpg"
+                alt="Advertisement"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 384px"
+              />
+            </div>
+
             <p className="text-sm text-gray-300">
               Looking to grow your audience?{' '}
               <a href="/your-service-link" className="text-lime-400 underline hover:text-lime-300">

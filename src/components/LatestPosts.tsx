@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from 'next/image';
 
 type BlogPost = {
   _id: string;
@@ -36,11 +37,16 @@ export default function LatestPosts() {
               className="group bg-[#1f2937] border border-[var(--color-primary)] rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex flex-col"
             >
               {post.coverImage && (
-                <img
-                  src={post.coverImage}
-                  alt={post.title}
-                  className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-500 rounded-t-2xl"
-                />
+
+                <div className="relative w-full h-52">
+                  <Image
+                    src={post.coverImage}
+                    alt={post.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500 rounded-t-2xl"
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  />
+                </div>
               )}
               <div className="p-6 flex flex-col flex-grow">
                 <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-[var(--color-accent)] transition-colors">

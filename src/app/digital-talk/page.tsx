@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 type BlogPost = {
   _id: string;
@@ -55,11 +56,17 @@ export default function DigitalTalkPage() {
               style={{ height: '300px' }} // Fixed card height
             >
               {post.coverImage && (
-                <img
-                  src={post.coverImage}
-                  alt={post.title}
-                  className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
-                />
+
+                <div className="relative w-full h-32">
+                  <Image
+                    src={post.coverImage}
+                    alt={post.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, 33vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-300 rounded-t-xl"
+                    priority={false}
+                  />
+                </div>
               )}
               <div className="p-4 flex flex-col justify-between grow">
                 <div>

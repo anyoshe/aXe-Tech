@@ -1,6 +1,6 @@
 "use client";
 
-// import Image from "next/image";
+import Image from "next/image";
 
 type PortfolioItem = {
   title: string;
@@ -12,15 +12,15 @@ type PortfolioItem = {
 };
 
 const portfolioItems: PortfolioItem[] = [
-  
+
   {
-  title: "Brand Identity Design",
-  image: "/samples/sda.jpg",
-  description: "A cohesive brand identity concept featuring a bold logo, intentional color palette, and modern typography that reflect the startup’s innovative spirit and trust-first values. Includes hero section, feature highlights, and CTA layout.",
-  link: "/brand-gallary",
-  status: "Live",
-  type: "Design",
-},
+    title: "Brand Identity Design",
+    image: "/samples/sda.jpg",
+    description: "A cohesive brand identity concept featuring a bold logo, intentional color palette, and modern typography that reflect the startup’s innovative spirit and trust-first values. Includes hero section, feature highlights, and CTA layout.",
+    link: "/brand-gallary",
+    status: "Live",
+    type: "Design",
+  },
   {
     title: "E-Commerce Store",
     image: "/samples/ecommerce1.jpg",
@@ -30,13 +30,13 @@ const portfolioItems: PortfolioItem[] = [
     type: "E-commerce",
   },
   {
-  title: "Startup Landing Page",
-  image: "/samples/landpage.jpg",
-  description: "A high-converting landing page featuring a bold hero section, clear feature highlights, and a compelling CTA — crafted to attract leads and showcase the startup’s value with clarity and impact.",
-  link: "/landing-showcase",
-  status: "Live",
-  type: "Landing Page",
-},
+    title: "Startup Landing Page",
+    image: "/samples/landpage.jpg",
+    description: "A high-converting landing page featuring a bold hero section, clear feature highlights, and a compelling CTA — crafted to attract leads and showcase the startup’s value with clarity and impact.",
+    link: "/landing-showcase",
+    status: "Live",
+    type: "Landing Page",
+  },
   {
     title: "Anyoka Eats – Food Delivery Platform",
     image: "/samples/my-logo.png",
@@ -45,7 +45,7 @@ const portfolioItems: PortfolioItem[] = [
     type: "Full-Stack Web App",
     link: "https://github.com/anyoshe/anyoka_eats",
   },
-{
+  {
     title: "SaaS Dashboard UI",
     image: "/samples/social.jpg",
     description: "A sleek, intuitive SaaS dashboard UI designed for seamless productivity — featuring smart visualizations, modular layouts, and a dark mode interface optimized for decision-making.",
@@ -78,26 +78,30 @@ export default function Portfolio() {
             key={idx}
             className="bg-[var(--color-bg-dark)] border border-[var(--color-primary)] rounded-2xl overflow-hidden shadow-xl group hover:shadow-2xl transition-all duration-300"
           >
-            <img
-              src={item.image}
-              alt={item.title}
-              width={600}
-              height={400}
-              className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
-            />
+
+            <div className="relative w-full h-64">
+              <Image
+                src={item.image}
+                alt={item.title}
+                fill
+                className="object-cover rounded-t-2xl transition-transform duration-300 group-hover:scale-105"
+                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                placeholder="empty"
+              />
+            </div>
+
 
             <div className="p-5 text-left">
               <div className="flex justify-between items-center mb-2">
                 <h3 className="text-xl font-semibold text-white">{item.title}</h3>
                 {item.status && (
                   <span
-                    className={`text-xs px-2 py-1 rounded-full ${
-                      item.status === "Live"
+                    className={`text-xs px-2 py-1 rounded-full ${item.status === "Live"
                         ? "bg-green-600 text-white"
                         : item.status === "Unpublished"
-                        ? "bg-yellow-700 text-yellow-200"
-                        : "bg-gray-700 text-gray-200"
-                    }`}
+                          ? "bg-yellow-700 text-yellow-200"
+                          : "bg-gray-700 text-gray-200"
+                      }`}
                   >
                     {item.status}
                   </span>

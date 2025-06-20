@@ -3,6 +3,7 @@ import { useState } from "react";
 // import Link from 'next/link';
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
+import Image from 'next/image';
 import styles from "../../styles/Hero.module.css";
 
 
@@ -39,11 +40,15 @@ export default function Hero() {
       {/* LOGO & MENU */}
       <div className={`${styles.logoContainer} flex justify-between items-center z-20 relative`}>
         <div className={styles.logoBox}>
-          <img
+
+          <Image
             src="/axe-Tech.svg"
             alt="aXe-Tech logo"
+            width={160}
+            height={40}
             className="h-8 md:h-10 w-auto object-contain"
           />
+
         </div>
 
         <div className={styles.hamburgerBox}>

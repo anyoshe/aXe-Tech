@@ -2,6 +2,7 @@
 import { dbConnect } from '@/lib/mongodb';
 import BlogPost from '@/models/BlogPost';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default async function BlogPage() {
   await dbConnect();
@@ -21,11 +22,16 @@ export default async function BlogPage() {
               className="group block border border-[var(--color-primary)] rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 bg-[var(--color-bg-dark)]"
             >
               {post.coverImage && (
-                <img
-                  src={post.coverImage}
-                  alt={post.title}
-                  className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105"
-                />
+
+                <div className="relative w-full h-48">
+                  <Image
+                    src={post.coverImage}
+                    alt={post.title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105 rounded-t-2xl"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+                </div>
               )}
               <div className="p-6">
                 <h2 className="text-2xl font-semibold mb-2 group-hover:text-[var(--color-accent)] transition-colors">

@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from 'react'
 import { Menu, X } from 'lucide-react'
 import clsx from 'clsx'
 import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image';
+
 
 
 export default function Navbar() {
@@ -13,18 +15,23 @@ export default function Navbar() {
 
   const toggleMenu = () => setOpen(!open)
 
+
   useEffect(() => {
+    const el = triggerRef.current;
+    if (!el) return;
+
     const observer = new IntersectionObserver(
       ([entry]) => setIsSticky(!entry.isIntersecting),
       { threshold: 0 }
-    )
+    );
 
-    if (triggerRef.current) observer.observe(triggerRef.current)
+    observer.observe(el);
 
     return () => {
-      if (triggerRef.current) observer.unobserve(triggerRef.current)
-    }
-  }, [])
+      observer.unobserve(el);
+    };
+  }, []);
+
 
   return (
     <>
@@ -38,12 +45,17 @@ export default function Navbar() {
         )}
       >
         <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-          <img
-            src="/axe-Tech.svg"
-            alt="aXe-Tech logo"
-            className="h-8 md:h-10 w-auto object-contain"
-            style={{ filter: 'brightness(0) invert(1)' }}
-          />
+          <div className="relative h-8 md:h-10 w-[120px]">
+            <Image
+              src="/axe-Tech.svg"
+              alt="aXe-Tech logo"
+              fill
+              className="object-contain"
+              style={{ filter: 'brightness(0) invert(1)' }}
+              priority
+            />
+          </div>
+
 
           {/* Mobile Toggle Button */}
           <div className="md:hidden">

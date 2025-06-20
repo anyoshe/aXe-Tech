@@ -2,6 +2,7 @@
 
 import { motion, Variants } from "framer-motion";
 import { PenTool, Palette, Code2, Megaphone } from "lucide-react";
+import Image from "next/image";
 
 
 const services = [
@@ -98,11 +99,18 @@ export default function Services() {
             custom={i + 2}
             className="bg-[var(--color-primary)] rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 group"
           >
-            <img
-              src={service.image}
-              alt={service.title}
-              className="w-full h-48 object-cover"
-            />
+
+            <div className="relative w-full h-48">
+              <Image
+                src={service.image}
+                alt={service.title}
+                fill
+                className="object-cover"
+                sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                placeholder="empty"
+              />
+            </div>
+
             <div className="p-6 flex flex-col gap-4">
               <div className="flex items-center gap-3">
                 {service.icon}

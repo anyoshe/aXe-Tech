@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   title: "Axe-Tech",
   description: "Smart Digital Solutions for Bold Businesses.",
   icons: {
-    icon: "/icon logo.png", 
+    icon: "/favicon.png", 
   },
 };
 
