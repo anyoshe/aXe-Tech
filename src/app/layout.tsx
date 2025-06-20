@@ -16,13 +16,50 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+
 export const metadata: Metadata = {
-  title: "Axe-Tech",
-  description: "Smart Digital Solutions for Bold Businesses.",
-  icons: {
-    icon: "/favicon.png", 
+  metadataBase: new URL("https://getaxe.tech"), // ✅ Set this to resolve social images
+  title: "GetAxe · Lead‑Focused Branding, Web & App Development, Marketing",
+  description: "GetAxe helps startups and businesses generate more leads and sales through sharp branding, high‑performing websites/apps, e‑commerce, and data‑driven digital marketing.",
+  keywords: [
+    "GetAxe",
+    "branding agency",
+    "web development Nairobi",
+    "app development Kenya",
+    "digital marketing",
+    "e-commerce solutions",
+    "lead generation",
+    "startup branding",
+    "business growth"
+  ],
+  authors: [{ name: "GetAxe", url: "https://getaxe.tech" }],
+  openGraph: {
+    title: "GetAxe — Precision Tech to Grow Your Business",
+    description: "From branding to web/app development, e-commerce, and marketing — we build digital experiences that generate real leads & revenue.",
+    url: "https://getaxe.tech",
+    siteName: "GetAxe",
+    images: [
+      {
+        url: "/axe-Tech.png",
+        width: 1200,
+        height: 630,
+        alt: "GetAxe digital growth services"
+      }
+    ],
+    type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    site: "@getaxetech",
+    title: "GetAxe — Turn Digital into Leads & Sales",
+    description: "Branding • Web & App Dev • E-commerce • Digital Marketing",
+    images: ["/axe-Tech.png"]
+  },
+  icons: {
+    icon: "/favicon.png"
+  }
 };
+
 
 export default function RootLayout({
   children,
