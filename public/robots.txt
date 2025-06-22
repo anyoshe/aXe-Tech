@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://getaxe.tech
+
+# Sitemaps
+Sitemap: https://getaxe.tech/sitemap.xml
