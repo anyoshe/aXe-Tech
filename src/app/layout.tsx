@@ -4,7 +4,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../../styles/globals.css";
-import SocialNavbar from "@/components/SocialNavbar"; // Adjust path as needed
+import SocialNavbar from "@/components/SocialNavbar"; 
+import { Analytics } from "@vercel/analytics/react"; // ✅ Use 'react' not 'next'
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -82,6 +84,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white`}>
         {children}
         <SocialNavbar /> {/* 👈 Sticky Social Icons visible on every page */}
+        <Analytics /> {/* ✅ Vercel Analytics for tracking */}
       </body>
     </html>
   );

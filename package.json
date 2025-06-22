@@ -12,6 +12,7 @@
   "dependencies": {
     "@netlify/next": "^1.4.9",
     "@tailwindcss/typography": "^0.5.16",
+    "@vercel/analytics": "^1.5.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.18.1",
     "gray-matter": "^4.0.3",
