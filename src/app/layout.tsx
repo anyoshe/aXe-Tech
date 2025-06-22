@@ -19,7 +19,9 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://getaxe.tech"), // ✅ Set this to resolve social images
-  title: "GetAxe · Lead‑Focused Branding, Web & App Development, Marketing",
+  // title: "GetAxe · Lead‑Focused Branding, Web & App Development, Marketing",
+     title: "GetAxe.tech — Web, App, Marketing & Branding Agency for Growth",
+
   description: "GetAxe helps startups and businesses generate more leads and sales through sharp branding, high‑performing websites/apps, e‑commerce, and data‑driven digital marketing.",
   keywords: [
     "GetAxe",
@@ -30,7 +32,16 @@ export const metadata: Metadata = {
     "e-commerce solutions",
     "lead generation",
     "startup branding",
-    "business growth"
+    "business growth",
+    "getaxe",
+    "GetAxe Tech",
+    "Social Media Marketing",
+    "SEO services",
+    "content marketing",
+    "web design",
+    "mobile app development",
+    "digital strategy",
+    "Kenya web agency",
   ],
   authors: [{ name: "GetAxe", url: "https://getaxe.tech" }],
   openGraph: {
@@ -40,7 +51,7 @@ export const metadata: Metadata = {
     siteName: "GetAxe",
     images: [
       {
-        url: "/GetAxe.Tech.png",
+        url: "/favicon.png",
         width: 1200,
         height: 630,
         alt: "GetAxe digital growth services"
