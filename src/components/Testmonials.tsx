@@ -11,7 +11,7 @@ export default function Testimonials() {
       <div className="max-w-5xl mx-auto px-4 grid md:grid-cols-3 gap-8">
         <blockquote className="bg-[var(--color-primary)] p-6 rounded-xl shadow">
           <p className="text-md italic">
-            “aXe-Tech totally transformed our online presence. We’ve seen a 40% increase in leads!”
+            “GetAxe.Tech totally transformed our online presence. We’ve seen a 40% increase in leads!”
           </p>
           <footer className="mt-4 text-[var(--color-text-subtle)]">— Amanda T., Startup Founder</footer>
         </blockquote>

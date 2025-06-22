@@ -47,8 +47,8 @@ export default function Navbar() {
         <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
           <div className="relative h-8 md:h-10 w-[120px]">
             <Image
-              src="/axe-Tech.svg"
-              alt="aXe-Tech logo"
+              src="/GetAxe.Tech.png"
+              alt="GetAxe.Tech logo"
               fill
               className="object-contain"
               style={{ filter: 'brightness(0) invert(1)' }}

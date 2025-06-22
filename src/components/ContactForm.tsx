@@ -151,7 +151,7 @@ export default function ContactForm() {
                                 </a>
                                 <div className="text-center text-gray-400 mt-3">
                                     <p className="text-sm">
-                                        <strong>Why Axe-Tech?</strong> We deliver bold digital solutions with speed and precision, trusted by innovators worldwide.
+                                        <strong>Why GetAxe.Tech?</strong> We deliver bold digital solutions with speed and precision, trusted by innovators worldwide.
                                     </p>
                                     <p className="text-sm mt-2">
                                         <strong>Availability:</strong> Mon-Fri, 9 AM - 6 PM (EAT). WhatsApp us anytime for quick replies!

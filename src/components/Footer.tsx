@@ -9,7 +9,7 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-sm">
         {/* Company */}
         <div>
-          <h3 className="text-white font-semibold text-lg mb-4">Axe-Tech</h3>
+          <h3 className="text-white font-semibold text-lg mb-4">GetAxe.Tech</h3>
           <p className="text-gray-400 leading-relaxed">
             Bold digital experiences. Seamless code. Cutting-edge design. 
             We craft brands & build tools that convert.
@@ -54,9 +54,9 @@ export default function Footer() {
 
       {/* Divider */}
       <div className="border-t border-gray-800 mt-12 pt-6 text-center text-xs text-gray-500">
-        <p>© {new Date().getFullYear()} Axe-Tech. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} GetAxe.Tech. All rights reserved.</p>
         <p className="mt-2">
-          Built with precision & love by Axe-Tech — Where creativity meets code.
+          Built with precision & love by GetAxe.Tech — Where creativity meets code.
         </p>
       </div>
     </footer>

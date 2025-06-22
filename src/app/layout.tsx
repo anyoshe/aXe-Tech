@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     siteName: "GetAxe",
     images: [
       {
-        url: "/axe-Tech.png",
+        url: "/GetAxe.Tech.png",
         width: 1200,
         height: 630,
         alt: "GetAxe digital growth services"
@@ -53,10 +53,10 @@ export const metadata: Metadata = {
     site: "@getaxetech",
     title: "GetAxe — Turn Digital into Leads & Sales",
     description: "Branding • Web & App Dev • E-commerce • Digital Marketing",
-    images: ["/axe-Tech.png"]
+    images: ["/GetAxe.Tech.png"]
   },
   icons: {
-    icon: "/favicon.png"
+    icon: "/favicon.ico",
   }
 };
 

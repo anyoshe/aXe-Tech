@@ -43,7 +43,7 @@ export default function WhyChooseUs() {
           viewport={{ once: true }}
           className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"
         >
-          Why Choose Axe-Tech?
+          Why Choose GetAxe.Tech?
         </motion.h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
           {/* Left: Text */}

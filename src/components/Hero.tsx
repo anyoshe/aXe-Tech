@@ -42,8 +42,8 @@ export default function Hero() {
         <div className={styles.logoBox}>
 
           <Image
-            src="/axe-Tech.svg"
-            alt="aXe-Tech logo"
+            src="/GetAxe.Tech.svg"
+            alt="GetAxe.Tech logo"
             width={160}
             height={40}
             className="h-8 md:h-10 w-auto object-contain"
