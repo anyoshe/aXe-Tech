@@ -21,8 +21,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://getaxe.tech"), // ✅ Set this to resolve social images
-  // title: "GetAxe · Lead‑Focused Branding, Web & App Development, Marketing",
-     title: "GetAxe.tech — Web, App, Marketing & Branding Agency for Growth",
+  title: "GetAxe.tech — Web, App, Marketing & Branding Agency for Growth",
 
   description: "GetAxe helps startups and businesses generate more leads and sales through sharp branding, high‑performing websites/apps, e‑commerce, and data‑driven digital marketing.",
   keywords: [

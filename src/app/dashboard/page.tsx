@@ -25,6 +25,8 @@ type BlogForm = {
   coverImage?: string;
   secondaryImage?: string;
   author?: string;
+  date?: string; // Added
+  tags?: string;
 };
 
 type ImageBlock = {
@@ -130,7 +132,8 @@ export default function Dashboard() {
       content: post.content,
       coverImage: post.coverImage || '',
       secondaryImage: post.secondaryImage || '',
-      author: post.author || ''
+      author: post.author || '',
+     
     });
     setImageBlocks([]);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -147,7 +150,7 @@ export default function Dashboard() {
   };
 
   const resetForm = () => {
-    setForm({ title: '', subtitle: '', slug: '', description: '', content: '', coverImage: '', secondaryImage: '', author: '' });
+    setForm({ title: '', subtitle: '', slug: '', description: '', content: '', coverImage: '', secondaryImage: '', author: '', date: '', tags: '' });
     setEditingPostSlug(null);
     setImageBlocks([]);
   };
@@ -225,6 +228,27 @@ export default function Dashboard() {
             className="w-full p-3 border border-gray-700 bg-gray-900 text-white rounded focus:outline-none focus:ring-2 focus:ring-indigo-600"
           />
         </div>
+        <div>
+  <input
+    name="date"
+    type="date"
+    value={form.date || ''}
+    onChange={handleChange}
+    className="w-full p-3 border border-gray-700 bg-gray-900 text-white rounded focus:outline-none focus:ring-2 focus:ring-indigo-600"
+    placeholder="Date (optional)"
+  />
+</div>
+
+<div>
+  <input
+    name="tags"
+    value={form.tags || ''}
+    onChange={handleChange}
+    placeholder="Tags (comma separated)"
+    className="w-full p-3 border border-gray-700 bg-gray-900 text-white rounded focus:outline-none focus:ring-2 focus:ring-indigo-600"
+  />
+</div>
+
         <div className="relative">
           <textarea
             ref={contentRef}

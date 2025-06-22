@@ -15,6 +15,7 @@ const BlogPostSchema = new Schema({
   slug: { type: String, required: true, unique: true },
   description: { type: String, maxlength: 240 },
   content: { type: String },
+  tags: [{ type: String }],
   date: { type: Date, default: Date.now },
   coverImage: { type: String },
   secondaryImage: { type: String },

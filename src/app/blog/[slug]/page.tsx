@@ -170,11 +170,6 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
           transition={{ duration: 0.6 }}
         >
           {post.coverImage && (
-            // <img
-            //   src={post.coverImage}
-            //   alt={post.title}
-            //   className="rounded mb-6 w-full h-96 object-cover object-center"
-            // />
             <div className="relative w-full h-96 mb-6 rounded overflow-hidden">
               <Image
                 src={post.coverImage}
@@ -195,22 +190,51 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
           {post.tags && (
             <div className="flex flex-wrap gap-2 mb-4">
               {post.tags.map((tag, i) => (
-                <span key={i} className="bg-indigo-700 px-2 py-1 rounded text-sm text-white">#{tag}</span>
+                <span key={i} className="bg-[#A3E635] text-gray-900 text-sm font-semibold px-2 py-1 rounded">
+                  #{tag}
+                </span>
               ))}
             </div>
           )}
-          <div className="prose prose-invert prose-lg mb-6
-                  first-letter:text-5xl first-letter:font-bold first-letter:text-indigo-400
-                  [&_ul]:list-disc [&_ul]:pl-5 
-                  [&_ol]:list-decimal [&_ol]:pl-5 
-                  [&_h2]:text-2xl [&_h2]:text-indigo-300 [&_h2]:mt-6 [&_h2]:mb-2 
-                  [&_h3]:text-xl [&_h3]:text-indigo-400 [&_h3]:mt-4 [&_h3]:mb-1
-                  [&_img]:rounded-xl [&_img]:my-6 [&_img]:mx-auto [&_img]:shadow-lg
-                  [&_img]:w-full [&_img]:max-w-[600px] [&_img]:h-[380px] [&_img]:object-cover
-                  [&_figure]:text-center [&_figcaption]:text-sm [&_figcaption]:text-gray-400"
-          >
 
+          <div className="prose prose-invert prose-lg mb-6 max-w-full overflow-hidden break-words
+                first-letter:text-5xl first-letter:font-bold first-letter:text-indigo-400
 
+                /* Headings */
+                [&_h2]:text-2xl [&_h2]:text-indigo-300 [&_h2]:mt-6 [&_h2]:mb-2 
+                [&_h3]:text-xl [&_h3]:text-indigo-400 [&_h3]:mt-4 [&_h3]:mb-1
+
+                /* Lists */
+                [&_ul]:list-disc [&_ul]:pl-5 
+                [&_ol]:list-decimal [&_ol]:pl-5 
+                [&_li]:marker:text-indigo-400
+
+                /* Links */
+                [&_a]:text-lime-400 [&_a]:underline hover:[&_a]:text-lime-300
+
+                /* Blockquotes */
+                [&_blockquote]:border-l-4 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-gray-300 [&_blockquote]:border-indigo-500
+
+                /* Code Blocks & Inline Code */
+                [&_code]:bg-gray-800 [&_code]:text-pink-400 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded
+                [&_pre]:bg-gray-900 [&_pre]:p-4 [&_pre]:rounded-xl [&_pre]:overflow-x-auto [&_pre_code]:bg-transparent [&_pre_code]:text-white
+
+                /* Checklists */
+                [&_input[type='checkbox']]:accent-indigo-500 [&_li>input]:mr-2
+
+                /* Images */
+                [&_img]:rounded-xl [&_img]:my-6 [&_img]:mx-auto [&_img]:shadow-lg
+                [&_img]:w-full [&_img]:max-w-full [&_img]:h-auto [&_img]:object-cover
+
+                /* Figures */
+                [&_figure]:text-center [&_figcaption]:text-sm [&_figcaption]:text-gray-400
+
+                /* Tables */
+                [&_table]:table [&_table]:w-full [&_table]:overflow-x-auto [&_table]:block [&_th]:text-left [&_th]:bg-gray-700 [&_td]:bg-gray-800 [&_td]:border [&_th]:border [&_table]:border-collapse [&_table]:text-sm [&_table]:my-4 [&_td]:p-2 [&_th]:p-2 [&_table]:rounded-lg
+
+                /* Horizontal Rules */
+                [&_hr]:my-6 [&_hr]:border-gray-700
+              ">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.content}</ReactMarkdown>
           </div>
 
