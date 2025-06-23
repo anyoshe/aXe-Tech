@@ -170,7 +170,8 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
           transition={{ duration: 0.6 }}
         >
           {post.coverImage && (
-            <div className="relative w-full h-96 mb-6 rounded overflow-hidden">
+            <div className="relative w-full aspect-[16/9] mb-6 rounded overflow-hidden">
+
               <Image
                 src={post.coverImage}
                 alt={post.title}
@@ -223,7 +224,8 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
                 [&_input[type='checkbox']]:accent-indigo-500 [&_li>input]:mr-2
 
                 /* Images */
-                [&_img]:rounded-xl [&_img]:my-6 [&_img]:mx-auto [&_img]:shadow-lg
+                [&_img]:aspect-[16/10] [&_img]:object-cover [&_img]:rounded-xl
+
                 [&_img]:w-full [&_img]:max-w-full [&_img]:h-auto [&_img]:object-cover
 
                 /* Figures */
