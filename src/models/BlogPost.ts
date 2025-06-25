@@ -18,6 +18,7 @@ const BlogPostSchema = new Schema({
   tags: [{ type: String }],
   date: { type: Date, default: Date.now },
   coverImage: { type: String },
+  coverImageCaption: { type: String },
   secondaryImage: { type: String },
   author: { type: String },
   likes: { type: Number, default: 0 },

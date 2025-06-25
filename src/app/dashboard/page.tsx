@@ -11,6 +11,8 @@ type BlogPost = {
   description: string;
   content: string;
   coverImage?: string;
+  coverImageCaption?: string;
+
   secondaryImage?: string;
   author?: string;
   date?: string;
@@ -23,6 +25,8 @@ type BlogForm = {
   description: string;
   content: string;
   coverImage?: string;
+  coverImageCaption?: string;
+
   secondaryImage?: string;
   author?: string;
   date?: string; // Added
@@ -104,8 +108,6 @@ export default function Dashboard() {
       contentRef.current?.focus();
     }
   };
-
-
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -225,6 +227,16 @@ export default function Dashboard() {
             className="w-full p-3 border border-gray-700 bg-gray-900 text-white rounded focus:outline-none focus:ring-2 focus:ring-indigo-600"
           />
         </div>
+        <div>
+  <input
+    name="coverImageCaption"
+    value={form.coverImageCaption || ''}
+    onChange={handleChange}
+    placeholder="Cover Image Caption"
+    className="w-full p-3 border border-gray-700 bg-gray-900 text-white rounded focus:outline-none focus:ring-2 focus:ring-indigo-600"
+  />
+</div>
+
         <div>
           <input
             name="secondaryImage"
