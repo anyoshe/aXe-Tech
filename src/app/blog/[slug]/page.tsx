@@ -1,5 +1,5 @@
 'use client';
-
+import { useRouter } from 'next/navigation';
 import React, { use, useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import CTA from '@/components/CTA';
 import Navbar from '@/components/Navbar';
 import Image from "next/image";
+import { normalizeTag } from '@/utils/normalizeTag'
 
 
 // Types
@@ -99,6 +100,7 @@ const RecursiveComment: React.FC<RecursiveCommentProps> = ({ comment, path, onAc
 
 
 export default function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const router = useRouter();
   const { slug } = use(params);
   const [post, setPost] = useState<BlogPostType | null>(null);
   const [likes, setLikes] = useState(0);
@@ -106,6 +108,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
   const [name, setName] = useState('');
   const [comment, setComment] = useState('');
   const [showCommentBox, setShowCommentBox] = useState(false);
+  
 
   useEffect(() => {
     fetch(`/api/blog?slug=${slug}`)
@@ -142,6 +145,11 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
     if (action === 'comment') setComment('');
   };
 
+
+  const handleTagClick = (tag: string) => {
+    router.push(`/blog/tag/${encodeURIComponent(tag)}`);
+  };
+
   const handleShare = () => {
     if (!post) return;
     const shareData = {
@@ -162,43 +170,52 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
   return (
     <>
       <Navbar />
-      <div className="bg-gray-900 text-white grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-10 px-6 py-10 min-h-screen">
-        <motion.article
-          className="max-w-3xl"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          {post.coverImage && (
-            <div className="relative w-full aspect-[16/9] mb-6 rounded overflow-hidden">
+      {/* <div className="bg-gray-900 text-white grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-10 px-6 py-10 min-h-screen"> */}
+      <div className="bg-gray-900 text-white px-4 sm:px-6 py-10 min-h-screen">
+        <div className="max-w-screen-2xl mx-auto grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-10">
+          <motion.article
+            className="max-w-3xl"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            {post.coverImage && (
+              <div className="relative w-full aspect-[16/9] mb-6 rounded overflow-hidden">
 
-              <Image
-                src={post.coverImage}
-                alt={post.title}
-                fill
-                className="object-cover object-center"
-                sizes="(max-width: 768px) 100vw, 768px"
-                priority
-              />
-            </div>
+                <Image
+                  src={post.coverImage}
+                  alt={post.title}
+                  fill
+                  className="object-cover object-center"
+                  sizes="(max-width: 768px) 100vw, 768px"
+                  priority
+                />
+              </div>
 
-          )}
-          <h1 className="text-4xl font-bold mb-2 text-white">{post.title}</h1>
-          {post.subtitle && <h2 className="text-2xl text-indigo-300 font-medium mb-4 italic">{post.subtitle}</h2>}
-          <p className="text-gray-400 mb-4">
-            {new Date(post.date).toLocaleDateString()} {post.author && <>· By {post.author}</>}
-          </p>
-          {post.tags && (
-            <div className="flex flex-wrap gap-2 mb-4">
-              {post.tags.map((tag, i) => (
-                <span key={i} className="bg-[#A3E635] text-gray-900 text-sm font-semibold px-2 py-1 rounded">
-                  #{tag}
-                </span>
-              ))}
-            </div>
-          )}
+            )}
+            <h1 className="text-4xl font-bold mb-2 text-white">{post.title}</h1>
+            {post.subtitle && <h2 className="text-2xl text-indigo-300 font-medium mb-4 italic">{post.subtitle}</h2>}
+            <p className="text-gray-400 mb-4">
+              {new Date(post.date).toLocaleDateString()} {post.author && <>· By {post.author}</>}
+            </p>
+            {post.tags && (
+              <div className="flex flex-wrap gap-2 mb-4">
+               {post.tags?.map((tag, i) => (
+  <button
+    key={i}
+    onClick={() => handleTagClick(normalizeTag(tag))}
+    className="bg-lime-400 text-black text-sm font-semibold px-3 py-1 rounded-full hover:brightness-90 transition"
+  >
+    #{normalizeTag(tag)}
+  </button>
+))}
 
-          <div className="prose prose-invert prose-lg mb-6 max-w-full overflow-hidden break-words
+              </div>
+            )}
+
+
+
+            <div className="prose prose-invert prose-lg mb-6 max-w-full overflow-hidden break-words
                 first-letter:text-5xl first-letter:font-bold first-letter:text-indigo-400
 
                 /* Headings */
@@ -237,95 +254,95 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
                 /* Horizontal Rules */
                 [&_hr]:my-6 [&_hr]:border-gray-700
               ">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.content}</ReactMarkdown>
-          </div>
-
-          <div className="flex flex-wrap gap-4 my-6">
-            <button onClick={() => handleAction('like')} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">
-              👍 {likes}
-            </button>
-            <button onClick={handleShare} className="bg-lime-400 text-black px-4 py-2 rounded hover:brightness-90">
-              Share
-            </button>
-            <button onClick={() => setShowCommentBox(prev => !prev)} className="border border-indigo-600 text-indigo-300 px-4 py-2 rounded">
-              {showCommentBox ? 'Hide Comment Box' : 'Comment'}
-            </button>
-          </div>
-
-          {showCommentBox && (
-            <form
-              onSubmit={e => {
-                e.preventDefault();
-                handleAction('comment');
-              }}
-              className="mb-6 space-y-3"
-            >
-              <input
-                value={name}
-                onChange={e => setName(e.target.value)}
-                placeholder="Your name"
-                className="w-full border rounded px-3 py-2 bg-gray-800 text-white"
-                required
-              />
-              <textarea
-                value={comment}
-                onChange={e => setComment(e.target.value)}
-                placeholder="Add a comment"
-                className="w-full border rounded px-3 py-2 bg-gray-800 text-white"
-                rows={3}
-                required
-              />
-              <button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">
-                Post Comment
-              </button>
-            </form>
-          )}
-
-          <div className="my-6">
-            <h3 className="text-2xl font-bold mb-4">Comments</h3>
-            <ul className="space-y-2">
-              {comments.map((c, i) => (
-                <RecursiveComment key={i} comment={c} path={[i]} onAction={handleAction} />
-              ))}
-            </ul>
-          </div>
-        </motion.article>
-        {/* CTA for Mobile */}
-        <div className="block lg:hidden mt-10 bg-gradient-to-br from-indigo-700 to-indigo-900 rounded-xl p-6 text-center shadow-lg border border-indigo-500">
-          <CTA />
-        </div>
-
-
-        <aside className="w-full lg:w-96 px-4 py-6 bg-gray-800 rounded-xl sticky top-12 self-start space-y-8">
-          {/* Ad Section */}
-          <div>
-            <h3 className="text-lime-400 font-bold text-xl mb-4">Sponsored</h3>
-
-            <div className="relative w-full h-60 mb-4 rounded-lg overflow-hidden">
-              <Image
-                src="/samples/social-media.jpg"
-                alt="Advertisement"
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 384px"
-              />
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.content}</ReactMarkdown>
             </div>
 
-            <p className="text-sm text-gray-300">
-              Looking to grow your audience?{' '}
-              <a href="/your-service-link" className="text-lime-400 underline hover:text-lime-300">
-                Try our service now
-              </a>.
-            </p>
-          </div>
+            <div className="flex flex-wrap gap-4 my-6">
+              <button onClick={() => handleAction('like')} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">
+                👍 {likes}
+              </button>
+              <button onClick={handleShare} className="bg-lime-400 text-black px-4 py-2 rounded hover:brightness-90">
+                Share
+              </button>
+              <button onClick={() => setShowCommentBox(prev => !prev)} className="border border-indigo-600 text-indigo-300 px-4 py-2 rounded">
+                {showCommentBox ? 'Hide Comment Box' : 'Comment'}
+              </button>
+            </div>
 
-          {/* CTA for Desktop */}
-          <div className="hidden lg:block bg-gradient-to-br from-indigo-700 to-indigo-900 rounded-xl p-2 text-center shadow-lg border border-indigo-500">
+            {showCommentBox && (
+              <form
+                onSubmit={e => {
+                  e.preventDefault();
+                  handleAction('comment');
+                }}
+                className="mb-6 space-y-3"
+              >
+                <input
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                  placeholder="Your name"
+                  className="w-full border rounded px-3 py-2 bg-gray-800 text-white"
+                  required
+                />
+                <textarea
+                  value={comment}
+                  onChange={e => setComment(e.target.value)}
+                  placeholder="Add a comment"
+                  className="w-full border rounded px-3 py-2 bg-gray-800 text-white"
+                  rows={3}
+                  required
+                />
+                <button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">
+                  Post Comment
+                </button>
+              </form>
+            )}
+
+            <div className="my-6">
+              <h3 className="text-2xl font-bold mb-4">Comments</h3>
+              <ul className="space-y-2">
+                {comments.map((c, i) => (
+                  <RecursiveComment key={i} comment={c} path={[i]} onAction={handleAction} />
+                ))}
+              </ul>
+            </div>
+          </motion.article>
+          {/* CTA for Mobile */}
+          <div className="block lg:hidden mt-10 bg-gradient-to-br from-indigo-700 to-indigo-900 rounded-xl p-6 text-center shadow-lg border border-indigo-500">
             <CTA />
           </div>
-        </aside>
 
 
+          <aside className="w-full lg:w-96 px-4 py-6 bg-gray-800 rounded-xl sticky top-12 self-start space-y-8">
+            {/* Ad Section */}
+            <div>
+              <h3 className="text-lime-400 font-bold text-xl mb-4">Sponsored</h3>
+
+              <div className="relative w-full h-60 mb-4 rounded-lg overflow-hidden">
+                <Image
+                  src="/samples/social-media.jpg"
+                  alt="Advertisement"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 384px"
+                />
+              </div>
+
+              <p className="text-sm text-gray-300">
+                Looking to grow your audience?{' '}
+                <a href="/your-service-link" className="text-lime-400 underline hover:text-lime-300">
+                  Try our service now
+                </a>.
+              </p>
+            </div>
+
+            {/* CTA for Desktop */}
+            <div className="hidden lg:block bg-gradient-to-br from-indigo-700 to-indigo-900 rounded-xl p-2 text-center shadow-lg border border-indigo-500">
+              <CTA />
+            </div>
+          </aside>
+
+        </div>
       </div>
     </>
   );

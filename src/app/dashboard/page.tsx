@@ -53,8 +53,10 @@ export default function Dashboard() {
   useEffect(() => {
     setForm((prev) => ({
       ...prev,
-      slug: prev.title.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9-]+/g, '')
-    }));
+        slug: prev.slug
+      ? prev.slug // keep manual edits
+      : prev.title.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9-]+/g, '')
+  }));
   }, [form.title]);
 
   const fetchPosts = async () => {
@@ -103,26 +105,38 @@ export default function Dashboard() {
     }
   };
 
+
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setSuccess(false);
+
+    // Convert comma-separated string into string[]
+    const tagsArray = form.tags
+      ? form.tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0)
+      : [];
+
     const method = editingPostSlug ? 'PUT' : 'POST';
     const url = editingPostSlug ? `/api/blog/${editingPostSlug}` : '/api/blog';
+
     const res = await fetch(url, {
       method,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
+      body: JSON.stringify({ ...form, tags: tagsArray }),
     });
+
     if (res.ok) {
       setSuccess(true);
       resetForm();
       await fetchPosts();
     }
+
     setLoading(false);
   };
 
-  const handleEdit = (post: BlogPost) => {
+
+  const handleEdit = (post: BlogPost & { tags?: string[] }) => {
     setEditingPostSlug(post.slug);
     setForm({
       title: post.title,
@@ -133,11 +147,12 @@ export default function Dashboard() {
       coverImage: post.coverImage || '',
       secondaryImage: post.secondaryImage || '',
       author: post.author || '',
-     
+      tags: post.tags?.join(', ') || '',
     });
     setImageBlocks([]);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
 
   const handleDelete = async (slug: string) => {
     setLoading(true);
@@ -186,7 +201,7 @@ export default function Dashboard() {
             placeholder="Slug"
             className="w-full p-3 border border-gray-700 bg-gray-900 text-gray-400 rounded"
             required
-            readOnly
+            
           />
         </div>
         <div>
@@ -229,25 +244,25 @@ export default function Dashboard() {
           />
         </div>
         <div>
-  <input
-    name="date"
-    type="date"
-    value={form.date || ''}
-    onChange={handleChange}
-    className="w-full p-3 border border-gray-700 bg-gray-900 text-white rounded focus:outline-none focus:ring-2 focus:ring-indigo-600"
-    placeholder="Date (optional)"
-  />
-</div>
+          <input
+            name="date"
+            type="date"
+            value={form.date || ''}
+            onChange={handleChange}
+            className="w-full p-3 border border-gray-700 bg-gray-900 text-white rounded focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            placeholder="Date (optional)"
+          />
+        </div>
 
-<div>
-  <input
-    name="tags"
-    value={form.tags || ''}
-    onChange={handleChange}
-    placeholder="Tags (comma separated)"
-    className="w-full p-3 border border-gray-700 bg-gray-900 text-white rounded focus:outline-none focus:ring-2 focus:ring-indigo-600"
-  />
-</div>
+        <div>
+          <input
+            name="tags"
+            value={form.tags || ''}
+            onChange={handleChange}
+            placeholder="Tags (comma separated)"
+            className="w-full p-3 border border-gray-700 bg-gray-900 text-white rounded focus:outline-none focus:ring-2 focus:ring-indigo-600"
+          />
+        </div>
 
         <div className="relative">
           <textarea
@@ -296,7 +311,7 @@ export default function Dashboard() {
             className="bg-indigo-600 text-white px-6 py-3 rounded hover:bg-indigo-700 disabled:bg-indigo-400"
             disabled={loading}
           >
-            {loading ? 'Processing...' : editingPostSlug? 'Update Post' : 'Create Post'}
+            {loading ? 'Processing...' : editingPostSlug ? 'Update Post' : 'Create Post'}
           </button>
           {editingPostSlug && (
             <button
