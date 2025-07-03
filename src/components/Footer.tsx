@@ -9,7 +9,7 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-sm">
         {/* Company */}
         <div>
-          <h3 className="text-white font-semibold text-lg mb-4">GetAxe.Tech</h3>
+          <h3 className="text-white font-semibold text-lg mb-4">GETAXE.TECH</h3>
           <p className="text-gray-400 leading-relaxed">
             Bold digital experiences. Seamless code. Cutting-edge design. 
             We craft brands & build tools that convert.

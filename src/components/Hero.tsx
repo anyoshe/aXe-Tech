@@ -42,7 +42,7 @@ export default function Hero() {
         <div className={styles.logoBox}>
 
           <Image
-            src="/GetAxe.Tech.svg"
+            src="/getaxelogobkgd.svg"
             alt="GetAxe.Tech logo"
             width={160}
             height={40}

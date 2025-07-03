@@ -21,7 +21,7 @@
 }
 
 .logoBox {
-  background-color: var(--color-accent);
+  background-color: var(--color-bg-dark);
   padding: 1rem 1.5rem 1rem 1rem;
   min-height: 72px;
 }
