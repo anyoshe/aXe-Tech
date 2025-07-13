@@ -100,7 +100,7 @@ export default function Hero() {
           variants={textFade}
           custom={1}
         >
-          Your Business Deserves More Than Just Being Online
+          Get Online. Sell Online. Grow Online.
         </motion.h1>
         <hr className="w-20 h-2 bg-[var(--color-accent)] mb-6 mx-auto md:mx-0" />
         <motion.p
@@ -108,10 +108,11 @@ export default function Hero() {
           variants={textFade}
           custom={2}
         >
-          We believe every brand — startup or established — deserves real value
-          from its digital presence. That’s why we don’t just build websites; we
-          create results. Whether it’s branding, design, development, or marketing —
-          we’re here to help you thrive online.
+          At GetAxe, we help startups, small businesses, and hustlers thrive online.
+          From e-commerce stores to mobile-first websites, social media, and digital
+          marketing — we deliver tools that sell, connect, and grow your brand.
+          Our mission? To make going digital simple, fast, and affordable for every
+          business.
         </motion.p>
 
         <motion.div
@@ -123,7 +124,7 @@ export default function Hero() {
             href="/contactus"
             className={`ctaButton px-12 py-3 bg-[var(--color-primary)] text-[var(--color-text-main)] rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition`}
           >
-            Let’s Talk
+            Book Free Consultation
           </motion.a>
         </motion.div>
       </motion.div>
