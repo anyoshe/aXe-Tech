@@ -1,12 +1,9 @@
-
-
-
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../../styles/globals.css";
-import SocialNavbar from "@/components/SocialNavbar"; 
+import SocialNavbar from "@/components/SocialNavbar";
 import { Analytics } from "@vercel/analytics/react"; // ✅ Use 'react' not 'next'
-
+import Image from "next/image"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,9 +18,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://getaxe.tech"), // ✅ Set this to resolve social images
-  title: "GetAxe.tech — Web, App, Marketing & Branding Agency for Growth",
+  title: "GetAxe.tech — Branding, Web, Marketing & Lead Generation Agency",
 
-  description: "GetAxe helps startups and businesses generate more leads and sales through sharp branding, high‑performing websites/apps, e‑commerce, and data‑driven digital marketing.",
+  description: "GetAxe helps startups and businesses generate more leads and sales through sharp branding, high‑performing websites/apps, e‑commerce, and data‑driven digital marketing — including specialized lead generation from solar, power back-up solutions to high-ticket services and many more industries.",
+
   keywords: [
     "GetAxe",
     "branding agency",
@@ -32,6 +30,12 @@ export const metadata: Metadata = {
     "digital marketing",
     "e-commerce solutions",
     "lead generation",
+    "lead generation",
+    "qualified leads",
+    "solar leads",
+    "power backup leads",
+    "high ticket leads",
+    "high ticket lead gen",
     "startup branding",
     "business growth",
     "getaxe",
@@ -100,7 +104,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-         {/* Meta Pixel Code */}
+        {/* Meta Pixel Code */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -117,10 +121,19 @@ export default function RootLayout({
             `,
           }}
         />
+
         <noscript>
-          <img height="1" width="1" style={{ display: "none" }}
-            src="https://www.facebook.com/tr?id=673031319116971&ev=PageView&noscript=1" />
+          <Image
+            src="https://www.facebook.com/tr?id=673031319116971&ev=PageView&noscript=1"
+            alt=""
+            height={1}
+            width={1}
+            style={{ display: "none" }}
+            unoptimized
+          />
         </noscript>
+
+
         {/* End Meta Pixel Code */}
         {/* ✅ HubSpot Tracking Code */}
         <script

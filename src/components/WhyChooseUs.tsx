@@ -1,27 +1,28 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Link from "next/link";
 
 const cards = [
   {
-    title: 'Digital Launches',
+    title: 'Digital Presence',
     color: 'text-blue-400',
-    desc: 'Websites, landing pages, and funnels built for performance and scale.',
+    desc: 'Websites, landing pages, and funnels crafted for performance, plus social management to grow your brand online.',
   },
   {
-    title: 'Brand Crafting',
+    title: 'Brand & Identity',
     color: 'text-green-400',
-    desc: 'Logos, identities, and vibes that turn ideas into iconic brands.',
+    desc: 'Logos, visual identities, and brand vibes that transform ideas into memorable, consistent brands.',
   },
   {
-    title: 'Ad Creative',
+    title: 'Ad & Creative Strategy',
     color: 'text-purple-400',
-    desc: 'Eye-catching content designed for social and paid growth.',
+    desc: 'Eye-catching ads and content built for performance on social, plus strategy to maximize reach and conversion.',
   },
   {
-    title: 'Social Management',
-    color: 'text-yellow-400',
-    desc: 'Engaging storytelling across platforms to boost your presence.',
+    title: 'Lead Generation',
+    color: 'text-red-400',
+    desc: 'High-intent leads for solar, backup systems, and other high-ticket services — captured, qualified, and delivered.',
   },
 ];
 
@@ -43,7 +44,7 @@ export default function WhyChooseUs() {
           viewport={{ once: true }}
           className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"
         >
-          Why Choose GetAxe.Tech?
+          Why Choose GetAxe?
         </motion.h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
           {/* Left: Text */}
@@ -57,9 +58,11 @@ export default function WhyChooseUs() {
             <h2 className="text-2xl sm:text-3xl font-bold leading-tight mx-auto max-w-md md:max-w-none">
               Empowering Startups & Visionaries
             </h2>
+
             <p className="text-lg text-gray-300 max-w-md mx-auto md:mx-0">
-              From bold startups to rising brands, we craft digital experiences that amplify your story and drive impact with precision.
+              From bold startups to rising brands, we craft digital experiences that amplify your story, generate leads, and drive impact with precision.
             </p>
+
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-base text-gray-200 list-none mx-auto md:mx-0">
               <li className="flex items-center justify-center md:justify-start gap-2">
                 <span className="text-blue-400">⚡</span> Strategy-driven solutions
@@ -74,6 +77,25 @@ export default function WhyChooseUs() {
                 <span className="text-blue-400">🤝</span> Transparent collaboration
               </li>
             </ul>
+
+
+            <div className="mt-10 text-center relative z-10">
+
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: 'spring', stiffness: 300 }}
+                className="inline-block"
+              >
+                <Link
+                  href="/lead-gen"
+                  className="inline-block bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition cursor-pointer"
+                >
+                  Get Quality Leads
+                </Link>
+              </motion.div>
+            </div>
+
+
           </motion.div>
 
           {/* Right: Cards */}

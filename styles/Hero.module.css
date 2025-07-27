@@ -2,7 +2,7 @@
 .heroSection {
   position: relative;
    overflow: hidden;
-  padding-top: 4rem;
+  padding-top: 3rem;
   right: 0; 
   gap: 2rem;
   background: linear-gradient(to bottom right, #000000, var(--color-bg-dark));

@@ -73,7 +73,7 @@ export default function Hero() {
               <a href="#hero" className="block hover:underline">Home</a>
               <a href="#services" className="block hover:underline">What We Do</a>
               <a href="/contactus" className="block hover:underline">Contact Us</a>
-              <a href="/digital-talk" className="block hover:underline">Digital Talk</a>
+              <a href="/digital-talk" className="block hover:underline">Digital Academy</a>
             </motion.div>
           )}
         </AnimatePresence>
@@ -92,7 +92,7 @@ export default function Hero() {
           variants={textFade}
           custom={0}
         >
-          Trusted, Results-Driven Digital Partner
+          Trusted, Results-Driven Digital & Lead Generation Partner
         </motion.p>
 
         <motion.h1
@@ -100,7 +100,7 @@ export default function Hero() {
           variants={textFade}
           custom={1}
         >
-          Get Online. Sell Online. Grow Online.
+          Get Online. Sell Online. Get Quality Leads. Grow Online.
         </motion.h1>
         <hr className="w-20 h-2 bg-[var(--color-accent)] mb-6 mx-auto md:mx-0" />
         <motion.p
@@ -108,11 +108,10 @@ export default function Hero() {
           variants={textFade}
           custom={2}
         >
-          At GetAxe, we help startups, small businesses, and hustlers thrive online.
-          From e-commerce stores to mobile-first websites, social media, and digital
-          marketing — we deliver tools that sell, connect, and grow your brand.
-          Our mission? To make going digital simple, fast, and affordable for every
-          business.
+          At GetAxe, we empower startups and businesses with powerful digital tools
+          and verified sales leads. Whether you need a website, an e-commerce platform, or 
+          industry-specific leads — like solar, generator, or backup systems, etc — we’re here to help
+          you sell smarter and grow faster. Going digital has never been this simple.
         </motion.p>
 
         <motion.div
@@ -125,6 +124,12 @@ export default function Hero() {
             className={`ctaButton px-12 py-3 bg-[var(--color-primary)] text-[var(--color-text-main)] rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition`}
           >
             Book Free Consultation
+          </motion.a>
+           <motion.a
+           href="/lead-gen"
+            className={`ctaButton px-12 py-3 bg-[var(--color-accent)] text-black rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition`}
+           >
+            Get Quality Leads
           </motion.a>
         </motion.div>
       </motion.div>
