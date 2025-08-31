@@ -1,9 +1,23 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
+
+type FormData = {
+    parentName: string;
+    phone: string;
+    email: string;
+    studentName: string;
+    age: string;
+    classLevel: string;
+    program: string;
+    session: string;
+    duration: string;
+    notes: string;
+    consent: boolean;
+};
 
 export default function RegistrationForm() {
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<FormData>({
         parentName: "",
         phone: "",
         email: "",
@@ -17,23 +31,50 @@ export default function RegistrationForm() {
         consent: false,
     });
 
-    const handleChange = (e: any) => {
-        const { name, value, type, checked } = e.target;
-        setFormData({
-            ...formData,
-            [name]: type === "checkbox" ? checked : value,
-        });
+    // 🔹 For inputs, textareas, and selects
+    const handleChange = (
+        e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    ) => {
+        const { name, value, type } = e.target;
+
+        if (type === "checkbox") {
+            const { checked } = e.target as HTMLInputElement; // 👈 safe cast
+            setFormData((prev) => ({
+                ...prev,
+                [name]: checked,
+            }));
+        } else {
+            setFormData((prev) => ({
+                ...prev,
+                [name]: value,
+            }));
+        }
     };
 
-    const handleSubmit = async (e: any) => {
+
+    // 🔹 For form submission
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // Send data to Formspree or API route
         await fetch("https://formspree.io/f/mpwjrqjq", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData),
         });
         alert("✅ Registration submitted successfully!");
+        setFormData({
+            parentName: "",
+            phone: "",
+            email: "",
+            studentName: "",
+            age: "",
+            classLevel: "",
+            program: "",
+            session: "",
+            duration: "",
+            notes: "",
+            consent: false,
+        });
+
     };
 
     return (
@@ -44,7 +85,7 @@ export default function RegistrationForm() {
                 </h2>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    {/* Parent Name */}
+                    {/* 🔹 Parent Name */}
                     <div>
                         <label className="block font-semibold text-gray-700">
                             Parent/Guardian Full Name
@@ -59,7 +100,7 @@ export default function RegistrationForm() {
                         />
                     </div>
 
-                    {/* Phone */}
+                    {/* 🔹 Phone */}
                     <div>
                         <label className="block font-semibold text-gray-700">
                             Phone Number (WhatsApp)
@@ -74,7 +115,7 @@ export default function RegistrationForm() {
                         />
                     </div>
 
-                    {/* Email */}
+                    {         /* Email */}
                     <div>
                         <label className="block font-semibold text-gray-700">
                             Email Address (optional)
@@ -170,6 +211,7 @@ export default function RegistrationForm() {
                             <option value="">-- Select --</option>
                             <option>Morning</option>
                             <option>Afternoon</option>
+                            <option>Full Day</option>
                         </select>
                     </div>
 
