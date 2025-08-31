@@ -109,12 +109,12 @@ export default function Hero() {
           custom={2}
         >
           At GetAxe, we empower startups and businesses with powerful digital tools
-          and verified sales leads. Whether you need a website, an e-commerce platform, or 
+          and verified sales leads. Whether you need a website, an e-commerce platform, or
           industry-specific leads — like solar, generator, or backup systems, etc — we’re here to help
           you sell smarter and grow faster. Going digital has never been this simple.
         </motion.p>
 
-        <motion.div
+        {/* <motion.div
           className="w-full flex justify-center md:justify-start mt-6"
           variants={textFade}
           custom={4}
@@ -137,7 +137,32 @@ export default function Hero() {
            >
             Register For Tech Talent
           </motion.a>
+        </motion.div> */}
+        <motion.div
+          className="w-full flex flex-col md:flex-row gap-3 justify-center md:justify-start mt-6"
+          variants={textFade}
+          custom={4}
+        >
+          <motion.a
+            href="/contactus"
+            className="ctaButton px-8 py-3 bg-[var(--color-primary)] text-[var(--color-text-main)] rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition text-center"
+          >
+            Book Free Consultation
+          </motion.a>
+          <motion.a
+            href="/lead-gen"
+            className="ctaButton px-8 py-3 bg-[var(--color-accent)] text-black rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition text-center"
+          >
+            Get Quality Leads
+          </motion.a>
+          <motion.a
+            href="/registration"
+            className="ctaButton px-8 py-3 bg-[var(--color-primary)] text-[var(--color-text-main)] rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition text-center"
+          >
+            Register For Tech Talent
+          </motion.a>
         </motion.div>
+
       </motion.div>
       {/* Scroll to Top Arrow */}
       <button

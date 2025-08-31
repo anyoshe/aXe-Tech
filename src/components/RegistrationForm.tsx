@@ -129,8 +129,10 @@ export default function RegistrationForm() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-            <div className="w-full max-w-2xl bg-white p-8 rounded-2xl shadow-lg">
+        // <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+        //     <div className="w-full max-w-2xl bg-white p-8 rounded-2xl shadow-lg">
+        <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+            <div className="w-full max-w-2xl bg-white p-6 mb-5 rounded-2xl shadow-2xl border border-gray-200 text-gray-800">
                 <h2 className="text-2xl font-bold text-center text-indigo-600 mb-6">
                     Holiday Tech Talent Incubator Registration
                 </h2>
