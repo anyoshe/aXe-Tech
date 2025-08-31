@@ -121,15 +121,21 @@ export default function Hero() {
         >
           <motion.a
             href="/contactus"
-            className={`ctaButton px-12 py-3 bg-[var(--color-primary)] text-[var(--color-text-main)] rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition`}
+            className={`ctaButton px-8 py-3 bg-[var(--color-primary)] text-[var(--color-text-main)] rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition`}
           >
             Book Free Consultation
           </motion.a>
            <motion.a
            href="/lead-gen"
-            className={`ctaButton px-12 py-3 bg-[var(--color-accent)] text-black rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition`}
+            className={`ctaButton px-8 py-3 bg-[var(--color-accent)] text-black rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition`}
            >
             Get Quality Leads
+          </motion.a>
+           <motion.a
+           href="/registration"
+            className={`ctaButton px-8 py-3 bg-[var(--color-primary)] text-[var(--color-text-main)] rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition`}
+           >
+            Register For Tech Talent
           </motion.a>
         </motion.div>
       </motion.div>
