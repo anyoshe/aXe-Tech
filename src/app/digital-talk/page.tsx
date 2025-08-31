@@ -67,7 +67,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   return (
     <main className="bg-gray-900 text-white min-h-screen flex flex-col lg:flex-row">
       {/* Scrollable Blog List */}
-      <section className="flex-1 overflow-y-auto p-6 mb-7 max-h-screen">
+      <section className="flex-1 overflow-y-auto p-6 max-h-screen">
         <h1 className="text-4xl font-bold text-indigo-400 mb-6 text-center">Digital Talk</h1>
         <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
           {posts.map(post => (
