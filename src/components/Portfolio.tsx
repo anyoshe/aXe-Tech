@@ -41,9 +41,9 @@ const portfolioItems: PortfolioItem[] = [
     title: "Anyoka Eats – Food Delivery Platform",
     image: "/samples/my-logo.png",
     description: "A modern food ordering platform with menu browsing, checkout, and admin dashboard built using React and Firebase.",
-    status: "Unpublished",
+    status: "Live",
     type: "Full-Stack Web App",
-    link: "https://github.com/anyoshe/anyoka_eats",
+    link: "https://www.anyokaeats.com/",
   },
   {
     title: "SaaS Dashboard UI",

@@ -92,7 +92,7 @@ export default function Hero() {
           variants={textFade}
           custom={0}
         >
-          Trusted, Results-Driven Digital & Lead Generation Partner
+          Trusted, Results-Driven Digital & ICT Solutions for Schools & Businesses
         </motion.p>
 
         <motion.h1
@@ -100,68 +100,49 @@ export default function Hero() {
           variants={textFade}
           custom={1}
         >
-          Get Online. Sell Online. Get Quality Leads. Grow Online.
+          ICT Solutions, Digital Services & Smart Technology for Schools and Businesses.
         </motion.h1>
+
         <hr className="w-20 h-2 bg-[var(--color-accent)] mb-6 mx-auto md:mx-0" />
+
         <motion.p
           className="text-lg md:text-xl mb-4 max-w-2xl text-[var(--color-text-subtle)]"
           variants={textFade}
           custom={2}
         >
-          At GetAxe, we empower startups and businesses with powerful digital tools
-          and verified sales leads. Whether you need a website, an e-commerce platform, or
-          industry-specific leads — like solar, generator, or backup systems, etc — we’re here to help
-          you sell smarter and grow faster. Going digital has never been this simple.
+          We help schools, SMEs, NGOs, and institutions leverage technology—from mobile computer labs, ICT infrastructure setup, school ERPs, networking, hardware supply and maintenance to websites, software development, and digital solutions.
+          Technology simplified. Impact amplified.
         </motion.p>
 
-        {/* <motion.div
-          className="w-full flex justify-center md:justify-start mt-6"
-          variants={textFade}
-          custom={4}
-        >
-          <motion.a
-            href="/contactus"
-            className={`ctaButton px-8 py-3 bg-[var(--color-primary)] text-[var(--color-text-main)] rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition`}
-          >
-            Book Free Consultation
-          </motion.a>
-           <motion.a
-           href="/lead-gen"
-            className={`ctaButton px-8 py-3 bg-[var(--color-accent)] text-black rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition`}
-           >
-            Get Quality Leads
-          </motion.a>
-           <motion.a
-           href="/registration"
-            className={`ctaButton px-8 py-3 bg-[var(--color-primary)] text-[var(--color-text-main)] rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition`}
-           >
-            Register For Tech Talent
-          </motion.a>
-        </motion.div> */}
+
+
         <motion.div
           className="w-full flex flex-col md:flex-row gap-3 justify-center md:justify-start mt-6"
           variants={textFade}
           custom={4}
         >
           <motion.a
+            href="/ict-solutions"
+            className="ctaButton px-8 py-3 bg-[var(--color-primary)] text-[var(--color-text-main)] rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition text-center"
+          >
+            Explore ICT Solutions
+          </motion.a>
+
+          <motion.a
+            href="/mobile-lab"
+            className="ctaButton px-8 py-3 bg-[var(--color-accent)] text-black rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition text-center"
+          >
+            Mobile Computer Labs
+          </motion.a>
+
+          <motion.a
             href="/contactus"
             className="ctaButton px-8 py-3 bg-[var(--color-primary)] text-[var(--color-text-main)] rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition text-center"
           >
-            Book Free Consultation
-          </motion.a>
-          <motion.a
-            href="/lead-gen"
-            className="ctaButton px-8 py-3 bg-[var(--color-accent)] text-black rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition text-center"
-          >
-            Get Quality Leads
-          </motion.a>
-          <motion.a
-            href="/registration"
-            className="ctaButton px-8 py-3 bg-[var(--color-primary)] text-[var(--color-text-main)] rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition text-center"
-          >
-            Register For Tech Talent
+            Book Consultation
           </motion.a>
         </motion.div>
+
 
       </motion.div>
       {/* Scroll to Top Arrow */}

@@ -66,7 +66,7 @@ export default function Navbar() {
 
           {/* Desktop Nav */}
           <ul className="hidden md:flex gap-6 text-sm font-medium">
-            {['branding', 'content', 'designing', 'development', 'marketing', 'buy Leads'].map((item) => (
+            {['ICT-Solutions', 'branding', 'content', 'designing', 'development', 'marketing', 'buy Leads'].map((item) => (
               <li key={item}>
                 <a
                   // href={`/${item}`}
