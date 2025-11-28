@@ -63,7 +63,7 @@ export default function DevelopmentHero() {
           Powerful Development That Delivers
         </h1>
         <p className="text-lg text-[var(--color-text-subtle)] mb-12 max-w-3xl mx-auto leading-relaxed">
-          At aXe Tech, we don’t just code — we build digital engines that drive results. Whether it’s a stunning website, a robust ecommerce platform, or a fast mobile app, our development team ensures your solution is fast, scalable, secure, and tailored to your goals.
+          At GetAxe, we don’t just code — we build digital engines that drive results. Whether it’s a stunning website, a robust ecommerce platform, or a fast mobile app, our development team ensures your solution is fast, scalable, secure, and tailored to your goals.
         </p>
 
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">

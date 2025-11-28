@@ -71,7 +71,7 @@ export default function MarketingHero() {
           Marketing That Moves the Needle
         </h1>
         <p className="text-lg text-[var(--color-text-subtle)] mb-12 max-w-3xl mx-auto leading-relaxed">
-          At aXe Tech, we don’t just run campaigns—we drive business growth. With over 10 years of experience in sales and marketing, both online and offline, our expert team helps you find the right voice, the right channel, and the right momentum to win your market.
+          At GetAxe, we don’t just run campaigns—we drive business growth. With over 10 years of experience in sales and marketing, both online and offline, our expert team helps you find the right voice, the right channel, and the right momentum to win your market.
         </p>
 
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">

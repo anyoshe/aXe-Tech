@@ -34,7 +34,7 @@ export default function DesigningHero() {
           Design That Defines Experience
         </h1>
         <p className="text-lg text-[var(--color-text-subtle)] mb-12 max-w-3xl mx-auto leading-relaxed">
-          At aXe Tech, we don’t just design for aesthetics — we craft experiences. From sleek user interfaces to impactful graphics, our designs tell your story clearly and creatively. Whether it’s UI/UX, web layouts, or visual identity, we make sure every pixel works in harmony to serve your users and elevate your brand.
+          At GetAxe, we don’t just design for aesthetics — we craft experiences. From sleek user interfaces to impactful graphics, our designs tell your story clearly and creatively. Whether it’s UI/UX, web layouts, or visual identity, we make sure every pixel works in harmony to serve your users and elevate your brand.
         </p>
 
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">

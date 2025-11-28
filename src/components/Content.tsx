@@ -34,7 +34,7 @@ export default function ContentCreationHero() {
           Content That Converts & Connects
         </h1>
         <p className="text-lg text-[var(--color-text-subtle)] mb-12 max-w-3xl mx-auto leading-relaxed">
-          With good and intentional content tailored to the right audience—whether video, cards, or long posts explaining how-to or DIY—our content hits the mark. Catchy, interesting, and to the point, it addresses your customers’ pain points, creates stronger followings, more leads, and brand loyalty. At aXe Tech, we ensure you get exactly that, growing your business through powerful content.
+          With good and intentional content tailored to the right audience—whether video, cards, or long posts explaining how-to or DIY—our content hits the mark. Catchy, interesting, and to the point, it addresses your customers’ pain points, creates stronger followings, more leads, and brand loyalty. At GetAxe, we ensure you get exactly that, growing your business through powerful content.
         </p>
 
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">

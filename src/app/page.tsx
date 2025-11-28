@@ -16,10 +16,10 @@ export default async function Home() {
     <main className="bg-white text-black">
       <Hero />
       <Navbar />
-      <WhyChooseUs />
       <Services />
       <Portfolio />
       <LatestPosts />
+      <WhyChooseUs />
       <Testimonials />
       <CTA />
       <Footer />
