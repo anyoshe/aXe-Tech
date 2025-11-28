@@ -71,6 +71,7 @@ export default function Hero() {
               className="absolute top-full right-0 mt-2 w-[90vw] sm:w-[280px] bg-black bg-opacity-90 text-[var(--color-text-main)] rounded-lg shadow-lg p-6 space-y-4 z-40"
             >
               <a href="#hero" className="block hover:underline">Home</a>
+              <a href="/shop" className="block hover:underline">ICT Products</a>
               <a href="#services" className="block hover:underline">What We Do</a>
               <a href="/contactus" className="block hover:underline">Contact Us</a>
               <a href="/digital-talk" className="block hover:underline">Digital Academy</a>
@@ -92,7 +93,7 @@ export default function Hero() {
           variants={textFade}
           custom={0}
         >
-          Trusted, Results-Driven Digital & ICT Solutions for Schools & Businesses
+          Your Trusted ICT Solutions & Technology Supply Partner
         </motion.p>
 
         <motion.h1
@@ -100,7 +101,7 @@ export default function Hero() {
           variants={textFade}
           custom={1}
         >
-          ICT Solutions, Digital Services & Smart Technology for Schools and Businesses.
+          Affordable ICT Solutions, Laptops, Computers & Smart Technology for Schools and Businesses.
         </motion.h1>
 
         <hr className="w-20 h-2 bg-[var(--color-accent)] mb-6 mx-auto md:mx-0" />
@@ -110,8 +111,8 @@ export default function Hero() {
           variants={textFade}
           custom={2}
         >
-          We help schools, SMEs, NGOs, and institutions leverage technology—from mobile computer labs, ICT infrastructure setup, school ERPs, networking, hardware supply and maintenance to websites, software development, and digital solutions.
-          Technology simplified. Impact amplified.
+          We supply laptops, computers, tablets, printers, and essential ICT equipment — plus full ICT setup for schools, SMEs, and institutions. From mobile computer labs, networking and ERPs to maintenance, software, and digital services — we deliver the technology you need, ready to use.
+
         </motion.p>
 
 
@@ -121,6 +122,13 @@ export default function Hero() {
           variants={textFade}
           custom={4}
         >
+          <motion.a
+            href="/shop"
+            className="ctaButton px-8 py-3 bg-[var(--color-accent)] text-black rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition text-center"
+          >
+            Browse Laptops & ICT Products
+          </motion.a>
+
           <motion.a
             href="/ict-solutions"
             className="ctaButton px-8 py-3 bg-[var(--color-primary)] text-[var(--color-text-main)] rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition text-center"
