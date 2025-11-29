@@ -18,6 +18,7 @@ type Product = {
   price: number;
   category?: string;
   images?: string[];
+  image?: string;
   short?: string;
   description?: string;
 };
@@ -60,14 +61,25 @@ export default function ICTProductsPage() {
   ------------------------------------------- */
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    let list = products.filter((p) => {
-      const matchCategory = category === "All" || p.category === category;
-      const matchQuery =
-        !q ||
-        p.title.toLowerCase().includes(q) ||
-        (p.short ?? "").toLowerCase().includes(q);
-      return matchCategory && matchQuery;
-    });
+    // let list = products.filter((p) => {
+    //   const matchCategory = category === "All" || p.category === category;
+    //   const matchQuery =
+    //     !q ||
+    //     p.title.toLowerCase().includes(q) ||
+    //     (p.short ?? "").toLowerCase().includes(q);
+    //   return matchCategory && matchQuery;
+    // });
+
+    const list = products
+      .filter((p) => {
+        const matchCategory = category === "All" || p.category === category;
+        const matchQuery =
+          !q ||
+          p.title.toLowerCase().includes(q) ||
+          (p.short ?? "").toLowerCase().includes(q);
+        return matchCategory && matchQuery;
+      });
+
 
     if (sortBy === "price-asc") list.sort((a, b) => a.price - b.price);
     else if (sortBy === "price-desc") list.sort((a, b) => b.price - a.price);
@@ -210,50 +222,51 @@ export default function ICTProductsPage() {
             <div className="p-8 col-span-full text-center">Loading products…</div>
           ) : (
             filtered.map((p) => (
-            <motion.div
-              key={p.id}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35 }}
-              className="bg-[#0b0b0b] rounded-2xl overflow-hidden shadow-lg"
-            >
+              <motion.div
+                key={p.id}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35 }}
+                className="bg-[#0b0b0b] rounded-2xl overflow-hidden shadow-lg"
+              >
                 <div className="relative w-full h-48 bg-black/20">
-                <Image
-                  src={(p as any).image ?? p.images?.[0] ?? "/samples/laptop1.jpg"}
-                  alt={p.title}
-                  fill
-                  className="object-cover"
-                />
-              </div>
+                  <Image
+                    // src={(p as any).image ?? p.images?.[0] ?? "/samples/laptop1.jpg"}
+                    src={p.image ?? p.images?.[0] ?? "/samples/laptop1.jpg"}
+                    alt={p.title}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
 
-              <div className="p-4">
-                <h3 className="text-lg font-semibold">{p.title}</h3>
-                <p className="text-sm text-white/70 mb-3">{p.short}</p>
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold">{p.title}</h3>
+                  <p className="text-sm text-white/70 mb-3">{p.short}</p>
 
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-xl font-bold">{currency(p.price)}</div>
-                    <div className="text-xs text-white/50">{p.category}</div>
-                  </div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-xl font-bold">{currency(p.price)}</div>
+                      <div className="text-xs text-white/50">{p.category}</div>
+                    </div>
 
-                  <div className="flex flex-col items-end gap-2">
-                    <button
-                      onClick={() => addToQuote(p)}
-                      className="px-4 py-2 bg-[var(--color-primary)] rounded-full text-sm font-semibold"
-                    >
-                      Add to Quote
-                    </button>
+                    <div className="flex flex-col items-end gap-2">
+                      <button
+                        onClick={() => addToQuote(p)}
+                        className="px-4 py-2 bg-[var(--color-primary)] rounded-full text-sm font-semibold"
+                      >
+                        Add to Quote
+                      </button>
 
-                    <Link
-                      href={`/ict-products/${p.id}`}
-                      className="text-sm text-[var(--color-accent)] hover:underline"
-                    >
-                      View details →
-                    </Link>
+                      <Link
+                        href={`/ict-products/${p.id}`}
+                        className="text-sm text-[var(--color-accent)] hover:underline"
+                      >
+                        View details →
+                      </Link>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
             ))
           )}
         </div>
@@ -314,7 +327,8 @@ export default function ICTProductsPage() {
                       <li key={it.product.id} className="flex gap-3">
                         <div className="relative w-20 h-16 bg-black/30 rounded overflow-hidden">
                           <Image
-                            src={(it.product as any).image ?? it.product.images?.[0] ?? "/samples/laptop1.jpg"}
+                            // src={(it.product as any).image ?? it.product.images?.[0] ?? "/samples/laptop1.jpg"}
+                            src={it.product.image ?? it.product.images?.[0] ?? "/samples/laptop1.jpg"}
                             alt={it.product.title}
                             fill
                             className="object-cover"
@@ -355,6 +369,13 @@ export default function ICTProductsPage() {
                       <span className="text-white/60">Subtotal</span>
                       <span className="font-semibold">{currency(quoteTotal)}</span>
                     </div>
+                    <button
+                      onClick={clearQuote}
+                      className="w-full text-sm text-red-400 underline mt-3"
+                    >
+                      Clear All
+                    </button>
+
 
                     <button
                       onClick={sendWhatsApp}

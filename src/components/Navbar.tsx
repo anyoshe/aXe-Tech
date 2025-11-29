@@ -120,6 +120,23 @@ import clsx from 'clsx'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 
+// -----------------------------
+// Type Definitions
+// -----------------------------
+type MenuItem = {
+  label: string
+  href: string
+}
+
+type MenuGroup = {
+  title: string
+  items?: MenuItem[]
+  href?: string // for single-link groups
+}
+
+// -----------------------------
+// Navbar Component
+// -----------------------------
 export default function Navbar() {
   const [open, setOpen] = useState(false)
   const [isSticky, setIsSticky] = useState(false)
@@ -143,10 +160,10 @@ export default function Navbar() {
     return () => observer.unobserve(el)
   }, [])
 
-  // -----------------------------------------
-  // Define menu groups
-  // -----------------------------------------
-  const menuGroups = [
+  // -----------------------------
+  // Menu Groups
+  // -----------------------------
+  const menuGroups: MenuGroup[] = [
     {
       title: 'ICT Solutions',
       items: [
@@ -172,6 +189,7 @@ export default function Navbar() {
 
   return (
     <>
+      {/* Invisible trigger for sticky effect */}
       <div ref={triggerRef} className="h-[1px]" />
 
       <nav
@@ -181,6 +199,7 @@ export default function Navbar() {
         )}
       >
         <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+          {/* Logo */}
           <div className="relative h-8 md:h-10 w-[120px]">
             <Image
               src="/getaxelogobkgd.svg"
@@ -201,8 +220,8 @@ export default function Navbar() {
 
           {/* Desktop Nav */}
           <ul className="hidden md:flex gap-6 text-sm font-medium items-center">
-            {menuGroups.map((group: any) =>
-              'items' in group ? (
+            {menuGroups.map((group) =>
+              group.items ? (
                 <li key={group.title} className="relative group">
                   <button
                     className="flex items-center gap-1 hover:text-[var(--color-accent)] transition-colors duration-200"
@@ -213,7 +232,7 @@ export default function Navbar() {
 
                   {/* Dropdown */}
                   <ul className="absolute top-full left-0 mt-2 min-w-[180px] bg-[var(--color-bg-dark)] border border-gray-800 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 group-hover:visible invisible transition-all duration-200 z-50">
-                    {group.items.map((item: any) => (
+                    {group.items.map((item) => (
                       <li key={item.label}>
                         <a
                           href={item.href}
@@ -249,15 +268,15 @@ export default function Navbar() {
               transition={{ duration: 0.25, ease: 'easeInOut' }}
               className="md:hidden px-4 pb-4 space-y-3 text-sm font-medium bg-[var(--color-bg-dark)] text-[var(--color-text-main)]"
             >
-              {menuGroups.map((group: any) =>
-                'items' in group ? (
+              {menuGroups.map((group) =>
+                group.items ? (
                   <li key={group.title}>
                     <details className="group [&_summary::-webkit-details-marker]:hidden">
                       <summary className="flex justify-between items-center px-2 py-2 hover:text-[var(--color-accent)] cursor-pointer">
                         {group.title} <ChevronDown size={16} />
                       </summary>
                       <ul className="pl-4 mt-1 space-y-1">
-                        {group.items.map((item: any) => (
+                        {group.items.map((item) => (
                           <li key={item.label}>
                             <a
                               href={item.href}

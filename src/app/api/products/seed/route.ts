@@ -3,7 +3,7 @@ import { dbConnect } from "@/lib/mongodb";
 import Product from "@/models/Product";
 import { sampleProducts } from "@/data/products";
 
-export async function POST(request: Request) {
+export async function POST() {
   // Only allow seeding in development to avoid accidental production writes
   if (process.env.NODE_ENV !== "development") {
     return NextResponse.json({ message: "Seeding allowed only in development" }, { status: 403 });
