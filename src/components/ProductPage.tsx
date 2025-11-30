@@ -61,15 +61,6 @@ export default function ICTProductsPage() {
   ------------------------------------------- */
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    // let list = products.filter((p) => {
-    //   const matchCategory = category === "All" || p.category === category;
-    //   const matchQuery =
-    //     !q ||
-    //     p.title.toLowerCase().includes(q) ||
-    //     (p.short ?? "").toLowerCase().includes(q);
-    //   return matchCategory && matchQuery;
-    // });
-
     const list = products
       .filter((p) => {
         const matchCategory = category === "All" || p.category === category;

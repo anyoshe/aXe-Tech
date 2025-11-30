@@ -17,8 +17,6 @@ export default async function Home() {
       <Hero />
       <Navbar />
       <Services />
-      <Portfolio />
-      <LatestPosts />
       <WhyChooseUs />
       <Testimonials />
       <CTA />

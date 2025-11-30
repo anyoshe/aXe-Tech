@@ -1,13 +1,15 @@
 import Navbar from "@/components/Navbar";
-import ContactForm from "@/components/ContactForm";
+import Portfolio from "@/components/Portfolio";
 
 export default function BrandingPage() {
   return (
     <>
-      <Navbar />
+    
       <main>
-        <ContactForm />
+        <Navbar />
+        <Portfolio />
       </main>
     </>
   );
 }
+

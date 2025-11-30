@@ -1,124 +1,11 @@
-// 'use client'
-
-// import { useState, useEffect, useRef } from 'react'
-// import { Menu, X } from 'lucide-react'
-// import clsx from 'clsx'
-// import { motion, AnimatePresence } from 'framer-motion'
-// import Image from 'next/image';
-
-
-
-// export default function Navbar() {
-//   const [open, setOpen] = useState(false)
-//   const [isSticky, setIsSticky] = useState(false)
-//   const triggerRef = useRef<HTMLDivElement>(null)
-
-//   const toggleMenu = () => setOpen(!open)
-
-
-//   useEffect(() => {
-//     const el = triggerRef.current;
-//     if (!el) return;
-
-//     const observer = new IntersectionObserver(
-//       ([entry]) => setIsSticky(!entry.isIntersecting),
-//       { threshold: 0 }
-//     );
-
-//     observer.observe(el);
-
-//     return () => {
-//       observer.unobserve(el);
-//     };
-//   }, []);
-
-
-//   return (
-//     <>
-//       {/* Invisible trigger just below Hero */}
-//       <div ref={triggerRef} className="h-[1px]" />
-
-//       <nav
-//         className={clsx(
-//           'w-full bg-[var(--color-bg-dark)]/80 backdrop-blur text-[var(--color-text-main)] shadow transition-all duration-300 z-50',
-//           isSticky ? 'sticky top-0' : 'relative'
-//         )}
-//       >
-//         <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-//           <div className="relative h-8 md:h-10 w-[120px]">
-//             <Image
-//               src="/getaxelogobkgd.svg"
-//               alt="GetAxe.Tech logo"
-//               fill
-//               className="object-contain"
-//               style={{ filter: 'brightness(0) invert(1)' }}
-//               priority
-//             />
-//           </div>
-
-
-//           {/* Mobile Toggle Button */}
-//           <div className="md:hidden">
-//             <button onClick={toggleMenu} aria-label="Toggle menu">
-//               {open ? <X size={24} /> : <Menu size={24} />}
-//             </button>
-//           </div>
-
-//           {/* Desktop Nav */}
-//           <ul className="hidden md:flex gap-6 text-sm font-medium">
-//             {['ICT-Solutions', 'branding', 'content', 'designing', 'development', 'marketing', 'buy Leads'].map((item) => (
-//               <li key={item}>
-//                 <a
-//                   // href={`/${item}`}
-//                   href={item.toLowerCase() === 'buy leads' ? '/lead-gen' : `/${item}`}
-
-//                   className="hover:text-[var(--color-accent)] transition-colors duration-200"
-//                 >
-//                   {item.charAt(0).toUpperCase() + item.slice(1)}
-//                 </a>
-//               </li>
-//             ))}
-//           </ul>
-//         </div>
-
-//         {/* Animated Mobile Menu */}
-//         <AnimatePresence>
-//           {open && (
-//             <motion.ul
-//               initial={{ opacity: 0, y: -10 }}
-//               animate={{ opacity: 1, y: 0 }}
-//               exit={{ opacity: 0, y: -10 }}
-//               transition={{ duration: 0.25, ease: 'easeInOut' }}
-//               className="md:hidden px-4 pb-4 space-y-3 text-sm font-medium bg-[var(--color-bg-dark)] text-[var(--color-text-main)]"
-//             >
-//               {['branding', 'content', 'designing', 'development', 'marketing', 'buy Leads'].map((item) => (
-//                 <li key={item}>
-//                   <a
-//                     // href={`/${item}`}
-//                     href={item.toLowerCase() === 'buy leads' ? '/lead-gen' : `/${item}`}
-
-//                     onClick={toggleMenu}
-//                     className="block py-1 hover:text-[var(--color-accent)] transition-colors duration-200"
-//                   >
-//                     {item.charAt(0).toUpperCase() + item.slice(1)}
-//                   </a>
-//                 </li>
-//               ))}
-//             </motion.ul>
-//           )}
-//         </AnimatePresence>
-//       </nav>
-//     </>
-//   )
-// }
-
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Menu, X, ChevronDown } from 'lucide-react'
+import { Menu, X, ChevronDown, Phone, Briefcase } from 'lucide-react'
 import clsx from 'clsx'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
+import Link from 'next/link'
 
 // -----------------------------
 // Type Definitions
@@ -126,12 +13,15 @@ import Image from 'next/image'
 type MenuItem = {
   label: string
   href: string
+  description?: string
+  icon?: string
 }
 
 type MenuGroup = {
   title: string
   items?: MenuItem[]
-  href?: string // for single-link groups
+  href?: string
+  featured?: boolean
 }
 
 // -----------------------------
@@ -140,12 +30,22 @@ type MenuGroup = {
 export default function Navbar() {
   const [open, setOpen] = useState(false)
   const [isSticky, setIsSticky] = useState(false)
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const triggerRef = useRef<HTMLDivElement>(null)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const toggleMenu = () => setOpen(!open)
-  const toggleDropdown = (group: string) =>
-    setOpenDropdown(openDropdown === group ? null : group)
+
+  const handleDropdownEnter = (group: string) => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    setActiveDropdown(group)
+  }
+
+  const handleDropdownLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setActiveDropdown(null)
+    }, 200)
+  }
 
   useEffect(() => {
     const el = triggerRef.current
@@ -153,7 +53,7 @@ export default function Navbar() {
 
     const observer = new IntersectionObserver(
       ([entry]) => setIsSticky(!entry.isIntersecting),
-      { threshold: 0 }
+      { threshold: 0, rootMargin: '-80px 0px 0px 0px' }
     )
 
     observer.observe(el)
@@ -161,30 +61,86 @@ export default function Navbar() {
   }, [])
 
   // -----------------------------
-  // Menu Groups
+  // Enhanced Menu Groups with Projects
   // -----------------------------
   const menuGroups: MenuGroup[] = [
     {
       title: 'ICT Solutions',
       items: [
-        { label: 'ICT Hardware', href: '/ict-hardware' },
-        { label: 'Mobile Labs', href: '/mobile-labs' },
-        { label: 'Networking', href: '/networking' },
-        { label: 'School ICT Setup', href: '/school-ict-setup' },
-        { label: 'ERPs & Software', href: '/software-erp' },
-        { label: 'IT Support', href: '/it-support' },
+        { 
+          label: 'ICT Products', 
+          href: '/shop',
+          description: 'Hardware & Equipment',
+          icon: '💻'
+        },
+        { 
+          label: 'Mobile Labs', 
+          href: '/mobile-labs',
+          description: 'Portable ICT Solutions',
+          icon: '🚀'
+        },
+        { 
+          label: 'Networking', 
+          href: '/networking',
+          description: 'Infrastructure & Setup',
+          icon: '🌐'
+        },
+        { 
+          label: 'School ERP', 
+          href: '/school-erp',
+          description: 'Management Systems',
+          icon: '📊'
+        },
+        { 
+          label: 'IT Support', 
+          href: '/it-support',
+          description: 'Maintenance & Services',
+          icon: '🔧'
+        },
       ],
     },
     {
       title: 'Digital Services',
       items: [
-        { label: 'Branding', href: '/branding' },
-        { label: 'UI/UX & Graphics', href: '/designing' },
-        { label: 'Web Development', href: '/development' },
-        { label: 'Digital Marketing', href: '/marketing' },
+        { 
+          label: 'Branding', 
+          href: '/branding',
+          description: 'Identity & Strategy',
+          icon: '🎨'
+        },
+        { 
+          label: 'UI/UX Design', 
+          href: '/designing',
+          description: 'User Experience',
+          icon: '✨'
+        },
+        { 
+          label: 'Web Development', 
+          href: '/development',
+          description: 'Custom Solutions',
+          icon: '💻'
+        },
+        { 
+          label: 'Digital Marketing', 
+          href: '/marketing',
+          description: 'Growth & Visibility',
+          icon: '📈'
+        },
       ],
     },
-    { title: 'Buy Leads', href: '/lead-gen' },
+    { 
+      title: 'Projects', 
+      href: '/portfolios',
+      featured: true
+    },
+    { 
+      title: 'Blog', 
+      href: '/digital-talk'
+    },
+    { 
+      title: 'Contact', 
+      href: '/contact' 
+    },
   ]
 
   return (
@@ -194,115 +150,208 @@ export default function Navbar() {
 
       <nav
         className={clsx(
-          'w-full bg-[var(--color-bg-dark)]/80 backdrop-blur text-[var(--color-text-main)] shadow transition-all duration-300 z-50',
-          isSticky ? 'sticky top-0' : 'relative'
+          'w-full bg-[var(--color-bg-dark)]/95 backdrop-blur-xl border-b border-white/10 transition-all duration-500 z-50',
+          isSticky 
+            ? 'sticky top-0 shadow-2xl shadow-black/30' 
+            : 'relative'
         )}
       >
-        <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-          {/* Logo */}
-          <div className="relative h-8 md:h-10 w-[120px]">
-            <Image
-              src="/getaxelogobkgd.svg"
-              alt="GetAxe.Tech logo"
-              fill
-              className="object-contain"
-              style={{ filter: 'brightness(0) invert(1)' }}
-              priority
-            />
-          </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo - Retained Your Original */}
+            <Link href="/" className="flex items-center space-x-3 group">
+              <div className="relative h-8 md:h-10 w-[120px]">
+                <Image
+                  src="/getaxelogobkgd.svg"
+                  alt="GetAxe.Tech logo"
+                  fill
+                  className="object-contain group-hover:scale-105 transition-transform duration-300"
+                  style={{ filter: 'brightness(0) invert(1)' }}
+                  priority
+                />
+              </div>
+            </Link>
 
-          {/* Mobile Toggle */}
-          <div className="md:hidden">
-            <button onClick={toggleMenu} aria-label="Toggle menu">
-              {open ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
-
-          {/* Desktop Nav */}
-          <ul className="hidden md:flex gap-6 text-sm font-medium items-center">
-            {menuGroups.map((group) =>
-              group.items ? (
-                <li key={group.title} className="relative group">
-                  <button
-                    className="flex items-center gap-1 hover:text-[var(--color-accent)] transition-colors duration-200"
-                    onClick={() => toggleDropdown(group.title)}
-                  >
-                    {group.title} <ChevronDown size={16} />
-                  </button>
-
-                  {/* Dropdown */}
-                  <ul className="absolute top-full left-0 mt-2 min-w-[180px] bg-[var(--color-bg-dark)] border border-gray-800 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 group-hover:visible invisible transition-all duration-200 z-50">
-                    {group.items.map((item) => (
-                      <li key={item.label}>
-                        <a
-                          href={item.href}
-                          className="block px-4 py-2 text-sm hover:bg-[var(--color-accent)]/20 transition-colors duration-200"
-                        >
-                          {item.label}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              ) : (
-                <li key={group.title}>
-                  <a
-                    href={group.href}
-                    className="hover:text-[var(--color-accent)] transition-colors duration-200"
-                  >
-                    {group.title}
-                  </a>
-                </li>
-              )
-            )}
-          </ul>
-        </div>
-
-        {/* Mobile Menu */}
-        <AnimatePresence>
-          {open && (
-            <motion.ul
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.25, ease: 'easeInOut' }}
-              className="md:hidden px-4 pb-4 space-y-3 text-sm font-medium bg-[var(--color-bg-dark)] text-[var(--color-text-main)]"
-            >
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center space-x-1">
               {menuGroups.map((group) =>
                 group.items ? (
-                  <li key={group.title}>
-                    <details className="group [&_summary::-webkit-details-marker]:hidden">
-                      <summary className="flex justify-between items-center px-2 py-2 hover:text-[var(--color-accent)] cursor-pointer">
-                        {group.title} <ChevronDown size={16} />
-                      </summary>
-                      <ul className="pl-4 mt-1 space-y-1">
-                        {group.items.map((item) => (
-                          <li key={item.label}>
-                            <a
-                              href={item.href}
-                              onClick={toggleMenu}
-                              className="block py-1 hover:text-[var(--color-accent)] transition-colors duration-200"
-                            >
-                              {item.label}
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    </details>
-                  </li>
+                  <div
+                    key={group.title}
+                    className="relative"
+                    onMouseEnter={() => handleDropdownEnter(group.title)}
+                    onMouseLeave={handleDropdownLeave}
+                  >
+                    <button className="flex items-center space-x-1 px-4 py-2 text-[15px] font-semibold text-gray-200 hover:text-white transition-all duration-200 rounded-lg hover:bg-white/5 group/nav-item">
+                      <span className="font-semibold">{group.title}</span>
+                      <ChevronDown 
+                        size={16} 
+                        className={clsx(
+                          'transition-transform duration-200',
+                          activeDropdown === group.title && 'rotate-180'
+                        )} 
+                      />
+                    </button>
+
+                    {/* Enhanced Dropdown */}
+                    <AnimatePresence>
+                      {activeDropdown === group.title && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                          transition={{ duration: 0.2, ease: 'easeOut' }}
+                          className="absolute top-full left-0 mt-2 w-80 bg-gray-900/95 backdrop-blur-xl border border-gray-800 rounded-2xl shadow-2xl shadow-black/50 p-4 z-50"
+                          onMouseEnter={() => handleDropdownEnter(group.title)}
+                          onMouseLeave={handleDropdownLeave}
+                        >
+                          <div className="space-y-2">
+                            {group.items.map((item) => (
+                              <Link
+                                key={item.label}
+                                href={item.href}
+                                className="flex items-center space-x-3 p-3 rounded-xl hover:bg-white/5 transition-all duration-200 group/item"
+                              >
+                                <span className="text-lg">{item.icon}</span>
+                                <div className="flex-1 min-w-0">
+                                  <div className="text-white font-semibold text-[15px] group-hover/item:text-[var(--color-accent)] transition-colors">
+                                    {item.label}
+                                  </div>
+                                  {item.description && (
+                                    <div className="text-gray-400 text-xs mt-0.5 font-medium">
+                                      {item.description}
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="opacity-0 group-hover/item:opacity-100 transition-opacity duration-200">
+                                  <div className="w-1 h-1 bg-[var(--color-accent)] rounded-full"></div>
+                                </div>
+                              </Link>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 ) : (
-                  <li key={group.title}>
-                    <a
-                      href={group.href}
-                      onClick={toggleMenu}
-                      className="block py-1 hover:text-[var(--color-accent)] transition-colors duration-200"
-                    >
+                  <Link
+                    key={group.title}
+                    href={group.href!}
+                    className={clsx(
+                      'flex items-center space-x-2 px-4 py-2 text-[15px] font-semibold transition-all duration-200 rounded-lg group/nav-link',
+                      group.featured
+                        ? 'bg-gradient-to-r from-[var(--color-accent)] to-purple-500 text-white shadow-lg hover:shadow-xl hover:scale-105 font-bold'
+                        : 'text-gray-200 hover:text-white hover:bg-white/5'
+                    )}
+                  >
+                    {group.featured && <Briefcase size={16} className="group-hover/nav-link:scale-110 transition-transform" />}
+                    <span className="group-hover/nav-link:translate-x-0.5 transition-transform">
                       {group.title}
-                    </a>
-                  </li>
+                    </span>
+                  </Link>
                 )
               )}
-            </motion.ul>
+
+              {/* CTA Button */}
+              <Link
+                href="/contactus"
+                className="ml-4 flex items-center space-x-2 bg-white text-gray-900 px-6 py-2.5 rounded-full text-[15px] font-bold hover:bg-gray-100 hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl group/cta"
+              >
+                <Phone size={16} className="group-hover/cta:scale-110 transition-transform" />
+                <span>Get Quote</span>
+              </Link>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <div className="lg:hidden">
+              <button
+                onClick={toggleMenu}
+                className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-200"
+                aria-label="Toggle menu"
+              >
+                {open ? (
+                  <X size={20} className="text-white" />
+                ) : (
+                  <Menu size={20} className="text-white" />
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Enhanced Mobile Menu */}
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              className="lg:hidden bg-gray-900/95 backdrop-blur-xl border-t border-white/10"
+            >
+              <div className="px-4 py-6 space-y-4">
+                {menuGroups.map((group) =>
+                  group.items ? (
+                    <div key={group.title} className="space-y-2">
+                      <div className="text-[15px] font-bold text-gray-300 uppercase tracking-wide px-2">
+                        {group.title}
+                      </div>
+                      <div className="space-y-1">
+                        {group.items.map((item) => (
+                          <Link
+                            key={item.label}
+                            href={item.href}
+                            onClick={() => setOpen(false)}
+                            className="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-white/5 transition-all duration-200 group"
+                          >
+                            <span className="text-lg">{item.icon}</span>
+                            <div>
+                              <div className="text-white font-semibold text-[15px] group-hover:text-[var(--color-accent)]">
+                                {item.label}
+                              </div>
+                              {item.description && (
+                                <div className="text-gray-400 text-xs mt-0.5 font-medium">
+                                  {item.description}
+                                </div>
+                              )}
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <Link
+                      key={group.title}
+                      href={group.href!}
+                      onClick={() => setOpen(false)}
+                      className={clsx(
+                        'flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 group',
+                        group.featured
+                          ? 'bg-gradient-to-r from-[var(--color-accent)] to-purple-500 text-white shadow-lg font-bold'
+                          : 'text-white hover:bg-white/5 font-semibold'
+                      )}
+                    >
+                      {group.featured && <Briefcase size={16} className="group-hover:scale-110 transition-transform" />}
+                      <span className="group-hover:translate-x-1 transition-transform">
+                        {group.title}
+                      </span>
+                    </Link>
+                  )
+                )}
+
+                {/* Mobile CTA */}
+                <div className="pt-4 border-t border-white/10">
+                  <Link
+                    href="/contact"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center justify-center space-x-2 w-full bg-white text-gray-900 px-6 py-3 rounded-xl text-[15px] font-bold hover:bg-gray-100 transition-all duration-200 shadow-lg group/cta-mobile"
+                  >
+                    <Phone size={16} className="group-hover/cta-mobile:scale-110 transition-transform" />
+                    <span>Get Free Quote</span>
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
           )}
         </AnimatePresence>
       </nav>

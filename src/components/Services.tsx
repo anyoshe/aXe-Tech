@@ -19,7 +19,7 @@ import Image from "next/image";
 // -------------------------------------
 const ictSolutions = [
   {
-    id: "ict-hardware",
+    id: "shop",
     title: "ICT Hardware Supply",
     icon: <Laptop size={32} className="text-[var(--color-accent)]" />,
     description:
@@ -88,63 +88,6 @@ const fadeInUp: Variants = {
   }),
 };
 
-// -------------------------------------
-// CARD COMPONENT
-// -------------------------------------
-// const ServiceCard = ({ service, index }: any) => {
-//   return (
-//     <motion.div
-//       initial="hidden"
-//       whileInView="visible"
-//       viewport={{ once: true }}
-//       variants={fadeInUp}
-//       custom={index}
-//       className="bg-[var(--color-primary)] rounded-2xl overflow-hidden 
-//       shadow-xl hover:shadow-2xl transition-all duration-300 group"
-//     >
-//       <div className="relative w-full h-48">
-//         <Image
-//           src={service.image}
-//           alt={service.title}
-//           fill
-//           className="object-cover"
-//         />
-//       </div>
-
-//       <div className="p-6 flex flex-col gap-4">
-//         <div className="flex items-center gap-3">
-//           {service.icon}
-//           <h3
-//             className="text-xl font-semibold text-[var(--color-text-main)] 
-//           group-hover:text-[var(--color-accent)] transition"
-//           >
-//             {service.title}
-//           </h3>
-//         </div>
-
-//         <p className="text-sm text-white/80 leading-relaxed">
-//           {service.description}
-//         </p>
-
-//         {service.bullets && (
-//           <ul className="text-white/70 text-xs leading-relaxed space-y-1">
-//             {service.bullets.map((b: string, i: number) => (
-//               <li key={i}>• {b}</li>
-//             ))}
-//           </ul>
-//         )}
-
-//         <a
-//           href={`/${service.id}`}
-//           className="text-sm text-[var(--color-accent)] font-semibold opacity-0 
-//           group-hover:opacity-100 transition-opacity duration-300"
-//         >
-//           Learn more →
-//         </a>
-//       </div>
-//     </motion.div>
-//   );
-// };
 type Service = {
   id: string;
   title: string;
