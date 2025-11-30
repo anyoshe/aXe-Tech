@@ -25,7 +25,7 @@ export default function ICTOverview() {
       value: "Cost-effective procurement with warranty support",
       features: ["Bulk pricing", "Warranty included", "Quality assurance", "Delivery & setup"],
       price: "From KSh 5,500",
-      link: "/ict-products",
+      link: "/shop",
       color: "from-blue-500 to-cyan-500"
     },
     {
@@ -205,13 +205,13 @@ export default function ICTOverview() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 
-              href="/contact"
+              href="/contactus"
               className="px-8 py-3 bg-black text-white rounded-lg font-semibold hover:bg-gray-800 transition-colors"
             >
               Free Consultation
             </Link>
             <Link 
-              href="/ict-products"
+              href="/shop"
               className="px-8 py-3 bg-white text-black rounded-lg font-semibold hover:bg-gray-100 transition-colors border border-black"
             >
               Browse Products
