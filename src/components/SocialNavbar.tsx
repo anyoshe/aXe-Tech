@@ -16,14 +16,12 @@ const socials = [
     color: 'text-[#0077B5]',
     label: 'LinkedIn',
   },
-  
- {
-  href: 'https://www.tiktok.com/@yourusername',
-  icon: FaTiktok,
-  color: 'text-white',
-  label: 'TikTok',
-},
-
+  {
+    href: 'https://www.tiktok.com/@yourusername',
+    icon: FaTiktok,
+    color: 'text-white',
+    label: 'TikTok',
+  },
   {
     href: 'https://instagram.com/yourprofile',
     icon: FaInstagram,
@@ -46,8 +44,8 @@ const socials = [
 
 export default function SocialNavbar() {
   return (
-    <div className="fixed bottom-0 left-1/2 -translate-x-1/2 z-50 bg-gray-900/80 backdrop-blur-md px-6 py-3 rounded-full shadow-lg">
-      <div className="flex items-center justify-center space-x-7">
+    <div className="fixed bottom-0 left-1/2 -translate-x-1/2 z-50 bg-gray-900/90 backdrop-blur-md px-4 py-2 rounded-full shadow-xl border border-gray-700/50">
+      <div className="flex items-center justify-center space-x-5">
         {socials.map(({ href, icon: Icon, color, label }, index) => (
           <Link
             key={index}
@@ -58,9 +56,9 @@ export default function SocialNavbar() {
             className="group relative"
           >
             <Icon
-              className={`text-4xl hover:scale-125 transition-transform duration-300 ease-in-out ${color}`}
+              className={`text-2xl hover:scale-110 transition-transform duration-300 ease-in-out ${color}`}
             />
-            <span className="absolute -top-8 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all text-sm bg-black text-white px-2 py-1 rounded-md">
+            <span className="absolute -top-8 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all text-xs bg-black text-white px-2 py-1 rounded-md whitespace-nowrap">
               {label}
             </span>
           </Link>

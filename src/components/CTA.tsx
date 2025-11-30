@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Phone, Mail, MessageCircle, ArrowRight } from 'lucide-react';
+import { FaWhatsapp } from 'react-icons/fa';
 
 export default function CTA() {
   const router = useRouter();
@@ -98,7 +99,7 @@ export default function CTA() {
           >
             <div className="flex flex-col items-center text-center">
               <div className="p-3 bg-green-500/20 rounded-full mb-4 group-hover:scale-110 transition-transform duration-300">
-                <MessageCircle className="w-6 h-6 text-green-400" />
+                <FaWhatsapp className="w-6 h-6 text-green-400" />
               </div>
               <h3 className="text-xl font-semibold mb-2">WhatsApp</h3>
               <p className="text-gray-400 mb-4 text-sm">Quick quotes & support</p>

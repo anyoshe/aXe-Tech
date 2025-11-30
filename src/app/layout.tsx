@@ -16,57 +16,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// export const metadata: Metadata = {
-//   metadataBase: new URL("https://getaxe.tech"),
-//   title: "GetAxe.tech — Branding, Web, Marketing & Lead Generation Agency",
-//   description:
-//     "GetAxe helps startups and businesses generate more leads and sales through sharp branding, high-performing websites/apps, e-commerce, and data-driven digital marketing — including specialized lead generation from solar, power back-up solutions to high-ticket services and many more industries.",
-//   keywords: [
-//     "GetAxe",
-//     "branding agency",
-//     "web development Nairobi",
-//     "app development Kenya",
-//     "digital marketing",
-//     "e-commerce solutions",
-//     "lead generation",
-//     "qualified leads",
-//     "solar leads",
-//     "power backup leads",
-//     "high ticket leads",
-//     "startup branding",
-//     "business growth",
-//     "GetAxe Tech",
-//     "SEO services",
-//   ],
-//   authors: [{ name: "GetAxe", url: "https://getaxe.tech" }],
-//   openGraph: {
-//     title: "GetAxe — Precision Tech to Grow Your Business",
-//     description:
-//       "From branding to web/app development, e-commerce, and marketing — we build digital experiences that generate real leads & revenue.",
-//     url: "https://getaxe.tech",
-//     siteName: "GetAxe",
-//     images: [
-//       {
-//         url: "/gat-icon.png",
-//         width: 1200,
-//         height: 630,
-//         alt: "GetAxe digital growth services",
-//       },
-//     ],
-//     type: "website",
-//   },
-//   twitter: {
-//     card: "summary_large_image",
-//     site: "@getaxetech",
-//     title: "GetAxe — Turn Digital into Leads & Sales",
-//     description: "Branding • Web & App Dev • E-commerce • Digital Marketing",
-//     images: ["/gat-icon.png"],
-//   },
-//   icons: {
-//     icon: "/favicon.ico",
-//   },
-// };
-
 export const metadata: Metadata = {
   metadataBase: new URL("https://getaxe.tech"),
   title: "GetAxe.Tech — ICT Equipment, Laptop Supply, School ICT Labs & Technology Solutions Kenya",
