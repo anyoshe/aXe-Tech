@@ -1992,13 +1992,13 @@ export default function AdminProductsPage() {
 
               <textarea
                 placeholder={`Example format:
-{
-  "processor": "Intel Core i5",
-  "ram": "8GB DDR4", 
-  "storage": "512GB SSD",
-  "display": "14\\" FHD",
-  "ports": "2x USB 3.0, 1x USB-C"
-}`}
+                      {
+                        "processor": "Intel Core i5",
+                        "ram": "8GB DDR4", 
+                        "storage": "512GB SSD",
+                        "display": "14\\" FHD",
+                        "ports": "2x USB 3.0, 1x USB-C"
+                      }`}
                 value={form.specs}
                 onChange={e => setForm({ ...form, specs: e.target.value })}
                 rows={6}
