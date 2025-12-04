@@ -258,7 +258,7 @@ export default function ICTProductsPage() {
                     src={getImageSource(p.image ?? p.images?.[0])}
                     alt={p.title}
                     fill
-                    className="object-contain"
+                    className="object-cover"
                     unoptimized={isBase64(p.image ?? p.images?.[0] ?? '')}
                   />
                 </div>
