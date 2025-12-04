@@ -1057,7 +1057,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { ImageIcon, Upload, X, Loader2, Video, FileVideo, Youtube, Globe } from "lucide-react";
-import { convertToBase64, isBase64, isUrl } from "@/lib/image-utils";
+import { convertToBase64, isBase64, isUrl } from "@/utils/image-utils";
 
 type Product = {
   id: string;
@@ -1166,7 +1166,7 @@ export default function AdminProductsPage() {
       try {
         // Convert to Base64 (auto-compressed to ~300KB)
         const base64Image = await convertToBase64(fileObj.file, 300);
-        
+
         setUploadingFiles(prev =>
           prev.map(f =>
             f.file === fileObj.file
@@ -1274,7 +1274,7 @@ export default function AdminProductsPage() {
         /(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/,
         /youtube\.com\/embed\/([a-zA-Z0-9_-]+)/
       ];
-      
+
       for (const pattern of patterns) {
         const match = videoUrlInput.match(pattern);
         if (match && match[1]) {
@@ -1451,7 +1451,7 @@ export default function AdminProductsPage() {
   const renderImagePreview = (url: string, index: number) => {
     const isBase64Img = isBase64(url);
     const isUrlImg = isUrl(url);
-    
+
     return (
       <div key={index} className="relative group">
         <div className="w-20 h-20 bg-gray-800 rounded-lg overflow-hidden border border-white/10">
@@ -1512,8 +1512,8 @@ export default function AdminProductsPage() {
         {/* Message Alert */}
         {message && (
           <div className={`p-4 mb-6 rounded-lg border ${message.type === 'error'
-              ? 'bg-red-500/20 border-red-500'
-              : 'bg-green-500/20 border-green-500'
+            ? 'bg-red-500/20 border-red-500'
+            : 'bg-green-500/20 border-green-500'
             }`}>
             <div className="flex items-center gap-2">
               <span className={`w-2 h-2 rounded-full ${message.type === 'error' ? 'bg-red-500' : 'bg-green-500'
@@ -1698,7 +1698,7 @@ export default function AdminProductsPage() {
                     </button>
                   </div>
                 </div>
-                
+
                 <textarea
                   placeholder="Base64 images appear here after upload, or paste URLs manually (comma separated)"
                   value={form.images}
@@ -1706,7 +1706,7 @@ export default function AdminProductsPage() {
                   rows={3}
                   className="w-full p-3 bg-[#111] border border-white/10 rounded-lg focus:border-[var(--color-accent)] outline-none font-mono text-xs"
                 />
-                
+
                 {/* Image Previews */}
                 {form.images && (
                   <div className="mt-3">
@@ -1733,8 +1733,8 @@ export default function AdminProductsPage() {
                   type="button"
                   onClick={() => setVideoInputMode('url')}
                   className={`px-4 py-2 rounded-lg flex items-center gap-2 ${videoInputMode === 'url'
-                      ? 'bg-blue-600'
-                      : 'bg-gray-800 hover:bg-gray-700'
+                    ? 'bg-blue-600'
+                    : 'bg-gray-800 hover:bg-gray-700'
                     }`}
                 >
                   <Globe className="w-4 h-4" />
@@ -1744,8 +1744,8 @@ export default function AdminProductsPage() {
                   type="button"
                   onClick={() => setVideoInputMode('upload')}
                   className={`px-4 py-2 rounded-lg flex items-center gap-2 ${videoInputMode === 'upload'
-                      ? 'bg-purple-600'
-                      : 'bg-gray-800 hover:bg-gray-700'
+                    ? 'bg-purple-600'
+                    : 'bg-gray-800 hover:bg-gray-700'
                     }`}
                 >
                   <Upload className="w-4 h-4" />
@@ -1932,7 +1932,7 @@ export default function AdminProductsPage() {
                             <div className="absolute bottom-0 left-0 right-0 bg-black/80 text-xs p-1 text-center truncate">
                               {url.includes('youtube.com') ? 'YouTube' :
                                 url.includes('vimeo.com') ? 'Vimeo' :
-                                url.startsWith('data:video/') ? 'MongoDB' : 'Video'} {index + 1}
+                                  url.startsWith('data:video/') ? 'MongoDB' : 'Video'} {index + 1}
                             </div>
                           </div>
                         )
@@ -2164,11 +2164,12 @@ export default function AdminProductsPage() {
                 </div>
 
                 {/* Image Thumbnails in Product Card */}
+
                 {p.images && p.images.length > 0 && (
                   <div className="mt-4 pt-4 border-t border-white/10">
                     <div className="flex gap-2 overflow-x-auto pb-2">
                       {p.images.slice(0, 5).map((img, index) => (
-                        <div key={index} className="w-16 h-16 flex-shrink-0 rounded overflow-hidden border border-white/10">
+                        <div key={index} className="relative w-16 h-16 flex-shrink-0 rounded overflow-hidden border border-white/10">
                           <img
                             src={img}
                             alt={`${p.title} ${index + 1}`}
@@ -2178,8 +2179,8 @@ export default function AdminProductsPage() {
                             }}
                           />
                           {isBase64(img) && (
-                            <div className="absolute bottom-0 left-0 right-0 bg-green-900/80 text-[8px] p-0.5 text-center text-green-300">
-                              MongoDB
+                            <div className="absolute bottom-0 left-0 right-0 bg-green-900/80 text-[8px] px-1 py-0.5 text-center text-green-300 truncate">
+                              DB
                             </div>
                           )}
                         </div>
