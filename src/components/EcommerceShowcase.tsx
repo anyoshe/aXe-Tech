@@ -13,7 +13,7 @@ const ecommerceProjects = [
   },
   {
     src: '/samples/my-logo.png',
-    link: '', // not yet published
+    link: 'https://www.anyokaeats.com/',
   },
   {
     src: '/samples/ecommerce3.jpg',
