@@ -75,7 +75,7 @@ export default function Navbar() {
         },
         { 
           label: 'Mobile Labs', 
-          href: '/mobile-labs',
+          href: '/mobile-lab',
           description: 'Portable ICT Solutions',
           icon: '🚀'
         },

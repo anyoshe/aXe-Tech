@@ -27,7 +27,7 @@ const ictSolutions = [
     image: "/samples/hardwaredisplay.jpg",
   },
   {
-    id: "mobile-labs",
+    id: "mobile-lab",
     title: "Mobile Computer Labs",
     icon: <Layers size={32} className="text-[var(--color-accent)]" />,
     description:
