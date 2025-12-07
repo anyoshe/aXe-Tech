@@ -212,7 +212,7 @@ export default function MobileLabPage() {
 
             {/* Subheadline */}
             <p className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto opacity-90">
-              Get a fully equipped computer lab delivered to your school in Kenya. 
+              Usiambie wazazi hauna computer lab! Get a fully equipped computer lab delivered to your school in Kenya. 
               <span className="text-cyan-300 font-semibold"> Pay per use or save with monthly booking!</span> Perfect for CBC & KCSE computer studies.
             </p>
 
@@ -404,19 +404,19 @@ export default function MobileLabPage() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-white/20">
-                      <th className="text-left py-4">Gharama</th>
-                      <th className="text-center py-4 text-red-300">Kujenga Lab Yako</th>
+                      <th className="text-left py-4">Cost</th>
+                      <th className="text-center py-4 text-red-300">Building your own lab</th>
                       <th className="text-center py-4 text-green-300">Hiring our Mobile Lab</th>
                     </tr>
                   </thead>
                   <tbody>
                     {[
-                      ["Gharama ya Kuanzia", "KES 1.5M - KES 2.5M", "KES 0"],
+                      ["Gharama ya Kuanzia", "KES 0.5M - KES 1.5M", "KES 0"],
                       ["Matengenezo Kila Mwezi", "KES 20,000 - KES 50,000", "KES 0"],
-                      ["Mshahara wa IT Staff", "KES 40,000 - KES 80,000", "KES 0"],
-                      ["Kuboresha Vifaa (Miaka 3)", "KES 800,000 - KES 1.2M", "KES 0"],
+                      ["Mshahara wa IT Staff", "KES 20,000 - KES 80,000", "KES 0"],
+                      ["Kuboresha Vifaa (Miaka 3)", "KES 500,000 - KES 800,000", "KES 0"],
                       ["Bima ya Vifaa", "KES 30,000/mwaka", "KES 0"],
-                      ["Gharama ya Mwezi (8 sessions)", "KES 0", "KES 200,000"]
+                      ["Gharama ya Mwezi (8 sessions)", "KES 0", "KES 20,000"]
                     ].map((row, idx) => (
                       <tr key={idx} className="border-b border-white/10">
                         <td className="py-4">{row[0]}</td>
@@ -430,10 +430,10 @@ export default function MobileLabPage() {
 
               <div className="mt-8 p-6 bg-gradient-to-r from-green-900/30 to-emerald-900/30 rounded-xl">
                 <div className="text-2xl font-bold text-green-300 text-center">
-                  Akiba ya Mwaka: Hadi KES 4.5 Million!
+                  Akiba ya Mwaka: Hadi KES 2.5 Million!
                 </div>
                 <p className="text-center mt-2 opacity-80">
-                  Pesa hii mnaweza kutumia kwa walimu, ukarabati wa shule, au masomo ya ziada!
+                  Pesa hii unaweza kutumia kwa walimu, ukarabati wa shule, au masomo ya ziada!
                 </p>
               </div>
 
@@ -548,7 +548,7 @@ export default function MobileLabPage() {
           >
             <h2 className="text-4xl font-bold mb-6">
               Ready For Computer Classes?{" "}
-              <span className="text-yellow-300">Tafadhali Tuwasiliane!</span>
+              <span className="text-yellow-300">Reach us out!</span>
             </h2>
             <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
               Book a free demonstration at your school. See how easy it is to bring ICT to your students.

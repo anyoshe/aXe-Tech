@@ -299,7 +299,7 @@ export default function SchoolERPPage() {
               Ready to Transform Your School?
             </h2>
             <p className="text-xl mb-10 opacity-90">
-              Flexible plans starting from just $99/month. No hidden fees, cancel anytime.
+              Flexible plans starting from just $99/term. No hidden fees, cancel anytime.
             </p>
 
             <div className="grid md:grid-cols-3 gap-8 mb-12">
@@ -335,7 +335,7 @@ export default function SchoolERPPage() {
                     </div>
                   )}
                   <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                  <div className="text-4xl font-bold mb-4">{plan.price}<span className="text-lg">/month</span></div>
+                  <div className="text-4xl font-bold mb-4">{plan.price}<span className="text-lg">/term</span></div>
                   <p className="mb-6 opacity-80">{plan.desc}</p>
                   <ul className="space-y-3 mb-8">
                     {plan.features.map((feature, fIdx) => (
