@@ -88,7 +88,7 @@ export default function SoftwareERPPage() {
         "Email support",
         "Cloud hosting included"
       ],
-      price: "KES 25,000",
+      price: "KES 5,000/month",
       setupFee: "KES 15,000",
       popular: false,
       color: "from-blue-500 to-cyan-500"
@@ -107,7 +107,7 @@ export default function SoftwareERPPage() {
         "Priority support",
         "Training sessions"
       ],
-      price: "KES 65,000/month",
+      price: "KES 10,000/month",
       setupFee: "KES 45,000",
       popular: true,
       color: "from-purple-500 to-pink-500"
@@ -127,7 +127,7 @@ export default function SoftwareERPPage() {
         "Security audits",
         "Disaster recovery"
       ],
-      price: "KES 150,000+/month",
+      price: "KES 100,000+/month",
       setupFee: "Custom",
       popular: false,
       color: "from-orange-500 to-red-500"
@@ -140,21 +140,21 @@ export default function SoftwareERPPage() {
       description: "Complete school management system",
       icon: <Users className="w-6 h-6" />,
       features: ["Student management", "Fee collection", "Exam management", "Parent portal"],
-      price: "From KES 40,000/month"
+      price: "From KES 10,000/month"
     },
     {
       title: "Retail POS",
       description: "Point of sale for shops & supermarkets",
       icon: <CreditCard className="w-6 h-6" />,
       features: ["Barcode scanning", "Inventory tracking", "Sales reports", "Receipt printing"],
-      price: "From KES 20,000/month"
+      price: "From KES 10,000/month"
     },
     {
       title: "Hospital System",
       description: "Healthcare management solution",
       icon: <Shield className="w-6 h-6" />,
       features: ["Patient records", "Appointment scheduling", "Pharmacy management", "Lab integration"],
-      price: "From KES 75,000/month"
+      price: "From KES 15,000/month"
     },
     {
       title: "Custom Software",
@@ -231,7 +231,7 @@ export default function SoftwareERPPage() {
   ];
 
   const stats = [
-    { value: "200+", label: "ERP Systems Deployed" },
+    { value: "50+", label: "ERP Systems Deployed" },
     { value: "95%", label: "Client Satisfaction" },
     { value: "40%", label: "Avg. Cost Reduction" },
     { value: "24/7", label: "Support Available" }
