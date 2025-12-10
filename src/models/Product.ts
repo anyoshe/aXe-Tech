@@ -217,8 +217,9 @@ const ProductSchema = new Schema<IProduct>(
   }
 );
 
-// Index for better search performance
-ProductSchema.index({ id: 1 });
+// Indexes for better search performance
+// Note: `id` field already has `unique: true` which creates an index,
+// so we avoid adding a duplicate index here.
 ProductSchema.index({ category: 1 });
 ProductSchema.index({ price: 1 });
 ProductSchema.index({ title: 'text', short: 'text', description: 'text' });
