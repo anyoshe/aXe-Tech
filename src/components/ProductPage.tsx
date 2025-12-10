@@ -250,7 +250,6 @@ export default function ICTProductsPage() {
                     alt={p.title}
                     fill
                     className="object-cover"
-                    unoptimized={isBase64(p.image ?? p.images?.[0] ?? '')}
                     unoptimized={isBase64(p.image ?? normalizeImageList(p.images ?? [])[0] ?? '')}
                   />
                 </div>
