@@ -240,3 +240,44 @@ const compressBase64Image = async (base64: string, maxSizeKB: number): Promise<s
     img.onerror = () => resolve(base64); // Return original if compression fails
   });
 };
+
+    // Normalize an array of stored image entries — repairs cases where Base64 data URLs
+    // were accidentally split at commas (e.g. ['data:image/jpeg;base64', '/9j/4AAQ...'])
+    export const normalizeImageList = (images?: string[] | null): string[] => {
+      if (!images || !Array.isArray(images)) return [];
+
+      const out: string[] = [];
+      const base64PayloadRe = /^[A-Za-z0-9+/\/=]+$/; // matches base64 payload (may include = and leading /)
+
+      for (let i = 0; i < images.length; i++) {
+        const raw = (images[i] ?? '').trim();
+        if (!raw) continue;
+
+        // If this is already a full data URL, keep it
+        if (isValidBase64(raw)) {
+          out.push(raw);
+          continue;
+        }
+
+        // If looks like a data URI header but missing comma/payload, try to join with next
+        if (raw.startsWith('data:image') && !raw.includes(',')) {
+          const next = (images[i + 1] ?? '').trim();
+          if (next && (base64PayloadRe.test(next) || next.startsWith('/'))) {
+            out.push(`${raw},${next}`);
+            i++; // skip next since consumed
+            continue;
+          }
+        }
+
+        // If this looks like a payload fragment that follows a header, try to attach to previous
+        if (base64PayloadRe.test(raw) && out.length > 0 && out[out.length - 1].startsWith('data:image') && !out[out.length - 1].includes(',')) {
+          out[out.length - 1] = `${out[out.length - 1]},${raw}`;
+          continue;
+        }
+
+        // Otherwise push as-is (URL or other string)
+        out.push(raw);
+      }
+
+      return out;
+    };

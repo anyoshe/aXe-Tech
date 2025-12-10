@@ -6,6 +6,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingCart, X, Plus, Minus, Trash2, Star, Shield, Battery, Cpu, HardDrive, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { normalizeImageList } from '@/utils/image-utils';
 
 // -------------------------------------------
 // Types
@@ -216,6 +217,7 @@ export default function ProductDetailPage() {
   // -------------------------------------------
   // Main UI
   // -------------------------------------------
+  const images = normalizeImageList(product.images ?? []);
   return (
     <div className="min-h-screen bg-[var(--color-bg-dark)] text-[var(--color-text-main)] pb-32 md:pb-10">
       {/* Header */}
@@ -238,15 +240,15 @@ export default function ProductDetailPage() {
           <div className="space-y-4">
             {/* Main Image */}
             <div className="relative aspect-square rounded-2xl overflow-hidden bg-black/20">
-              {isBase64(product.images?.[selectedImage]) ? (
+              {isBase64(images[selectedImage]) ? (
                 <img
-                  src={getImageSource(product.images?.[selectedImage])}
+                  src={getImageSource(images[selectedImage])}
                   alt={product.title}
                   className="w-full h-full object-cover"
                 />
               ) : (
                 <Image
-                  src={getImageSource(product.images?.[selectedImage])}
+                  src={getImageSource(images[selectedImage])}
                   alt={product.title}
                   fill
                   className="object-cover"
@@ -256,9 +258,9 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Thumbnail Gallery */}
-            {product.images && product.images.length > 1 && (
+            {images && images.length > 1 && (
               <div className="flex gap-3 overflow-x-auto pb-2">
-                {product.images.map((image, index) => (
+                {images.map((image, index) => (
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
@@ -482,15 +484,15 @@ export default function ProductDetailPage() {
                         animate={{ opacity: 1, scale: 1 }}
                       >
                         <div className="relative w-16 h-16 bg-black/30 rounded overflow-hidden flex-shrink-0">
-                          {isBase64(it.product.images?.[0]) ? (
+                          {isBase64(normalizeImageList(it.product.images ?? [])[0]) ? (
                             <img
-                              src={getImageSource(it.product.images?.[0])}
+                              src={getImageSource(normalizeImageList(it.product.images ?? [])[0])}
                               alt={it.product.title}
                               className="w-full h-full object-cover"
                             />
                           ) : (
                             <Image
-                              src={getImageSource(it.product.images?.[0])}
+                              src={getImageSource(normalizeImageList(it.product.images ?? [])[0])}
                               alt={it.product.title}
                               fill
                               className="object-cover"

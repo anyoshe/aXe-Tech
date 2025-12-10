@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { X, ShoppingCart, Trash2, Plus, Minus } from "lucide-react";
+import { isBase64, isUrl, normalizeImageList } from '@/utils/image-utils';
 
 /* -------------------------------------------
    UTILS
@@ -12,17 +13,7 @@ import { X, ShoppingCart, Trash2, Plus, Minus } from "lucide-react";
 const currency = (n: number | string) =>
   typeof n === "number" ? "KSh " + n.toLocaleString("en-KE") : String(n);
 
-// Utility to handle both URL and Base64 images
-const isBase64 = (str: string): boolean => {
-  if (!str) return false;
-  // Check for Base64 image pattern
-  return /^data:image\/[a-zA-Z]+;base64,/.test(str);
-};
-
-const isUrl = (str: string): boolean => {
-  if (!str) return false;
-  return str.startsWith('http') || str.startsWith('/');
-};
+// Using shared image utils for Base64/URL detection
 
 export const getImageSource = (image: string | undefined): string => {
   if (!image) return '/placeholder.jpg';
@@ -255,11 +246,12 @@ export default function ICTProductsPage() {
               >
                 <div className="relative w-full h-48 bg-black/20">
                   <Image
-                    src={getImageSource(p.image ?? p.images?.[0])}
+                    src={getImageSource(p.image ?? normalizeImageList(p.images ?? [])[0])}
                     alt={p.title}
                     fill
                     className="object-cover"
                     unoptimized={isBase64(p.image ?? p.images?.[0] ?? '')}
+                    unoptimized={isBase64(p.image ?? normalizeImageList(p.images ?? [])[0] ?? '')}
                   />
                 </div>
 
@@ -351,11 +343,11 @@ export default function ICTProductsPage() {
                       <li key={it.product.id} className="flex gap-3">
                         <div className="relative w-20 h-16 bg-black/30 rounded overflow-hidden">
                           <Image
-                            src={getImageSource(it.product.image ?? it.product.images?.[0])}
+                            src={getImageSource(it.product.image ?? normalizeImageList(it.product.images ?? [])[0])}
                             alt={it.product.title}
                             fill
                             className="object-cover"
-                            unoptimized={isBase64(it.product.image ?? it.product.images?.[0] ?? '')}
+                            unoptimized={isBase64(it.product.image ?? normalizeImageList(it.product.images ?? [])[0] ?? '')}
                           />
                         </div>
 

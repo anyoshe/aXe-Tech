@@ -88,6 +88,24 @@ export default function AdminProductsPage() {
     setVideoUrlInput('');
   };
 
+  // Helpers to safely serialize/parse lists in the text form fields.
+  // We use JSON encoding to avoid splitting Base64 data URLs at commas.
+  const parseFormList = (s?: string | null): string[] => {
+    if (!s) return [];
+    try {
+      const parsed = JSON.parse(s);
+      if (Array.isArray(parsed)) return parsed.map(item => String(item).trim()).filter(Boolean);
+    } catch (e) {
+      // Fallback: legacy comma-separated values (best-effort)
+      return String(s).split(',').map(x => x.trim()).filter(Boolean);
+    }
+    return [];
+  };
+
+  const stringifyFormList = (arr: string[]): string => {
+    return JSON.stringify(arr || []);
+  };
+
   const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
     setMessage({ text, type });
     setTimeout(() => setMessage(null), 5000);
@@ -120,10 +138,10 @@ export default function AdminProductsPage() {
           )
         );
 
-        // Add to form as Base64 string
-        const currentImages = form.images ? form.images.split(',').filter(Boolean) : [];
+        // Add to form as Base64 string (use JSON encoding to avoid splitting on commas)
+        const currentImages = parseFormList(form.images);
         const updatedImages = [...currentImages, base64Image];
-        setForm(prev => ({ ...prev, images: updatedImages.join(', ') }));
+        setForm(prev => ({ ...prev, images: stringifyFormList(updatedImages) }));
 
         showMessage('✓ Image added! (Stored in MongoDB as Base64)');
 
@@ -185,9 +203,9 @@ export default function AdminProductsPage() {
         )
       );
 
-      const currentVideos = form.videos ? form.videos.split(',').filter(Boolean) : [];
+      const currentVideos = parseFormList(form.videos);
       const updatedVideos = [...currentVideos, videoBase64];
-      setForm(prev => ({ ...prev, videos: updatedVideos.join(', ') }));
+      setForm(prev => ({ ...prev, videos: stringifyFormList(updatedVideos) }));
 
       showMessage('Video added! (Stored in MongoDB) Note: Large videos may slow down loading.');
 
@@ -237,9 +255,9 @@ export default function AdminProductsPage() {
       }
     }
 
-    const currentVideos = form.videos ? form.videos.split(',').filter(Boolean) : [];
+    const currentVideos = parseFormList(form.videos);
     const updatedVideos = [...currentVideos, processedUrl];
-    setForm(prev => ({ ...prev, videos: updatedVideos.join(', ') }));
+    setForm(prev => ({ ...prev, videos: stringifyFormList(updatedVideos) }));
 
     setVideoUrlInput('');
     showMessage('✓ Video URL added successfully!');
@@ -250,15 +268,15 @@ export default function AdminProductsPage() {
   };
 
   const removeImageFromList = (urlToRemove: string) => {
-    const images = form.images.split(',').map(s => s.trim()).filter(Boolean);
+    const images = parseFormList(form.images);
     const updatedImages = images.filter(url => url !== urlToRemove);
-    setForm(prev => ({ ...prev, images: updatedImages.join(', ') }));
+    setForm(prev => ({ ...prev, images: stringifyFormList(updatedImages) }));
   };
 
   const removeVideoFromList = (urlToRemove: string) => {
-    const videos = form.videos.split(',').map(s => s.trim()).filter(Boolean);
+    const videos = parseFormList(form.videos);
     const updatedVideos = videos.filter(url => url !== urlToRemove);
-    setForm(prev => ({ ...prev, videos: updatedVideos.join(', ') }));
+    setForm(prev => ({ ...prev, videos: stringifyFormList(updatedVideos) }));
   };
 
   // ========== PRODUCT CRUD FUNCTIONS ==========
@@ -274,8 +292,8 @@ export default function AdminProductsPage() {
         title: form.title,
         price: Number(form.price) || 0,
         category: form.category,
-        images: form.images ? form.images.split(',').map(s => s.trim()).filter(s => s) : [],
-        videos: form.videos ? form.videos.split(',').map(s => s.trim()).filter(s => s) : [],
+        images: parseFormList(form.images),
+        videos: parseFormList(form.videos),
         features: form.features ? form.features.split(',').map(s => s.trim()).filter(s => s) : [],
         short: form.short,
         description: form.description,
@@ -311,8 +329,8 @@ export default function AdminProductsPage() {
         title: form.title,
         price: Number(form.price) || 0,
         category: form.category,
-        images: form.images ? form.images.split(',').map(s => s.trim()).filter(s => s) : [],
-        videos: form.videos ? form.videos.split(',').map(s => s.trim()).filter(s => s) : [],
+        images: parseFormList(form.images),
+        videos: parseFormList(form.videos),
         features: form.features ? form.features.split(',').map(s => s.trim()).filter(s => s) : [],
         short: form.short,
         description: form.description,
@@ -364,8 +382,8 @@ export default function AdminProductsPage() {
       title: p.title,
       price: String(p.price),
       category: p.category || '',
-      images: (p.images || []).join(', '),
-      videos: (p.videos || []).join(', '),
+      images: stringifyFormList(p.images || []),
+      videos: stringifyFormList(p.videos || []),
       features: (p.features || []).join(', '),
       short: p.short || '',
       description: p.description || '',
@@ -609,8 +627,8 @@ export default function AdminProductsPage() {
               {/* Current Images */}
               <div className="mb-4">
                 <div className="flex justify-between items-center mb-2">
-                  <label className="block text-sm text-white/60">
-                    Images ({form.images ? form.images.split(',').filter(Boolean).length : 0})
+                    <label className="block text-sm text-white/60">
+                    Images ({parseFormList(form.images).length})
                   </label>
                   <div className="flex gap-2">
                     <button
@@ -619,9 +637,9 @@ export default function AdminProductsPage() {
                         // Add a URL manually
                         const url = prompt('Enter image URL:');
                         if (url) {
-                          const currentImages = form.images ? form.images.split(',').filter(Boolean) : [];
+                          const currentImages = parseFormList(form.images);
                           const updatedImages = [...currentImages, url];
-                          setForm(prev => ({ ...prev, images: updatedImages.join(', ') }));
+                          setForm(prev => ({ ...prev, images: stringifyFormList(updatedImages) }));
                         }
                       }}
                       className="text-xs px-2 py-1 bg-blue-900/50 hover:bg-blue-900/70 rounded"
@@ -644,7 +662,7 @@ export default function AdminProductsPage() {
                 </div>
 
                 <textarea
-                  placeholder="Base64 images appear here after upload, or paste URLs manually (comma separated)"
+                  placeholder="Base64 images appear here after upload, or paste URLs manually (JSON array or legacy comma separated)"
                   value={form.images}
                   onChange={e => setForm({ ...form, images: e.target.value })}
                   rows={3}
