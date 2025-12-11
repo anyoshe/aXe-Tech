@@ -42,19 +42,33 @@ export async function POST(request: Request) {
   await dbConnect();
   try {
     const body = await request.json();
-    if (!body?.id || !body?.title || typeof body.price !== "number") {
-      return NextResponse.json({ message: "Invalid payload" }, { status: 400 });
+    
+    // Detailed validation
+    if (!body?.id) {
+      return NextResponse.json({ message: "Product ID is required" }, { status: 400 });
+    }
+    if (!body?.title) {
+      return NextResponse.json({ message: "Product title is required" }, { status: 400 });
+    }
+    if (typeof body.price !== "number" || body.price < 0) {
+      return NextResponse.json({ message: "Product price must be a positive number" }, { status: 400 });
     }
 
     const existing = await Product.findOne({ id: body.id });
     if (existing) {
-      return NextResponse.json({ message: "Product with this id already exists" }, { status: 409 });
+      return NextResponse.json({ message: `Product with ID '${body.id}' already exists` }, { status: 409 });
     }
 
     const created = await Product.create(body);
     return NextResponse.json(created);
   } catch (err) {
-    return NextResponse.json({ message: "Error creating product", error: String(err) }, { status: 500 });
+    const errorMsg = err instanceof Error ? err.message : String(err);
+    console.error('[API] Product creation error:', err);
+    return NextResponse.json({ 
+      message: "Error creating product", 
+      error: errorMsg,
+      details: err instanceof Error ? err.stack : undefined
+    }, { status: 500 });
   }
 }
 
@@ -76,12 +90,18 @@ export async function PUT(request: Request) {
     );
 
     if (!updated) {
-      return NextResponse.json({ message: "Product not found" }, { status: 404 });
+      return NextResponse.json({ message: `Product with ID '${id}' not found` }, { status: 404 });
     }
 
     return NextResponse.json(updated);
   } catch (err) {
-    return NextResponse.json({ message: "Error updating product", error: String(err) }, { status: 500 });
+    const errorMsg = err instanceof Error ? err.message : String(err);
+    console.error('[API] Product update error:', err);
+    return NextResponse.json({ 
+      message: "Error updating product", 
+      error: errorMsg,
+      details: err instanceof Error ? err.stack : undefined
+    }, { status: 500 });
   }
 }
 

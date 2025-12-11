@@ -286,6 +286,17 @@ export default function AdminProductsPage() {
       return;
     }
 
+    // Validate specs JSON before attempting creation
+    let parsedSpecs: Record<string, unknown> = {};
+    if (form.specs && form.specs.trim() !== '{}' && form.specs.trim() !== '') {
+      try {
+        parsedSpecs = JSON.parse(form.specs);
+      } catch (jsonErr) {
+        showMessage(`✗ Invalid Specifications JSON: ${jsonErr instanceof Error ? jsonErr.message : 'Unknown error'}`, 'error');
+        return;
+      }
+    }
+
     try {
       const payload = {
         id: form.id || `prod-${Date.now()}`,
@@ -297,8 +308,10 @@ export default function AdminProductsPage() {
         features: form.features ? form.features.split(',').map(s => s.trim()).filter(s => s) : [],
         short: form.short,
         description: form.description,
-        specs: form.specs ? JSON.parse(form.specs) : {},
+        specs: parsedSpecs,
       };
+
+      console.log('[Admin] Creating product:', { id: payload.id, title: payload.title, price: payload.price });
 
       const r = await fetch('/api/products', {
         method: 'POST',
@@ -306,22 +319,38 @@ export default function AdminProductsPage() {
         headers: { 'Content-Type': 'application/json' }
       });
 
+      console.log('[Admin] Response status:', r.status);
+
       const result = await r.json();
+      console.log('[Admin] Response body:', result);
 
       if (r.ok) {
         showMessage('✓ Product created successfully! (Images stored in MongoDB)');
         resetForm();
         fetchProducts();
       } else {
-        showMessage(`✗ Error: ${result.message}`, 'error');
+        showMessage(`✗ Error: ${result.message || 'Unknown error'}`, 'error');
       }
     } catch (error) {
-      showMessage('✗ Error creating product', 'error');
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      console.error('[Admin] Caught error:', error);
+      showMessage(`✗ Error creating product: ${errorMsg}`, 'error');
     }
   };
 
   const handleUpdate = async () => {
     if (!editing) return;
+
+    // Validate specs JSON before attempting update
+    let parsedSpecs: Record<string, unknown> = {};
+    if (form.specs && form.specs.trim() !== '{}' && form.specs.trim() !== '') {
+      try {
+        parsedSpecs = JSON.parse(form.specs);
+      } catch (jsonErr) {
+        showMessage(`✗ Invalid Specifications JSON: ${jsonErr instanceof Error ? jsonErr.message : 'Unknown error'}`, 'error');
+        return;
+      }
+    }
 
     try {
       const payload = {
@@ -334,8 +363,10 @@ export default function AdminProductsPage() {
         features: form.features ? form.features.split(',').map(s => s.trim()).filter(s => s) : [],
         short: form.short,
         description: form.description,
-        specs: form.specs ? JSON.parse(form.specs) : {},
+        specs: parsedSpecs,
       };
+
+      console.log('[Admin] Updating product:', { id: payload.id, title: payload.title });
 
       const r = await fetch(`/api/products`, {
         method: 'PUT',
@@ -343,17 +374,22 @@ export default function AdminProductsPage() {
         headers: { 'Content-Type': 'application/json' }
       });
 
+      console.log('[Admin] Update response status:', r.status);
+
       const result = await r.json();
+      console.log('[Admin] Update response body:', result);
 
       if (r.ok) {
         showMessage('✓ Product updated successfully!');
         resetForm();
         fetchProducts();
       } else {
-        showMessage(`✗ Error: ${result.message}`, 'error');
+        showMessage(`✗ Error: ${result.message || 'Unknown error'}`, 'error');
       }
     } catch (error) {
-      showMessage('✗ Error updating product', 'error');
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      console.error('[Admin] Caught error:', error);
+      showMessage(`✗ Error updating product: ${errorMsg}`, 'error');
     }
   };
 
