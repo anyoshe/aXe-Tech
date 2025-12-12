@@ -28,10 +28,10 @@ const ictSolutions = [
   },
   {
     id: "mobile-lab",
-    title: "Mobile Computer Labs",
+    title: "Computer Labaratories",
     icon: <Layers size={32} className="text-[var(--color-accent)]" />,
     description:
-      "Fully equipped mobile ICT labs for schools and training centers — portable, affordable, and ready for deployment.",
+     "Portable mobile labs for schools without permanent space • Full permanent computer lab design and installation for long-term ICT needs.",
     image: "/samples/mobilecomputerlab.jpg",
   },
   {

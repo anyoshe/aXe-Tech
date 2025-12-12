@@ -28,16 +28,43 @@ export default function ICTOverview() {
       link: "/shop",
       color: "from-blue-500 to-cyan-500"
     },
-    {
-      icon: <Layers className="w-8 h-8" />,
-      title: "Mobile Computer Labs",
-      description: "Portable, fully-equipped ICT labs for schools without permanent infrastructure",
-      value: "80% cost savings vs traditional labs",
-      features: ["From 10 laptops + charging cart", "Pre-installed software", "Training included", "Flexible deployment"],
-      price: "From KSh 10,000/month",
-      link: "/mobile-lab",
-      color: "from-green-500 to-emerald-500"
-    },
+   
+    // {
+    //   icon: <Layers className="w-8 h-8" />,
+    //   title: "Computer Labs",
+    //   description:
+    //     "Portable mobile labs for schools without permanent space • Full permanent computer lab design and installation for long-term ICT needs.",
+    //     extralink: "/computer-lab-setup",
+    //     value: "80% cost savings vs traditional labs",
+    //   features: [
+    //     "Mobile labs: From 10 laptops + charging cart",
+    //     "Permanent labs: Full wiring, desks, networking & installation • Permanent labs priced per project",
+    //     "Pre-installed educational & productivity software",
+    //     "Teacher & student ICT training included",
+    //     "Flexible deployment and scalable upgrades"
+    //   ],
+    //   price: "From KSh 10,000/month (mobile labs)",
+    //   link: "/mobile-lab",
+    //   color: "from-green-500 to-emerald-500"
+    // },
+  {
+    icon: <Layers className="w-8 h-8" />,
+    title: "Computer Labs",
+    description:
+      "Flexible mobile labs for instant deployment • Complete permanent lab design & installation for long-term digital infrastructure.",
+    value: "Up to 80% cheaper than traditional computer labs",
+    features: [
+      "Mobile labs: 10–40 laptops, charging trolley, projector & offline content",
+      "Permanent labs: Full cabling, furniture, networking, security & setup",
+      "Pre-loaded educational software & school management tools",
+      "Free teacher & student training included",
+      "Scalable & future-proof solutions"
+    ],
+    price: "From KSh 10,000/month (mobile) • Permanent labs custom quote",
+    link: "/computer-lab-setup",
+    extraLink: "/mobile-lab",
+    color: "from-green-500 to-emerald-500"
+  },
     {
       icon: <Server className="w-8 h-8" />,
       title: "School ERP & Management Systems",
@@ -174,15 +201,30 @@ export default function ICTOverview() {
 
                 {/* Price & CTA */}
                 <div className="mt-auto pt-4 border-t border-gray-700">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-lg font-bold text-white">{solution.price}</span>
+                  <div className="text-lg font-bold text-white mb-3">{solution.price}</div>
+                  {solution.extraLink ? (
+                    <div className="flex gap-2">
+                      <Link 
+                        href={solution.link}
+                        className="flex-1 px-3 py-2 bg-[var(--color-accent)] text-black rounded-lg text-xs font-semibold hover:bg-[var(--color-accent)]/90 transition-colors"
+                      >
+                        Permanent Lab
+                      </Link>
+                      <Link 
+                        href={solution.extraLink}
+                        className="flex-1 px-3 py-2 bg-[var(--color-accent)] text-black rounded-lg text-xs font-semibold hover:bg-[var(--color-accent)]/90 transition-colors"
+                      >
+                        Mobile Lab
+                      </Link>
+                    </div>
+                  ) : (
                     <Link 
                       href={solution.link}
-                      className="px-4 py-2 bg-[var(--color-accent)] text-black rounded-lg text-sm font-semibold hover:bg-[var(--color-accent)]/90 transition-colors"
+                      className="block w-full px-4 py-2 bg-[var(--color-accent)] text-black rounded-lg text-sm font-semibold hover:bg-[var(--color-accent)]/90 transition-colors text-center"
                     >
                       Get Quote
                     </Link>
-                  </div>
+                  )}
                 </div>
               </div>
             </motion.div>

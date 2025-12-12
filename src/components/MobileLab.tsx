@@ -203,17 +203,14 @@ export default function MobileLabPage() {
 
             {/* Main Headline */}
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
-              Rent A{" "}
-              <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-                Mobile Computer Lab
-              </span>{" "}
-              For Your School
+              Mobile & Permanent Computer Labs
             </h1>
 
             {/* Subheadline */}
             <p className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto opacity-90">
-              Usiambie wazazi hauna computer lab! Get a fully equipped computer lab delivered to your school in Kenya. 
-              <span className="text-cyan-300 font-semibold"> Pay per use or save with monthly booking!</span> Perfect for CBC & KCSE computer studies.
+              Flexible ICT solutions for schools — rent a mobile computer lab for pay-per-use classes,
+              or partner with us to design and install a permanent computer lab on your campus. We
+              handle delivery, teaching support, and long-term maintenance so your school succeeds.
             </p>
 
             {/* Kenyan Features */}
@@ -247,12 +244,12 @@ export default function MobileLabPage() {
                 </div>
               </a>
               <Link
-                href="#monthly-discount"
+                href="/computer-lab-setup"
                 className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full font-bold text-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/25"
               >
                 <div className="flex items-center justify-center gap-2">
                   <Gift className="w-5 h-5" />
-                  View Monthly Discounts
+                  Learn About Permanent Labs
                 </div>
               </Link>
             </div>

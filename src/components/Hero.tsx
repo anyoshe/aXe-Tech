@@ -140,7 +140,7 @@ export default function Hero() {
             href="/mobile-lab"
             className="ctaButton px-8 py-3 bg-[var(--color-accent)] text-black rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition text-center"
           >
-            Mobile Computer Labs
+            Mobile & Permanent Computer Labs
           </motion.a>
 
           <motion.a
