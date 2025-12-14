@@ -139,6 +139,12 @@ export default function SchoolERPPage() {
               >
                 Explore Features
               </Link>
+              <Link
+                href="/school-erp/demo"
+                className="px-8 py-4 bg-[var(--color-accent)] rounded-full font-bold text-lg text-black hover:brightness-95 transition-all duration-200"
+              >
+                Try Live Demo
+              </Link>
             </div>
           </motion.div>
         </div>

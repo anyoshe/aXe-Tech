@@ -7,10 +7,7 @@ import {
   Server,
   Layers,
   Wrench,
-  // Palette,
-  // PenTool,
-  // Code2,
-  // Megaphone,
+
 } from "lucide-react";
 import Image from "next/image";
 

@@ -14,6 +14,27 @@ pnpm dev
 bun dev
 ```
 
+## MongoDB + Demo API (upgrade notes)
+
+This project can be upgraded from the localStorage demo to a multi-tenant MongoDB-backed demo.
+
+Environment variables (Vercel / local `.env`):
+
+```
+MONGODB_URI=your-mongodb-connection-string
+NEXTAUTH_SECRET=some-long-random-secret
+NEXTAUTH_URL=http://localhost:3000
+```
+
+Files added as an initial step:
+- `src/app/api/students/route.ts` — GET students by `?schoolId=...` and POST to create students.
+- `src/app/api/schools/[id]/seed/route.ts` — POST to seed demo data for a given `schoolId`.
+
+Next steps suggested:
+- Add `lib/mongodb.ts` client util (cached MongoClient) and ensure `MONGODB_URI` is set.
+- Add NextAuth authentication and expose `user.role` and `user.schoolId` on session.
+- Migrate `SchoolERPDemo` to use these APIs instead of `localStorage`.
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.

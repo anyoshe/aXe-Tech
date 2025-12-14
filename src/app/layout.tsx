@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../../styles/globals.css";
 import SocialNavbar from "@/components/SocialNavbar";
+import NextAuthProvider from "@/components/NextAuthProvider";
 import { Analytics } from "@vercel/analytics/react"; 
 import Image from "next/image";
 import Script from "next/script"; // ✅ Import Script
@@ -117,7 +118,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white`}
       >
-        {children}
+        <NextAuthProvider>
+          {children}
+        </NextAuthProvider>
         <SocialNavbar />
         <Analytics />
       </body>
