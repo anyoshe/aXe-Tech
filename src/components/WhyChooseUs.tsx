@@ -64,7 +64,7 @@ export default function WhyChooseUs() {
           viewport={{ once: true }}
           className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-center mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"
         >
-          Why Choose GetAxe.Tech?
+          Why Choose Getaxe Technologies?
         </motion.h1>
 
         <motion.p

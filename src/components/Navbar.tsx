@@ -163,7 +163,7 @@ export default function Navbar() {
               <div className="relative h-8 md:h-10 w-[120px]">
                 <Image
                   src="/getaxelogobkgd.svg"
-                  alt="GetAxe.Tech logo"
+                  alt="getaxekenya.com logo"
                   fill
                   className="object-contain group-hover:scale-105 transition-transform duration-300"
                   style={{ filter: 'brightness(0) invert(1)' }}

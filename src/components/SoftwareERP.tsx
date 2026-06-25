@@ -781,7 +781,7 @@ export default function SoftwareERPPage() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="text-center md:text-left">
-              <div className="text-lg font-bold mb-2">GetAxe.Tech Software & ERP Solutions</div>
+              <div className="text-lg font-bold mb-2">getaxekenya.com Software & ERP Solutions</div>
               <p className="text-sm opacity-80">Transform your business with intelligent software solutions</p>
             </div>
             <div className="flex flex-col sm:flex-row items-center gap-4">

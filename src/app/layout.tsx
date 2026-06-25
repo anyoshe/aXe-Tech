@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "../../styles/globals.css";
+import "@/styles/globals.css";
 import SocialNavbar from "@/components/SocialNavbar";
 import NextAuthProvider from "@/components/NextAuthProvider";
 import { Analytics } from "@vercel/analytics/react"; 
@@ -18,8 +18,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://getaxe.tech"),
-  title: "GetAxe.Tech — ICT Equipment, Laptop Supply, School ICT Labs & Technology Solutions Kenya",
+  metadataBase: new URL("https://getaxekenya.com"),
+  title: "getaxekenya.com — ICT Equipment, Laptop Supply, School ICT Labs & Technology Solutions Kenya",
   description:
     "We supply laptops, computers, tablets, printers, networking hardware and full ICT setup for schools, SMEs, NGOs and institutions in Kenya. Mobile computer labs, networking, ERPs, IT maintenance, ICT consulting and digital deployment — affordable and ready to use.",
   keywords: [
@@ -38,13 +38,13 @@ export const metadata: Metadata = {
     "GetAxe ICT",
     "technology supplier Kenya",
   ],
-  authors: [{ name: "GetAxe Technologies", url: "https://getaxe.tech" }],
+  authors: [{ name: "GetAxe Technologies", url: "https://getaxekenya.com" }],
 
   openGraph: {
-    title: "GetAxe.Tech — Laptops, Computers, ICT Labs & Tech Solutions",
+    title: "getaxekenya.com — Laptops, Computers, ICT Labs & Tech Solutions",
     description:
       "Kenya’s trusted ICT supply and solutions partner — laptops, computers, tablets, printers, networking, school ICT labs, ERPs and full ICT deployment.",
-    url: "https://getaxe.tech",
+    url: "https://getaxekenya.com",
     siteName: "GetAxe Technologies",
     images: [
       {
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     site: "@getaxetech",
-    title: "GetAxe.Tech — ICT Products, Laptop Supply & Technology Solutions Kenya",
+    title: "getaxekenya.com — ICT Products, Laptop Supply & Technology Solutions Kenya",
     description:
       "Laptops, computers, tablets, printers, networking and ICT labs for schools, SMEs and organizations across Kenya.",
     images: ["/gat-icon.png"],

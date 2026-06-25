@@ -150,7 +150,7 @@ if (!isMounted) {
                         <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-6" />
                         <h2 className="text-3xl font-bold mb-4">Thank You!</h2>
                         <p className="text-xl text-gray-300 mb-6">
-                            Your inquiry has been sent directly to <span className="text-[var(--color-accent)] font-semibold">hello@getaxe.tech</span>.
+                            Your inquiry has been sent directly to <span className="text-[var(--color-accent)] font-semibold">hello@getaxekenya.com</span>.
                         </p>
                         <p className="text-gray-400 mb-6">
                             Our ICT team will contact you within 24 hours to discuss your technology needs.
@@ -305,7 +305,7 @@ if (!isMounted) {
                                 className="w-full bg-gradient-to-r from-[var(--color-accent)] to-purple-600 text-white font-bold py-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
                             >
                                 {isSubmitting ? (
-                                    'Sending to hello@getaxe.tech...'
+                                    'Sending to hello@getaxekenya.com...'
                                 ) : (
                                     <>
                                         Get Free ICT Consultation
@@ -361,7 +361,7 @@ if (!isMounted) {
                                 </a>
 
                                 <a
-                                    href="mailto:hello@getaxe.tech"
+                                    href="mailto:hello@getaxekenya.com"
                                     className="flex items-center gap-4 p-4 bg-purple-600/20 border border-purple-500/30 rounded-xl hover:bg-purple-600/30 transition-all duration-300 group"
                                 >
                                     <div className="p-2 bg-purple-500 rounded-lg group-hover:scale-110 transition-transform">
@@ -369,7 +369,7 @@ if (!isMounted) {
                                     </div>
                                     <div>
                                         <div className="font-semibold">Email Us</div>
-                                        <div className="text-sm text-gray-300">hello@getaxe.tech</div>
+                                        <div className="text-sm text-gray-300">hello@getaxekenya.com</div>
                                     </div>
                                 </a>
                             </div>

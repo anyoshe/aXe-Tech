@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
       port: 587,
       secure: false, // Use STARTTLS
       auth: {
-        user: 'hello@getaxe.tech',
+        user: 'hello@getaxekenya.com',
         pass: process.env.EMAIL_PASSWORD,
       },
       tls: {
@@ -33,8 +33,8 @@ export async function POST(request: NextRequest) {
 
     // Email content
     const mailOptions = {
-      from: `"GetAxe.Tech Website" <hello@getaxe.tech>`,
-      to: 'hello@getaxe.tech', // Send to yourself
+      from: `"getaxekenya.com Website" <hello@getaxekenya.com>`,
+      to: 'hello@getaxekenya.com', // Send to yourself
       replyTo: email, // So you can reply directly to the customer
       subject: `🖥️ ICT Inquiry: ${name} - ${service || 'General Inquiry'}`,
       html: `
@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
           <body>
             <div class="container">
               <div class="header">
-                <div class="logo">GetAxe.Tech</div>
+                <div class="logo">getaxekenya.com</div>
                 <h1>New ICT Solutions Inquiry</h1>
                 <p>Website Contact Form Submission</p>
               </div>
@@ -164,7 +164,7 @@ export async function POST(request: NextRequest) {
               </div>
 
               <div class="footer">
-                <p>This email was sent from your website contact form at GetAxe.Tech</p>
+                <p>This email was sent from your website contact form at getaxekenya.com</p>
                 <p>📍 Lead Source: Website Contact Form | 🕒 ${new Date().toLocaleString()}</p>
               </div>
             </div>
@@ -172,7 +172,7 @@ export async function POST(request: NextRequest) {
         </html>
       `,
       text: `
-New ICT Inquiry from GetAxe.Tech Website
+New ICT Inquiry from getaxekenya.com Website
 
 Contact Information:
 Name: ${name}
@@ -188,7 +188,7 @@ Message:
 ${message}
 
 ---
-Sent from GetAxe.Tech website contact form
+Sent from getaxekenya.com website contact form
 ${new Date().toLocaleString()}
       `,
     };
@@ -200,7 +200,7 @@ ${new Date().toLocaleString()}
     return NextResponse.json(
       { 
         success: true,
-        message: 'Email sent successfully to hello@getaxe.tech',
+        message: 'Email sent successfully to hello@getaxekenya.com',
         messageId: info.messageId 
       },
       { status: 200 }

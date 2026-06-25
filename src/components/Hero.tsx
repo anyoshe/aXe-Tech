@@ -43,7 +43,7 @@ export default function Hero() {
 
           <Image
             src="/getaxelogobkgd.svg"
-            alt="GetAxe.Tech logo"
+            alt="getaxekenya.com logo"
             width={160}
             height={40}
             className="h-8 md:h-10 w-auto object-contain"

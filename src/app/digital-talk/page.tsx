@@ -223,7 +223,7 @@ const fallbackPosts: BlogPost[] = [
     description: "Learn how to effectively implement ICT solutions in educational institutions and maximize your technology investment.",
     content: "Full content here...",
     coverImage: "/samples/laptop1.jpg",
-    author: "GetAxe.Tech Team",
+    author: "getaxekenya.com Team",
     date: new Date().toISOString()
   },
   {
@@ -233,7 +233,7 @@ const fallbackPosts: BlogPost[] = [
     description: "A comprehensive guide to selecting the perfect ERP solution for your school or business needs and budget.",
     content: "Full content here...",
     coverImage: "/samples/ERp.jpg",
-    author: "GetAxe.Tech Team",
+    author: "getaxekenya.com Team",
     date: new Date().toISOString()
   },
   {
@@ -243,7 +243,7 @@ const fallbackPosts: BlogPost[] = [
     description: "Discover how mobile computer labs can provide flexible, affordable ICT access for institutions of all sizes.",
     content: "Full content here...",
     coverImage: "/samples/mobilecomputerlab.jpg",
-    author: "GetAxe.Tech Team",
+    author: "getaxekenya.com Team",
     date: new Date().toISOString()
   },
   {
@@ -253,7 +253,7 @@ const fallbackPosts: BlogPost[] = [
     description: "How small and medium enterprises can leverage technology to compete with larger corporations.",
     content: "Full content here...",
     coverImage: "/samples/webdevelopment.jpg",
-    author: "GetAxe.Tech Team",
+    author: "getaxekenya.com Team",
     date: new Date().toISOString()
   },
   {
@@ -263,7 +263,7 @@ const fallbackPosts: BlogPost[] = [
     description: "Essential cybersecurity practices every organization should implement to protect their data.",
     content: "Full content here...",
     coverImage: "/samples/network.jpg",
-    author: "GetAxe.Tech Team",
+    author: "getaxekenya.com Team",
     date: new Date().toISOString()
   },
   {
@@ -273,7 +273,7 @@ const fallbackPosts: BlogPost[] = [
     description: "Exploring emerging technologies that are shaping the future of learning and teaching.",
     content: "Full content here...",
     coverImage: "/samples/branding.jpg",
-    author: "GetAxe.Tech Team",
+    author: "getaxekenya.com Team",
     date: new Date().toISOString()
   }
 ];

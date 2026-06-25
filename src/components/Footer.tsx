@@ -71,7 +71,7 @@ export default function Footer() {
               <div className="p-2 bg-[var(--color-accent)] rounded-lg">
                 <FaLaptop className="text-black text-xl" />
               </div>
-              <h3 className="text-white font-bold text-xl">GETAXE.TECH</h3>
+              <h3 className="text-white font-bold text-xl">getaxekenya.com</h3>
             </div>
             <p className="text-gray-400 leading-relaxed mb-4">
               Your trusted ICT solutions partner. We supply quality laptops, computers, and technology equipment
@@ -93,7 +93,7 @@ export default function Footer() {
                 <FaPhoneAlt className="text-blue-400 text-lg" />
               </a>
               <a
-                href="mailto:hello@getaxe.tech"
+                href="mailto:hello@getaxekenya.com"
                 className="p-2 bg-purple-600/20 border border-purple-500/30 rounded-lg hover:bg-purple-600/30 transition"
               >
                 <FaEnvelope className="text-purple-400 text-lg" />
@@ -195,8 +195,8 @@ export default function Footer() {
             <ul className="space-y-3 text-gray-400">
               <li className="flex items-center gap-3">
                 <FaEnvelope className="text-[var(--color-accent)] text-sm" />
-                <a href="mailto:hello@getaxe.tech" className="hover:text-[var(--color-accent)] transition">
-                  hello@getaxe.tech
+                <a href="mailto:hello@getaxekenya.com" className="hover:text-[var(--color-accent)] transition">
+                  hello@getaxekenya.com
                 </a>
               </li>
               <li className="flex items-center gap-3">
@@ -236,7 +236,7 @@ export default function Footer() {
           className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500"
         >
           <p className="text-sm">
-            © {new Date().getFullYear()} GetAxe.Tech. All rights reserved. | Your Trusted ICT Solutions Partner
+            © {new Date().getFullYear()} getaxekenya.com. All rights reserved. | Your Trusted ICT Solutions Partner
           </p>
           <p className="text-xs mt-2">
             Quality Laptops • Reliable Computers • Complete ICT Setup • School Technology Solutions • Business IT Infrastructure

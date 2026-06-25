@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://getaxe.tech
+Host: https://getaxekenya.com
 
 # Sitemaps
-Sitemap: https://getaxe.tech/sitemap.xml
+Sitemap: https://getaxekenya.com/sitemap.xml

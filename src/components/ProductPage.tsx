@@ -146,7 +146,7 @@ export default function ICTProductsPage() {
      SEND QUOTE ACTIONS
   ------------------------------------------- */
   const buildMessage = () => {
-    let msg = "Hello GetAxe.Tech,\nI would like a quote for:\n\n";
+    let msg = "Hello getaxekenya.com,\nI would like a quote for:\n\n";
     quoteItems.forEach((it, idx) => {
       msg += `${idx + 1}. ${it.product.title} — Qty: ${it.qty} — ${currency(
         it.product.price
@@ -164,9 +164,9 @@ export default function ICTProductsPage() {
 
   const sendEmail = () => {
     if (quoteItems.length === 0) return alert("Add items first.");
-    const subject = encodeURIComponent("Quote Request — GetAxe.Tech");
+    const subject = encodeURIComponent("Quote Request — getaxekenya.com");
     const body = encodeURIComponent(buildMessage());
-    window.location.href = `mailto:hello@getaxe.tech?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:hello@getaxekenya.com?subject=${subject}&body=${body}`;
   };
 
   /* -------------------------------------------

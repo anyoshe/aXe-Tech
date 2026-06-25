@@ -126,10 +126,10 @@ export default function CTA() {
               <h3 className="text-xl font-semibold mb-2">Email Us</h3>
               <p className="text-gray-400 mb-4 text-sm">Detailed inquiries & quotes</p>
               <a
-                href="mailto:hello@getaxe.tech"
+                href="mailto:hello@getaxekenya.com"
                 className="text-blue-400 font-semibold hover:underline flex items-center gap-2"
               >
-                hello@getaxe.tech
+                hello@getaxekenya.com
               </a>
             </div>
           </motion.div>
