@@ -1,4 +1,4 @@
-
+export const dynamic = 'force-dynamic';
 import { dbConnect } from '@/lib/mongodb';
 import BlogPost from '@/models/BlogPost';
 import Link from 'next/link';
