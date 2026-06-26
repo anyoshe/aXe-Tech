@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://getaxekenya.com/sitemap.xml
+
+# Disallow sensitive and admin paths
+Disallow: /api/
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /_next/
+Disallow: /private/
+Disallow: /studio/
+
+# Prevent crawling of Next.js internal files
+Disallow: /_next/static/
+Disallow: /_next/image
+
+# Optional: Be respectful to crawlers
+Crawl-delay: 1
