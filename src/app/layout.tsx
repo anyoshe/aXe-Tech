@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "@/styles/globals.css";
 import SocialNavbar from "@/components/SocialNavbar";
 import NextAuthProvider from "@/components/NextAuthProvider";
-import { Analytics } from "@vercel/analytics/react"; 
+import { Analytics } from "@vercel/analytics/react";
 import Image from "next/image";
 import Script from "next/script"; // ✅ Import Script
 
@@ -79,7 +79,49 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      {/* <head>
+        {/* ✅ Facebook Pixel Script */}
+      {/* <Script id="facebook-pixel" strategy="afterInteractive">
+          {`
+            !function(f,b,e,v,n,t,s)
+            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+            n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)}(window, document,'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', '673031319116971'); 
+            fbq('track', 'PageView');
+          `}
+        </Script> */}
+
+      {/* ✅ HubSpot Script */}
+      {/* <Script
+          id="hubspot-script"
+          src="//js-eu1.hs-scripts.com/146581672.js"
+          strategy="afterInteractive"
+        /> */}
+
+      {/* ✅ Facebook Pixel Fallback */}
+      {/* <noscript>
+          <Image
+            src="https://www.facebook.com/tr?id=673031319116971&ev=PageView&noscript=1"
+            alt=""
+            height={1}
+            width={1}
+            style={{ display: "none" }}
+            unoptimized
+          /> */}
+      {/* </noscript>
+      </head> */} */
       <head>
+        {/* Google Site Verification */}
+        <meta
+          name="google-site-verification"
+          content="YfZyhhgRzzhBNsqREcNsPlUrbd8Yvg895OZ4fALCc_8"
+        />
+
         {/* ✅ Facebook Pixel Script */}
         <Script id="facebook-pixel" strategy="afterInteractive">
           {`
