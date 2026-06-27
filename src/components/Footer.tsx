@@ -71,7 +71,7 @@ export default function Footer() {
               <div className="p-2 bg-[var(--color-accent)] rounded-lg">
                 <FaLaptop className="text-black text-xl" />
               </div>
-              <h3 className="text-white font-bold text-xl">getaxekenya.com</h3>
+              <h3 className="text-white font-bold text-xl">Getaxe Technologies</h3>
             </div>
             <p className="text-gray-400 leading-relaxed mb-4">
               Your trusted ICT solutions partner. We supply quality laptops, computers, and technology equipment
@@ -236,7 +236,7 @@ export default function Footer() {
           className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500"
         >
           <p className="text-sm">
-            © {new Date().getFullYear()} getaxekenya.com. All rights reserved. | Your Trusted ICT Solutions Partner
+            © {new Date().getFullYear()} Getaxe Technologies. All rights reserved. | Your Trusted ICT Solutions Partner
           </p>
           <p className="text-xs mt-2">
             Quality Laptops • Reliable Computers • Complete ICT Setup • School Technology Solutions • Business IT Infrastructure
