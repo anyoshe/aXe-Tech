@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-
 :root {
   --color-primary: #4F46E5;         /* Indigo 600 */
   --color-primary-hover: #4338CA;  /* Indigo 700 */

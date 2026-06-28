@@ -20,22 +20,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://getaxekenya.com"),
 
-  // SEO & Verification
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-    },
-  },
 
-  verification: {
-    google: "YfZyhhgRzzhBNsqREcNsPlUrbd8Yvg895OZ4fALCc_8",
+  title: {
+    default: "GetAxe Technologies - ICT Solutions Kenya",
+    template: "%s | GetAxe Technologies",
   },
-
-  title: "getaxekenya.com — ICT Equipment, Laptop Supply, School ICT Labs & Technology Solutions Kenya",
   description:
     "We supply laptops, computers, tablets, printers, networking hardware and full ICT setup for schools, SMEs, NGOs and institutions in Kenya. Mobile computer labs, networking, ERPs, IT maintenance, ICT consulting and digital deployment — affordable and ready to use.",
 
@@ -58,10 +47,25 @@ export const metadata: Metadata = {
 
   authors: [{ name: "GetAxe Technologies", url: "https://getaxekenya.com" }],
 
+  // === FAVICON & ICONS (Improved) ===
+ icons: {
+  // Main favicon for browsers
+  icon: [
+    { url: "/favicon.ico", sizes: "any" },           // Best if you have it
+    { url: "/512x512.png", sizes: "512x512", type: "image/png" },
+    { url: "/192x192.png", sizes: "192x192", type: "image/png" },
+  ],
+
+  // Apple Touch Icon (you already have this)
+  apple: "/apple-touch-icon.png",
+
+  // Shortcut icon
+  shortcut: "/favicon.ico",
+},
   openGraph: {
-    title: "getaxekenya.com — Laptops, Computers, ICT Labs & Tech Solutions",
+    title: "GetAxe Technologies — ICT Equipment & Technology Solutions Kenya",
     description:
-      "Kenya’s trusted ICT supply and solutions partner — laptops, computers, tablets, printers, networking, school ICT labs, ERPs and full ICT deployment.",
+      "Trusted supplier of laptops, computers, school ICT labs, networking, ERPs and full technology solutions in Kenya.",
     url: "https://getaxekenya.com",
     siteName: "GetAxe Technologies",
     images: [
@@ -69,25 +73,36 @@ export const metadata: Metadata = {
         url: "/gat-icon.png",
         width: 1200,
         height: 630,
-        alt: "ICT equipment, laptops and digital solutions Kenya",
+        alt: "GetAxe Technologies Kenya",
       },
     ],
     type: "website",
+    locale: "en_KE",
   },
 
   twitter: {
     card: "summary_large_image",
     site: "@getaxetech",
-    title: "getaxekenya.com — ICT Products, Laptop Supply & Technology Solutions Kenya",
+    title: "GetAxe Technologies — ICT Solutions Kenya",
     description:
       "Laptops, computers, tablets, printers, networking and ICT labs for schools, SMEs and organizations across Kenya.",
     images: ["/gat-icon.png"],
   },
 
-  icons: {
-    icon: "/favicon.ico",
+robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+    },
+  },
+  verification: {
+    google: "YfZyhhgRzzhBNsqREcNsPlUrbd8Yvg895OZ4fALCc_8",
   },
 };
+
 
 export default function RootLayout({
   children,

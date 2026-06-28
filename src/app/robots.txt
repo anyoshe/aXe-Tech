@@ -1,20 +1,22 @@
-User-agent: *
-Allow: /
+import { MetadataRoute } from 'next';
 
-# Sitemap
-Sitemap: https://getaxekenya.com/sitemap.xml
-
-# Disallow sensitive and admin paths
-Disallow: /api/
-Disallow: /admin/
-Disallow: /dashboard/
-Disallow: /_next/
-Disallow: /private/
-Disallow: /studio/
-
-# Prevent crawling of Next.js internal files
-Disallow: /_next/static/
-Disallow: /_next/image
-
-# Optional: Be respectful to crawlers
-Crawl-delay: 1
+export default function robots(): MetadataRoute.Robots {
+  return {
+    rules: {
+      userAgent: '*',
+      allow: '/',
+      disallow: [
+        '/api/',
+        '/admin/',
+        '/dashboard/',
+        '/_next/',
+        '/private/',
+        '/studio/',
+        '/_next/static/',
+        '/_next/image/',
+      ],
+    },
+    sitemap: 'https://getaxekenya.com/sitemap.xml',
+    host: 'https://getaxekenya.com',
+  };
+}
