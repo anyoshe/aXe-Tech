@@ -139,7 +139,7 @@ export default function Navbar() {
     },
     { 
       title: 'Contact', 
-      href: '/contact' 
+      href: '/contactus' 
     },
   ]
 
