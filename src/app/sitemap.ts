@@ -56,6 +56,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: "/digital-services", priority: 0.8 },
     { url: "/school-erp", priority: 0.8 },
     { url: "/software-erp", priority: 0.8 },
+    { url: "/business-management", priority: 0.9 },
     { url: "/it-support", priority: 0.8 },
     { url: "/networking", priority: 0.8 },
     

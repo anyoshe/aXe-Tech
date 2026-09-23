@@ -173,6 +173,12 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/business-management" className="text-gray-400 hover:text-[var(--color-accent)] transition flex items-center gap-2">
+                  <div className="w-1 h-1 bg-gray-500 rounded-full"></div>
+                  Business Management System
+                </Link>
+              </li>
+              <li>
                 <Link href="/contactus" className="text-gray-400 hover:text-[var(--color-accent)] transition flex items-center gap-2">
                   <div className="w-1 h-1 bg-gray-500 rounded-full"></div>
                   Get Quote

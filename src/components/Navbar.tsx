@@ -91,6 +91,12 @@ export default function Navbar() {
           description: 'Management Systems',
           icon: '📊'
         },
+        {
+          label: 'Business Management System',
+          href: '/business-management',
+          description: 'Run your business with facts',
+          icon: '📋'
+        },
         { 
           label: 'IT Support', 
           href: '/it-support',
@@ -129,6 +135,11 @@ export default function Navbar() {
       ],
     },
     { 
+      title: 'Business System',
+      href: '/business-management',
+      featured: true
+    },
+    {
       title: 'Projects', 
       href: '/portfolios',
       featured: true

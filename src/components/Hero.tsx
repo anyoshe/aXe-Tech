@@ -123,6 +123,13 @@ export default function Hero() {
           custom={4}
         >
           <motion.a
+            href="/business-management"
+            className="ctaButton px-8 py-3 bg-[var(--color-accent)] text-black rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition text-center"
+          >
+            Explore Business Management System
+          </motion.a>
+
+          <motion.a
             href="/shop"
             className="ctaButton px-8 py-3 bg-[var(--color-accent)] text-black rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition text-center"
           >

@@ -350,7 +350,7 @@ export default function DigitalServicesPage() {
 
                       <div className="flex items-center justify-between pt-4 border-t border-white/10">
                         <Link
-                          href={`/${service.id}`}
+                          href={service.id === "erp" ? "/business-management" : `/${service.id}`}
                           className="text-blue-400 hover:text-blue-300 font-medium text-sm flex items-center gap-2"
                         >
                           Learn more
