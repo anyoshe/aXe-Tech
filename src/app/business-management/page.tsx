@@ -20,6 +20,7 @@ import Navbar from "@/components/Navbar";
 
 const whatsappUrl =
   "https://wa.me/254736889880?text=Hello%20GetAxe,%20I%27d%20like%20to%20see%20the%20Business%20Management%20System";
+const businessSystemUrl = "https://app.getaxekenya.com";
 
 export const metadata: Metadata = {
   title: "GetAxe Business Management System | Business Management Software Kenya",
@@ -135,7 +136,10 @@ export default function BusinessManagementPage() {
               Know what&apos;s happening in your business — even when you&apos;re not at the counter.
             </p>
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-              <a href="#demo" className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--color-accent)] px-7 py-4 font-bold text-black transition hover:scale-105">
+              <a href={businessSystemUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--color-accent)] px-7 py-4 font-bold text-black transition hover:scale-105">
+                Access Business System <ArrowRight size={18} />
+              </a>
+              <a href="#how-it-works" className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-7 py-4 font-bold transition hover:bg-white/10">
                 Watch the Demo <ArrowRight size={18} />
               </a>
               <Link href="/contactus?service=business-management" className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-7 py-4 font-bold transition hover:bg-white/10">
@@ -156,6 +160,18 @@ export default function BusinessManagementPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="px-4 py-14 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-5xl rounded-3xl border border-[var(--color-accent)]/30 bg-white/5 p-8 text-center sm:p-10">
+          <h2 className="text-2xl font-bold sm:text-3xl">Ready to access your Business System?</h2>
+          <p className="mx-auto mt-3 max-w-2xl leading-7 text-slate-300">
+            Whether you are accessing the system for the first time or returning to manage your business, start here.
+          </p>
+          <a href={businessSystemUrl} target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex items-center gap-2 rounded-full bg-[var(--color-accent)] px-6 py-3 font-bold text-black">
+            Access Business System <ArrowRight size={18} />
+          </a>
         </div>
       </section>
 
@@ -207,7 +223,7 @@ export default function BusinessManagementPage() {
         </div>
       </section>
 
-      <section className="bg-slate-900/70 px-4 py-20 sm:px-6 lg:px-8">
+      <section id="how-it-works" className="bg-slate-900/70 px-4 py-20 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <p className="font-bold uppercase tracking-wider text-[var(--color-accent)]">How it works</p>
           <h2 className="mt-3 text-3xl font-bold sm:text-4xl">A simple path from activity to insight.</h2>
@@ -219,6 +235,29 @@ export default function BusinessManagementPage() {
                 <p className="mt-2 text-sm leading-6 text-slate-400">{text}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white px-4 py-20 text-slate-900 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-5xl">
+          <p className="text-center font-bold uppercase tracking-wider text-indigo-600">Access journey</p>
+          <h2 className="mt-3 text-center text-3xl font-bold sm:text-4xl">How you access the Business System</h2>
+          <div className="mt-10 grid gap-6 md:grid-cols-2">
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-7">
+              <h3 className="text-xl font-bold">First time using the system?</h3>
+              <p className="mt-3 leading-7 text-slate-600">Use the initial credentials provided to you, set your password when prompted, and then complete your business setup before accessing your Business System.</p>
+              <a href={businessSystemUrl} target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex items-center gap-2 rounded-full bg-indigo-600 px-5 py-3 font-bold text-white">
+                Access Business System <ArrowRight size={18} />
+              </a>
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-7">
+              <h3 className="text-xl font-bold">Already set up your business?</h3>
+              <p className="mt-3 leading-7 text-slate-600">Sign in with your credentials to access and manage your existing business.</p>
+              <a href={businessSystemUrl} target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex items-center gap-2 rounded-full bg-indigo-600 px-5 py-3 font-bold text-white">
+                Access Your Business <ArrowRight size={18} />
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -254,8 +293,10 @@ export default function BusinessManagementPage() {
           <p className="font-bold uppercase tracking-wider text-[var(--color-accent)]">Why GetAxe</p>
           <h2 className="mt-3 text-3xl font-bold sm:text-5xl">More than software. A technology partner.</h2>
           <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-slate-300">GetAxe Technologies provides ICT and digital solutions for businesses and institutions. The Business Management System is part of that broader technology offering, supported by a team you can talk to.</p>
+          <p className="mt-5 text-slate-300">Ready to access your business? Enter the Business System here.</p>
           <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
             <Link href="/contactus?service=business-management" className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--color-accent)] px-7 py-4 font-bold text-black">Request a Demo <ArrowRight size={18} /></Link>
+            <a href={businessSystemUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border border-[var(--color-accent)]/60 px-7 py-4 font-bold text-[var(--color-accent)]">Access Business System <ArrowRight size={18} /></a>
             <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border border-green-400/50 px-7 py-4 font-bold text-green-300"><MessageCircle size={18} /> WhatsApp GetAxe</a>
             <a href="tel:+254736889880" className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-7 py-4 font-bold"><Phone size={18} /> Call +254 736 889 880</a>
           </div>

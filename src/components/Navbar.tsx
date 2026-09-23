@@ -134,11 +134,6 @@ export default function Navbar() {
         },
       ],
     },
-    { 
-      title: 'Business System',
-      href: '/business-management',
-      featured: true
-    },
     {
       title: 'Projects', 
       href: '/portfolios',
@@ -184,7 +179,7 @@ export default function Navbar() {
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-1">
+            <div className="hidden lg:flex items-center gap-2">
               {menuGroups.map((group) =>
                 group.items ? (
                   <div
@@ -193,7 +188,7 @@ export default function Navbar() {
                     onMouseEnter={() => handleDropdownEnter(group.title)}
                     onMouseLeave={handleDropdownLeave}
                   >
-                    <button className="flex items-center space-x-1 px-4 py-2 text-[15px] font-semibold text-gray-200 hover:text-white transition-all duration-200 rounded-lg hover:bg-white/5 group/nav-item">
+                    <button className="flex items-center space-x-1 rounded-lg px-3.5 py-2 text-sm font-semibold text-gray-200 transition-all duration-200 hover:bg-white/5 hover:text-white group/nav-item">
                       <span className="font-semibold">{group.title}</span>
                       <ChevronDown 
                         size={16} 
@@ -249,10 +244,10 @@ export default function Navbar() {
                     key={group.title}
                     href={group.href!}
                     className={clsx(
-                      'flex items-center space-x-2 px-4 py-2 text-[15px] font-semibold transition-all duration-200 rounded-lg group/nav-link',
-                      group.featured
-                        ? 'bg-gradient-to-r from-[var(--color-accent)] to-purple-500 text-white shadow-lg hover:shadow-xl hover:scale-105 font-bold'
-                        : 'text-gray-200 hover:text-white hover:bg-white/5'
+                      'flex items-center space-x-2 rounded-lg px-3.5 py-2 text-sm font-semibold transition-all duration-200 group/nav-link',
+                      group.title === 'Business System'
+                        ? 'bg-[var(--color-accent)] text-gray-900 shadow-md hover:bg-[var(--color-accent)]/90'
+                        : 'text-gray-200 hover:bg-white/5 hover:text-white'
                     )}
                   >
                     {group.featured && <Briefcase size={16} className="group-hover/nav-link:scale-110 transition-transform" />}
@@ -263,10 +258,19 @@ export default function Navbar() {
                 )
               )}
 
+              <a
+                href="https://app.getaxekenya.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center whitespace-nowrap rounded-full border border-[var(--color-accent)]/60 px-4 py-2 text-sm font-bold text-[var(--color-accent)] transition-all duration-200 hover:bg-[var(--color-accent)] hover:text-gray-900"
+              >
+                <span>Access Business System</span>
+              </a>
+
               {/* CTA Button */}
               <Link
                 href="/contactus"
-                className="ml-4 flex items-center space-x-2 bg-white text-gray-900 px-6 py-2.5 rounded-full text-[15px] font-bold hover:bg-gray-100 hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl group/cta"
+                className="flex items-center space-x-2 rounded-full bg-white px-4.5 py-2 text-sm font-bold text-gray-900 shadow-md transition-all duration-200 hover:bg-gray-100 group/cta"
               >
                 <Phone size={16} className="group-hover/cta:scale-110 transition-transform" />
                 <span>Get Quote</span>
@@ -349,6 +353,16 @@ export default function Navbar() {
                     </Link>
                   )
                 )}
+
+                <a
+                  href="https://app.getaxekenya.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center justify-center rounded-xl border border-[var(--color-accent)]/60 px-4 py-3 font-bold text-[var(--color-accent)] transition-all duration-200 hover:bg-[var(--color-accent)] hover:text-gray-900"
+                >
+                  Access Business System
+                </a>
 
                 {/* Mobile CTA */}
                 <div className="pt-4 border-t border-white/10">
