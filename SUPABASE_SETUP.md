@@ -1,0 +1,77 @@
+# Supabase setup for aXe-Tech (ICT products)
+
+Products no longer use MongoDB. Follow these steps once.
+
+## 1. Create a Supabase project
+
+1. Go to [https://supabase.com](https://supabase.com) → **New project**
+2. Name it e.g. `axe-tech` or `getaxe`
+3. Set a database password (save it)
+4. Choose a region close to Kenya (e.g. Frankfurt `eu-central-1` if available)
+
+## 2. Run the SQL schema
+
+1. In the project: **SQL Editor** → **New query**
+2. Paste the contents of `supabase/schema.sql`
+3. Click **Run**
+
+This creates the `products` table, indexes, RLS policies, and a `product-images` storage bucket.
+
+## 3. Copy API keys
+
+**Project Settings → API**:
+
+| Variable | Where |
+|----------|--------|
+| Project URL | `NEXT_PUBLIC_SUPABASE_URL` |
+| `anon` `public` key | `NEXT_PUBLIC_SUPABASE_ANON_KEY` |
+| `service_role` `secret` key | `SUPABASE_SERVICE_ROLE_KEY` (server only) |
+
+## 4. Update `.env.local`
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+SUPABASE_SERVICE_ROLE_KEY=eyJ...
+
+# Optional — you can leave or remove Mongo
+# MONGODB_URI=...
+
+NEXT_PUBLIC_SITE_URL=https://getaxekenya.com
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-existing-secret
+```
+
+## 5. Install & run
+
+```bash
+npm install
+npm run dev
+```
+
+- Shop / ICT: http://localhost:3000/ict-products or `/shop`
+- Admin upload: http://localhost:3000/admin/products
+
+### Optional sample data
+
+```bash
+curl -X POST http://localhost:3000/api/products/seed
+```
+
+## 6. Vercel
+
+Add the same three Supabase env vars in **Vercel → Project → Settings → Environment Variables**, then redeploy.
+
+## Security (after it works)
+
+The SQL file includes open write policies for **setup only**. Later:
+
+1. Remove the “Anon can insert/update/delete products” policies
+2. Keep public **SELECT**
+3. Only write from API routes using `SUPABASE_SERVICE_ROLE_KEY`
+4. Protect `/admin/products` with NextAuth
+
+## Images
+
+- **Short term:** admin can still store image URLs or small Base64 strings in `images text[]`
+- **Better:** upload files to the `product-images` bucket and save the public URL in `images`

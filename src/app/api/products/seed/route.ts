@@ -1,29 +1,63 @@
 import { NextResponse } from "next/server";
-import { dbConnect } from "@/lib/mongodb";
-import Product from "@/models/Product";
 import { sampleProducts } from "@/data/products";
+import {
+  getSupabaseAdmin,
+  isSupabaseConfigured,
+  productToRow,
+} from "@/lib/supabase";
 
 export async function POST() {
-  // Only allow seeding in development to avoid accidental production writes
-  if (process.env.NODE_ENV !== "development") {
-    return NextResponse.json({ message: "Seeding allowed only in development" }, { status: 403 });
+  const allowed =
+    process.env.NODE_ENV === "development" ||
+    process.env.ALLOW_PRODUCT_SEED === "true";
+
+  if (!allowed) {
+    return NextResponse.json(
+      { message: "Seeding disabled. Set ALLOW_PRODUCT_SEED=true or run in development." },
+      { status: 403 }
+    );
   }
 
-  await dbConnect();
-
-  // Upsert products by `id`
-  const ops = sampleProducts.map((p) => ({
-    updateOne: {
-      filter: { id: p.id },
-      update: { $set: p },
-      upsert: true,
-    },
-  }));
+  if (!isSupabaseConfigured()) {
+    return NextResponse.json({ message: "Supabase is not configured" }, { status: 503 });
+  }
 
   try {
-    await Product.bulkWrite(ops);
-    return NextResponse.json({ message: "Seeded products" });
+    const supabase = getSupabaseAdmin();
+    const rows = sampleProducts.map((p) => ({
+      ...productToRow({
+        id: p.id,
+        title: p.title,
+        price: p.price,
+        category: p.category,
+        images: p.images ?? [],
+        videos: p.videos ?? [],
+        features: p.features ?? [],
+        short: p.short,
+        description: p.description,
+        specs: {},
+      }),
+      created_at: new Date().toISOString(),
+    }));
+
+    const { data, error } = await supabase
+      .from("products")
+      .upsert(rows, { onConflict: "id" })
+      .select("id");
+
+    if (error) {
+      return NextResponse.json({ message: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({
+      message: "Seeded products into Supabase",
+      count: data?.length ?? rows.length,
+      ids: (data ?? []).map((r) => r.id),
+    });
   } catch (err) {
-    return NextResponse.json({ message: "Error seeding", error: String(err) }, { status: 500 });
+    return NextResponse.json(
+      { message: "Error seeding", error: String(err) },
+      { status: 500 }
+    );
   }
 }

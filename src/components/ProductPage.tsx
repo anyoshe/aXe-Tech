@@ -55,12 +55,32 @@ type QuoteItem = { product: Product; qty: number };
 export default function ICTProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   useEffect(() => {
     let mounted = true;
     fetch("/api/products")
-      .then((r) => r.json())
-      .then((data) => mounted && setProducts(data || []))
-      .catch(() => setProducts([]))
+      .then(async (r) => {
+        const data = await r.json();
+        if (!mounted) return;
+        if (!r.ok) {
+          setLoadError(data?.message || data?.error || "Failed to load products");
+          setProducts(Array.isArray(data?.products) ? data.products : []);
+          return;
+        }
+        if (Array.isArray(data)) {
+          setProducts(data);
+          setLoadError(null);
+        } else {
+          setProducts([]);
+          setLoadError(data?.message || "Unexpected response from server");
+        }
+      })
+      .catch(() => {
+        if (mounted) {
+          setProducts([]);
+          setLoadError("Network error — is the server running and MongoDB reachable?");
+        }
+      })
       .finally(() => mounted && setLoading(false));
     return () => {
       mounted = false;
@@ -235,6 +255,21 @@ export default function ICTProductsPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {loading ? (
             <div className="p-8 col-span-full text-center">Loading products…</div>
+          ) : loadError ? (
+            <div className="p-8 col-span-full text-center space-y-3">
+              <p className="text-red-400 font-medium">Could not load products</p>
+              <p className="text-sm text-white/70 max-w-xl mx-auto">{loadError}</p>
+              <p className="text-xs text-white/50">
+                Fix MongoDB Atlas Network Access, then refresh. Admin upload: /admin/products
+              </p>
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="p-8 col-span-full text-center space-y-2">
+              <p className="text-white/80">No ICT products yet.</p>
+              <p className="text-sm text-white/50">
+                Add products at <a className="underline" href="/admin/products">/admin/products</a>
+              </p>
+            </div>
           ) : (
             filtered.map((p) => (
               <motion.div
