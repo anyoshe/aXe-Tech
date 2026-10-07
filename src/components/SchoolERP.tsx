@@ -1,430 +1,357 @@
 "use client";
-import { motion } from "framer-motion";
+
 import Link from "next/link";
-import { CheckCircle, Shield, TrendingUp, Users, Clock, BarChart } from "lucide-react";
-import Navbar from "./Navbar";
+import Image from "next/image";
+import {
+  Shield,
+  CheckCircle2,
+  Phone,
+  Home,
+  MessageCircle,
+  Users,
+  Wallet,
+  BookOpen,
+  LayoutDashboard,
+  ClipboardList,
+  Settings,
+  GraduationCap,
+} from "lucide-react";
+
+const WA =
+  "https://wa.me/254736889880?text=Hello%20GetAxe%2C%20I%20need%20a%20quotation%20%2F%20demo%20for%20School%20ERP.";
+const PHONE = "tel:+254736889880";
+
+const outcomes = [
+  {
+    title: "Students & classes",
+    text: "Records, class lists and structure that match how your school actually runs.",
+    icon: Users,
+  },
+  {
+    title: "Fees & invoices",
+    text: "Track what is owed and paid — less chasing paper and spreadsheet chaos.",
+    icon: Wallet,
+  },
+  {
+    title: "Academics & work",
+    text: "Assignments and day-to-day academic operations in one place.",
+    icon: BookOpen,
+  },
+  {
+    title: "Leadership visibility",
+    text: "A clearer picture for principals and administrators without waiting for manual reports.",
+    icon: LayoutDashboard,
+  },
+];
+
+const process = [
+  {
+    step: "01",
+    title: "Discovery",
+    desc: "Understand your school size, terms and what must work first.",
+    icon: ClipboardList,
+  },
+  {
+    step: "02",
+    title: "Configure",
+    desc: "Set up modules, users and data migration approach with your team.",
+    icon: Settings,
+  },
+  {
+    step: "03",
+    title: "Train & go live",
+    desc: "Staff learn the daily flow; you start using real school data.",
+    icon: GraduationCap,
+  },
+  {
+    step: "04",
+    title: "Support",
+    desc: "Help after launch so the system stays used through the term.",
+    icon: Phone,
+  },
+];
+
+const packages = [
+  {
+    name: "Starter",
+    forWho: "Smaller schools starting digital records",
+    features: [
+      "Core student records",
+      "Basic fee tracking",
+      "Guided onboarding",
+      "Email / WhatsApp support path",
+    ],
+  },
+  {
+    name: "Professional",
+    forWho: "Growing schools needing full operations",
+    features: [
+      "Students, fees and staff tools",
+      "Assignments & operations views",
+      "Training for your team",
+      "Priority support options",
+    ],
+    popular: true,
+  },
+  {
+    name: "Enterprise",
+    forWho: "Larger schools and multi-campus setups",
+    features: [
+      "Multi-branch ready approach",
+      "Custom workflow discussion",
+      "Dedicated support options",
+      "Integration conversations as needed",
+    ],
+  },
+];
+
+const faqs = [
+  {
+    q: "Is this the same as Business Management?",
+    a: "No. School ERP is for schools (students, fees, academics). Business Management is for SMEs (sales, stock, expenses). Different products, same GetAxe team.",
+  },
+  {
+    q: "How do we get a price?",
+    a: "By quotation after we understand learners, campuses and modules. We do not publish a public price list that ignores your reality.",
+  },
+  {
+    q: "Can we try before buying?",
+    a: "Yes — use the interactive demo and/or book a live walkthrough tailored to your school.",
+  },
+  {
+    q: "Do you train staff?",
+    a: "Training is part of a proper rollout, not an optional extra we forget after install.",
+  },
+];
 
 export default function SchoolERPPage() {
-  const features = [
-    {
-      title: "Complete Financial Management",
-      description: "Track fees, expenses, payroll, and generate financial reports with real-time dashboards",
-      icon: TrendingUp,
-      color: "bg-blue-900"
-    },
-    {
-      title: "Smart Attendance System",
-      description: "Biometric, RFID, or mobile-based attendance with automated parent notifications",
-      icon: Users,
-      color: "bg-green-900"
-    },
-    {
-      title: "Academic Excellence Tools",
-      description: "Lesson planning, gradebooks, report cards, and performance analytics",
-      icon: BarChart,
-      color: "bg-purple-900"
-    },
-    {
-      title: "Parent-Teacher Collaboration",
-      description: "Dedicated portals, messaging, event calendars, and progress tracking",
-      icon: Shield,
-      color: "bg-amber-900"
-    },
-    {
-      title: "Administrative Automation",
-      description: "Timetables, inventory, library management, and transport tracking",
-      icon: Clock,
-      color: "bg-red-900"
-    },
-    {
-      title: "Compliance & Security",
-      description: "Data protection, audit trails, role-based access, and GDPR compliance",
-      icon: CheckCircle,
-      color: "bg-indigo-900"
-    }
-  ];
-
-  const benefits = [
-    "Reduce administrative workload by 60%",
-    "Improve parent engagement by 40%",
-    "Cut operational costs by 30%",
-    "Enhance academic performance tracking",
-    "Streamline communication across departments",
-    "Make data-driven decisions with analytics"
-  ];
-
-  const painPoints = [
-    "Manual record-keeping errors eating your time?",
-    "Parents complaining about lack of transparency?",
-    "Struggling with inefficient communication channels?",
-    "Financial management becoming too complex?",
-    "Exams and grading taking too long to process?"
-  ];
-
   return (
-    <>
-    <Navbar />
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
-      {/* Hero Section with Video Background */}
-      <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/60 to-purple-900/60 z-10"></div>
-          <video
-            autoPlay
-            loop
-            muted
-            className="w-full h-full object-cover opacity-40"
+    <div className="w-full min-h-screen bg-[var(--color-bg-dark)] text-white">
+      <div className="border-b border-white/10 bg-black/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center gap-2 text-sm text-white/60">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-white/80 hover:text-[var(--color-accent)]"
           >
-            <source src="/samples/schoolvideo.mp4" type="video/mp4" />
-          </video>
+            <Home className="w-4 h-4" /> Home
+          </Link>
+          <span className="text-white/30">/</span>
+          <span className="text-white">School ERP</span>
         </div>
+      </div>
 
-        <div className="container mx-auto px-6 relative z-20 py-20">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="max-w-6xl mx-auto text-center"
-          >
-            <div className="inline-flex items-center gap-2 bg-blue-900/30 border border-blue-500/30 rounded-full px-4 py-2 mb-6">
-              <Shield className="w-4 h-4" />
-              <span className="text-sm font-medium">Trusted by 100+ Schools Nationwide</span>
-            </div>
-
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-              Transform Your School Management with{" "}
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                Intelligent ERP
-              </span>
-            </h1>
-
-            <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-90">
-              All-in-one platform that automates administration, enhances learning outcomes, and connects your entire school community in one seamless system.
-            </p>
-
-            {/* Key Metrics */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 max-w-3xl mx-auto">
-              {[
-                { value: "90%", label: "Time Saved on Admin Tasks" },
-                { value: "45%", label: "Faster Communication" },
-                { value: "100%", label: "Data Accuracy" },
-                { value: "70%", label: "Parent Satisfaction" }
-              ].map((metric, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: idx * 0.1 }}
-                  className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10"
-                >
-                  <div className="text-2xl md:text-3xl font-bold text-blue-300">{metric.value}</div>
-                  <div className="text-sm opacity-80">{metric.label}</div>
-                </motion.div>
-              ))}
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/contactus?demo=erp"
-                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/25"
-              >
-                <div className="flex items-center justify-center gap-2">
-                  <span>🎯</span>
-                  Book Free Personalized Demo
-                </div>
-              </Link>
-              <Link
-                href="#features"
-                className="px-8 py-4 bg-white/10 backdrop-blur-sm rounded-full font-bold text-lg hover:bg-white/20 transition-all duration-300 border border-white/20"
-              >
-                Explore Features
-              </Link>
-              <Link
-                href="/school-erp/demo"
-                className="px-8 py-4 bg-[var(--color-accent)] rounded-full font-bold text-lg text-black hover:brightness-95 transition-all duration-200"
-              >
-                Try Live Demo
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Pain Points Section */}
-      <section className="py-16 bg-gradient-to-b from-gray-800/50 to-gray-900/50">
-        <div className="container mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="max-w-4xl mx-auto"
-          >
-            <h2 className="text-3xl font-bold text-center mb-12">
-              Are You Facing These{" "}
-              <span className="text-red-300">Challenges</span>?
-            </h2>
-            <div className="space-y-4">
-              {painPoints.map((point, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.1 }}
-                  className="flex items-start gap-4 p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-colors"
-                >
-                  <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center flex-shrink-0">
-                    <span className="text-red-300">!</span>
-                  </div>
-                  <p className="text-lg">{point}</p>
-                </motion.div>
-              ))}
-            </div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              className="mt-12 p-8 bg-gradient-to-r from-blue-900/30 to-purple-900/30 rounded-2xl border border-blue-500/30 text-center"
-            >
-              <h3 className="text-2xl font-bold mb-4">You're Not Alone!</h3>
-              <p className="text-xl mb-6">
-                Most schools face these exact challenges. Our ERP system is designed specifically to solve them.
-              </p>
-              <Link
-                href="/contactus?consultation=free"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-900 rounded-full font-bold hover:bg-gray-100 transition-colors"
-              >
-                Get Free Consultation
-                <span>→</span>
-              </Link>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section id="features" className="py-20">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-6">
-              Everything You Need in{" "}
-              <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-                One Platform
-              </span>
-            </h2>
-            <p className="text-xl opacity-90 max-w-3xl mx-auto">
-              Modular design - Start with what you need, expand as you grow
-            </p>
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 grid lg:grid-cols-2 gap-10 items-center">
+        <div>
+          <div className="inline-flex items-center gap-2 rounded-full border border-[var(--color-accent)]/30 bg-[var(--color-accent)]/10 px-3 py-1 text-xs font-semibold text-[var(--color-accent)] mb-4">
+            <Shield className="w-3.5 h-3.5" />
+            School ERP · Kenyan schools
           </div>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight tracking-tight">
+            Run the school with one system — students, fees and daily operations.
+          </h1>
+          <p className="mt-4 text-lg text-white/70 max-w-xl leading-relaxed">
+            GetAxe School ERP is built for how schools work: admissions and records,
+            fees, staff tools and visibility for leadership — with demo, training and
+            a clear quotation for your institution.
+          </p>
+          <div className="mt-8 flex flex-col sm:flex-row flex-wrap gap-3">
+            <Link
+              href="/school-erp/demo"
+              className="inline-flex justify-center items-center gap-2 rounded-xl bg-[var(--color-accent)] text-[var(--color-bg-dark)] font-semibold px-5 py-3 text-sm hover:brightness-110"
+            >
+              Try interactive demo
+            </Link>
+            <a
+              href={WA}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex justify-center items-center gap-2 rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold hover:bg-white/5"
+            >
+              <MessageCircle className="w-4 h-4" /> Request quotation
+            </a>
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-[var(--color-accent)] px-2 py-3"
+            >
+              ← Back to home
+            </Link>
+          </div>
+          <div className="mt-8 flex flex-wrap gap-4 text-sm text-white/55">
+            <span className="inline-flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-[var(--color-accent)]" /> Live demo
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-[var(--color-accent)]" /> Quotation-based
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-[var(--color-accent)]" /> Training on rollout
+            </span>
+          </div>
+        </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            {features.map((feature, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -10, transition: { duration: 0.2 } }}
-                className="group"
-              >
-                <div className={`${feature.color} rounded-2xl p-8 h-full border border-white/10 group-hover:border-blue-500/50 transition-all duration-300`}>
-                  <div className="w-14 h-14 rounded-xl bg-white/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <feature.icon className="w-7 h-7" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-                  <p className="opacity-80 mb-4">{feature.description}</p>
-                  <div className="pt-4 border-t border-white/10">
-                    <span className="text-sm text-blue-300 font-medium">Learn more →</span>
-                  </div>
-                </div>
-              </motion.div>
+        <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+          <Image
+            src="/samples/ERp.jpg"
+            alt="School ERP system"
+            fill
+            className="object-cover"
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg-dark)]/80 via-transparent to-transparent" />
+          <div className="absolute bottom-4 left-4 right-4 rounded-xl bg-black/50 border border-white/10 p-4 text-sm">
+            Students · Fees · Academics · Leadership views
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-white/10 bg-black/20 py-14">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl md:text-3xl font-bold mb-2">What schools gain</h2>
+          <p className="text-white/60 mb-8 max-w-2xl">
+            Practical outcomes for administrators and teachers — not a feature dump.
+          </p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {outcomes.map((o) => (
+              <div key={o.title} className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                <o.icon className="w-5 h-5 text-[var(--color-primary)] mb-3" />
+                <h3 className="font-semibold text-[var(--color-accent)]">{o.title}</h3>
+                <p className="mt-2 text-sm text-white/65 leading-relaxed">{o.text}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Benefits Section */}
-      <section className="py-20 bg-gradient-to-b from-gray-900 to-black">
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl font-bold text-center mb-12">
-              Transform Your School with{" "}
-              <span className="text-green-300">Measurable Results</span>
-            </h2>
-            <div className="grid md:grid-cols-2 gap-8">
-              {benefits.map((benefit, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, x: idx % 2 === 0 ? -20 : 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.1 }}
-                  className="flex items-start gap-4"
-                >
-                  <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-1">
-                    <CheckCircle className="w-5 h-5 text-green-400" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold mb-2">{benefit}</h3>
-                    <p className="opacity-80">Backed by data from our current school partners</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Case Study Teaser */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              className="mt-20 p-8 bg-gradient-to-r from-green-900/20 to-blue-900/20 rounded-2xl border border-green-500/30"
-            >
-              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                <div>
-                  <div className="inline-flex items-center gap-2 bg-black/50 rounded-full px-4 py-2 mb-4">
-                    <span className="text-yellow-300">★</span>
-                    <span className="font-medium">Case Study</span>
-                  </div>
-                  <h3 className="text-2xl font-bold mb-2">Green Valley Academy</h3>
-                  <p className="opacity-90">Achieved 65% reduction in administrative workload within 3 months of implementation</p>
+      <section className="py-14 border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl md:text-3xl font-bold mb-8">How rollout works</h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {process.map((s) => (
+              <div key={s.step} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[var(--color-accent)] font-bold">{s.step}</span>
+                  <s.icon className="w-5 h-5 text-[var(--color-primary)]" />
                 </div>
-                <Link
-                  href="/case-studies/green-valley"
-                  className="px-6 py-3 bg-green-600 rounded-full font-bold hover:bg-green-700 transition-colors whitespace-nowrap"
-                >
-                  Read Full Case Study
-                </Link>
+                <h3 className="font-semibold">{s.title}</h3>
+                <p className="mt-2 text-sm text-white/60">{s.desc}</p>
               </div>
-            </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-
-      {/* Packages & quotation CTA — no public pricing */}
-      <section className="py-20 bg-gradient-to-r from-blue-900/20 via-purple-900/20 to-pink-900/20">
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl font-bold mb-6">
-              Ready to Transform Your School?
-            </h2>
-            <p className="text-xl mb-10 opacity-90">
-              Every school is different. We scope modules, users, and support to your institution — then send a clear quotation. No public price list, no surprises.
-            </p>
-
-            <div className="grid md:grid-cols-3 gap-8 mb-12">
-              {[
-                {
-                  name: "Starter",
-                  desc: "Perfect for small schools",
-                  features: ["Core student records", "Basic fee tracking", "Email support", "Onboarding guidance"]
-                },
-                {
-                  name: "Professional",
-                  desc: "Most popular for growing schools",
-                  features: ["Full academic & fees modules", "Staff tools", "Priority support", "Training for your team"],
-                  popular: true
-                },
-                {
-                  name: "Enterprise",
-                  desc: "For large institutions & networks",
-                  features: ["Multi-branch ready", "Custom workflows", "Dedicated support", "Integration options"]
-                }
-              ].map((plan, idx) => (
-                <motion.div
-                  key={idx}
-                  whileHover={{ scale: 1.02 }}
-                  className={`rounded-2xl p-8 text-left ${plan.popular ? 'bg-white text-gray-900' : 'bg-white/10 text-white'} border ${plan.popular ? 'border-[var(--color-primary)]' : 'border-white/20'}`}
-                >
-                  {plan.popular && (
-                    <div className="inline-block bg-[var(--color-primary)] text-white text-sm font-bold px-4 py-1 rounded-full mb-4">
-                      MOST POPULAR
-                    </div>
-                  )}
-                  <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                  <p className="mb-6 opacity-80">{plan.desc}</p>
-                  <ul className="space-y-3 mb-8">
-                    {plan.features.map((feature, fIdx) => (
-                      <li key={fIdx} className="flex items-center gap-2">
-                        <CheckCircle className="w-5 h-5 text-[var(--color-accent)]" />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Link
-                    href={`/contactus?service=school-erp&package=${plan.name.toLowerCase()}`}
-                    className={`block w-full py-3 rounded-full font-bold text-center ${plan.popular ? 'bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white' : 'bg-white/20 hover:bg-white/30'} transition-colors`}
-                  >
-                    Request quotation
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-
-            <div className="bg-black/50 rounded-2xl p-8 border border-white/10">
-              <h3 className="text-2xl font-bold mb-4">See it before you decide</h3>
-              <p className="text-xl mb-6 opacity-90">
-                Book a short demo or try the interactive demo. We will map the system to your school and follow up with a tailored quotation.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link
-                  href="/school-erp/demo"
-                  className="px-8 py-4 bg-[var(--color-accent)] text-[var(--color-bg-dark)] rounded-full font-bold text-lg hover:brightness-110 transition-all"
-                >
-                  Try interactive demo
-                </Link>
-                <Link
-                  href="/contactus?demo=school-erp"
-                  className="px-8 py-4 bg-white/10 backdrop-blur-sm rounded-full font-bold text-lg hover:bg-white/20 transition-all border border-white/20"
-                >
-                  Book free demo call
-                </Link>
+      <section className="py-14 border-t border-white/10 bg-black/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl md:text-3xl font-bold mb-2">Packages (quoted to fit your school)</h2>
+          <p className="text-white/60 mb-8 max-w-2xl">
+            Starting points only — final scope and price come after discovery.
+          </p>
+          <div className="grid md:grid-cols-3 gap-5">
+            {packages.map((pkg) => (
+              <div
+                key={pkg.name}
+                className={`rounded-2xl border p-6 flex flex-col ${
+                  pkg.popular
+                    ? "border-[var(--color-primary)] bg-[var(--color-primary)]/10"
+                    : "border-white/10 bg-white/5"
+                }`}
+              >
+                {pkg.popular && (
+                  <span className="text-xs font-bold text-[var(--color-accent)] mb-2">
+                    OFTEN CHOSEN
+                  </span>
+                )}
+                <h3 className="text-xl font-bold">{pkg.name}</h3>
+                <p className="text-sm text-white/70 mt-1">{pkg.forWho}</p>
+                <ul className="mt-5 space-y-2 flex-1">
+                  {pkg.features.map((f) => (
+                    <li key={f} className="flex gap-2 text-sm text-white/75">
+                      <CheckCircle2 className="w-4 h-4 text-[var(--color-accent)] shrink-0 mt-0.5" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
                 <a
-                  href="https://wa.me/254736889880?text=Hello%20GetAxe%2C%20I%20need%20a%20quotation%20for%20School%20ERP"
+                  href={WA}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-8 py-4 bg-white/10 rounded-full font-bold text-lg hover:bg-white/20 border border-white/20"
+                  className="mt-6 block text-center rounded-xl bg-[var(--color-accent)] text-[var(--color-bg-dark)] font-semibold py-2.5 text-sm hover:brightness-110"
                 >
-                  WhatsApp quotation
+                  Request quotation
                 </a>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-
-      {/* FAQ Section */}
-      <section className="py-16">
-        <div className="container mx-auto px-6 max-w-3xl">
-          <h2 className="text-3xl font-bold text-center mb-12">
-            Frequently Asked Questions
-          </h2>
-          <div className="space-y-6">
-            {[
-              {
-                q: "How long does implementation take?",
-                a: "Typically 2-4 weeks for full setup. We provide training and support throughout."
-              },
-              {
-                q: "Can we customize the ERP for our specific needs?",
-                a: "Yes! We offer extensive customization options to fit your school's unique workflows."
-              },
-              {
-                q: "Is training included?",
-                a: "Comprehensive training for all staff members is included with every plan."
-              },
-              {
-                q: "How secure is our data?",
-                a: "Enterprise-grade security with daily backups, encryption, and GDPR compliance."
-              }
-            ].map((faq, idx) => (
-              <div key={idx} className="bg-white/5 rounded-xl p-6">
-                <h3 className="text-lg font-bold mb-3">{faq.q}</h3>
-                <p className="opacity-80">{faq.a}</p>
-              </div>
-            ))}
+      <section className="py-12 border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-lg font-semibold mb-4 text-white/80">Related</h2>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/school-erp/demo" className="rounded-lg border border-white/15 px-4 py-2 text-sm hover:text-[var(--color-accent)]">
+              Interactive demo
+            </Link>
+            <Link href="/business-management" className="rounded-lg border border-white/15 px-4 py-2 text-sm hover:text-[var(--color-accent)]">
+              Business management (SMEs)
+            </Link>
+            <Link href="/computer-lab-setup" className="rounded-lg border border-white/15 px-4 py-2 text-sm hover:text-[var(--color-accent)]">
+              Computer labs
+            </Link>
+            <Link href="/shop" className="rounded-lg border border-white/15 px-4 py-2 text-sm hover:text-[var(--color-accent)]">
+              ICT products
+            </Link>
           </div>
+        </div>
+      </section>
+
+      <section className="py-14 border-t border-white/10 bg-black/20">
+        <div className="max-w-3xl mx-auto px-4 space-y-4">
+          <h2 className="text-2xl font-bold mb-6">FAQ</h2>
+          {faqs.map((f) => (
+            <div key={f.q} className="rounded-xl border border-white/10 bg-white/5 p-5">
+              <h3 className="font-semibold">{f.q}</h3>
+              <p className="mt-2 text-sm text-white/65">{f.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="py-14 border-t border-white/10 text-center px-4">
+        <h2 className="text-2xl font-bold">See School ERP with your school in mind</h2>
+        <p className="mt-2 text-white/65 max-w-lg mx-auto">
+          Demo first, quotation second — no public price cards.
+        </p>
+        <div className="mt-8 flex flex-col sm:flex-row justify-center flex-wrap gap-3">
+          <Link
+            href="/school-erp/demo"
+            className="rounded-xl bg-[var(--color-accent)] text-[var(--color-bg-dark)] font-semibold px-6 py-3 text-sm"
+          >
+            Open demo
+          </Link>
+          <a
+            href={WA}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-xl border border-white/20 font-semibold px-6 py-3 text-sm inline-flex items-center justify-center gap-2"
+          >
+            <MessageCircle className="w-4 h-4" /> WhatsApp
+          </a>
+          <a
+            href={PHONE}
+            className="rounded-xl border border-white/20 font-semibold px-6 py-3 text-sm inline-flex items-center justify-center gap-2"
+          >
+            <Phone className="w-4 h-4" /> +254 736 889 880
+          </a>
+          <Link
+            href="/"
+            className="rounded-xl text-sm text-white/70 hover:text-[var(--color-accent)] px-6 py-3 inline-flex items-center justify-center gap-1"
+          >
+            <Home className="w-4 h-4" /> Home
+          </Link>
         </div>
       </section>
     </div>
-    </>
   );
 }

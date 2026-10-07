@@ -111,7 +111,7 @@ export default function DigitalServicePage() {
           </div>
         </div>
         <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/10">
-          <Image src="/samples/ui-ux-nxt-with-laptop.jpg" alt="Digital design and web services" fill className="object-cover" sizes="50vw" priority />
+          <Image src="/samples/webdevelopment.jpg" alt="Digital design and web services" fill className="object-cover" sizes="50vw" priority />
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg-dark)]/80 via-transparent to-transparent" />
           <div className="absolute bottom-4 left-4 right-4 rounded-xl bg-black/50 border border-white/10 p-4 text-sm">
             Brand · Web · UI · Content — quoted per project
