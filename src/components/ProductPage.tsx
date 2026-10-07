@@ -4,7 +4,7 @@ import { useMemo, useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { X, ShoppingCart, Trash2, Plus, Minus, Home, MessageCircle, Phone } from "lucide-react";;
+import { X, ShoppingCart, Trash2, Plus, Minus, Home, MessageCircle, Phone } from "lucide-react";
 import { isBase64, isUrl, normalizeImageList } from '@/utils/image-utils';
 
 /* -------------------------------------------
