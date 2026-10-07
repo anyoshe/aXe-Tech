@@ -66,6 +66,16 @@ const portfolioItems: PortfolioItem[] = [
     type: "Web app · Education",
   },
   {
+    title: "Chama Fund Vault",
+    client: "GetAxe Technologies",
+    image: "/samples/Saas.jpg",
+    description:
+      "Digital chama fund tracking for savings groups — contributions and clearer records. Live product from GetAxe.",
+    link: "https://chama-fund-vault-pi.vercel.app/",
+    status: "Live",
+    type: "Web app · Fintech / groups",
+  },
+  {
     title: "Anyoka Eats",
     client: "Anyoka Eats",
     image: "/samples/my-logo.png",
