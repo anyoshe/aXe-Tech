@@ -1,30 +1,54 @@
 import { NextResponse } from "next/server";
+import { erpUnavailable, getSchoolId, getSupabaseAdmin, newId } from "@/lib/erp";
 
-/** Legacy school-ERP route — MongoDB removed. Migrate to Supabase later. */
-export async function GET() {
-  return NextResponse.json([]);
-}
+export async function GET(request: Request) {
+  const blocked = erpUnavailable();
+  if (blocked) return blocked;
+  const schoolId = getSchoolId(request.url);
+  if (!schoolId) return NextResponse.json({ message: "schoolId required" }, { status: 400 });
 
-export async function POST() {
+  const supabase = getSupabaseAdmin();
+  const { data, error } = await supabase.from("erp_assignments").select("*").eq("school_id", schoolId);
+  if (error) return NextResponse.json({ message: error.message }, { status: 500 });
   return NextResponse.json(
-    {
-      message:
-        "This endpoint no longer uses MongoDB. School ERP APIs will be reconnected to Supabase in a later update.",
-    },
-    { status: 503 }
+    (data || []).map((a) => ({
+      id: a.id,
+      _id: a.id,
+      title: a.title,
+      klass: a.klass,
+      subject: a.subject,
+      dueDate: a.due_date,
+    }))
   );
 }
 
-export async function PUT() {
-  return NextResponse.json(
-    { message: "Not available — MongoDB removed. Use Supabase migration." },
-    { status: 503 }
-  );
-}
-
-export async function DELETE() {
-  return NextResponse.json(
-    { message: "Not available — MongoDB removed. Use Supabase migration." },
-    { status: 503 }
-  );
+export async function POST(request: Request) {
+  const blocked = erpUnavailable();
+  if (blocked) return blocked;
+  const body = await request.json();
+  if (!body.schoolId || !body.title) {
+    return NextResponse.json({ message: "schoolId and title required" }, { status: 400 });
+  }
+  const id = body.id || newId("asg");
+  const supabase = getSupabaseAdmin();
+  const { data, error } = await supabase
+    .from("erp_assignments")
+    .insert({
+      id,
+      school_id: body.schoolId,
+      title: body.title,
+      klass: body.klass || body.class || "",
+      subject: body.subject || "",
+      due_date: body.dueDate || null,
+    })
+    .select()
+    .single();
+  if (error) return NextResponse.json({ message: error.message }, { status: 500 });
+  return NextResponse.json({
+    id: data.id,
+    title: data.title,
+    klass: data.klass,
+    subject: data.subject,
+    dueDate: data.due_date,
+  }, { status: 201 });
 }

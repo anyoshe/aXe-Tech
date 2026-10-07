@@ -94,3 +94,17 @@ NEXT_PUBLIC_SITE_URL=https://your-production-domain.com
 MongoDB (`MONGODB_URI`) is **no longer used**. You can delete it from Vercel.
 
 After saving env vars, **Redeploy** the project.
+
+## School ERP tables
+
+After products schema, run:
+
+**SQL Editor →** paste `supabase/school-erp.sql` → **Run**
+
+Tables: `erp_students`, `erp_teachers`, `erp_subjects`, `erp_books`, `erp_issues`, `erp_invoices`, `erp_expenses`, `erp_assignments` (all scoped by `school_id`).
+
+Demo seed: open `/school-erp/demo` and use the seed action, or:
+
+```bash
+curl -X POST http://localhost:3000/api/schools/demo-school/seed
+```

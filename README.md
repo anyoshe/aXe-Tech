@@ -1,57 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# aXe-Tech / GetAxe Kenya
 
-## Getting Started
+Next.js site for **GetAxe Kenya** — ICT products, services, and School ERP demo.
 
-First, run the development server:
+## Stack
+
+- **Next.js** (App Router)
+- **Supabase** — products, School ERP data, storage
+- **NextAuth** — admin login via `ADMIN_EMAIL` / `ADMIN_PASSWORD` (env)
+- **Tailwind CSS**
+
+MongoDB is **not** used.
+
+## Setup
+
+1. Copy env vars (see `SUPABASE_SETUP.md`):
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+NEXTAUTH_SECRET=
+NEXTAUTH_URL=http://localhost:3000
+ADMIN_EMAIL=
+ADMIN_PASSWORD=
+```
+
+2. In Supabase SQL Editor, run:
+   - `supabase/schema.sql` (products + storage)
+   - `supabase/school-erp.sql` (ERP tables)
+
+3. Install and run:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-## MongoDB + Demo API (upgrade notes)
+## Useful routes
 
-This project can be upgraded from the localStorage demo to a multi-tenant MongoDB-backed demo.
+| Path | Purpose |
+|------|---------|
+| `/shop` or `/ict-products` | Product catalog |
+| `/admin/products` | Manage / seed products |
+| `/school-erp` | School ERP marketing page |
+| `/school-erp/demo` | Interactive ERP demo |
+| `/contactus` | Contact form |
 
-Environment variables (Vercel / local `.env`):
+## Deploy (Vercel)
 
-```
-MONGODB_URI=your-mongodb-connection-string
-NEXTAUTH_SECRET=some-long-random-secret
-NEXTAUTH_URL=http://localhost:3000
-```
-
-Files added as an initial step:
-- `src/app/api/students/route.ts` — GET students by `?schoolId=...` and POST to create students.
-- `src/app/api/schools/[id]/seed/route.ts` — POST to seed demo data for a given `schoolId`.
-
-Next steps suggested:
-- Add `lib/mongodb.ts` client util (cached MongoClient) and ensure `MONGODB_URI` is set.
-- Add NextAuth authentication and expose `user.role` and `user.schoolId` on session.
-- Migrate `SchoolERPDemo` to use these APIs instead of `localStorage`.
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Add the same env vars in **Vercel → Settings → Environment Variables**, then redeploy.  
+Do **not** set `MONGODB_URI`.

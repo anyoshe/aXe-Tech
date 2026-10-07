@@ -1,5 +1,5 @@
-# Upgrade branch
+# Upgrade notes
 
-Work in progress: UI redesign, performance, Mongo stability, features for GetAxe Technologies.
-
-Do not merge secrets. Use Vercel/local env for MONGODB_URI and NEXTAUTH_*.
+- Database: **Supabase only** (products + School ERP).
+- Auth: env-based admin (`ADMIN_EMAIL`, `ADMIN_PASSWORD`).
+- Never commit secrets. Use `.env.local` and Vercel env vars.

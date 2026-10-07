@@ -1,30 +1,46 @@
 import { NextResponse } from "next/server";
+import { erpUnavailable, getSchoolId, getSupabaseAdmin, newId } from "@/lib/erp";
 
-/** Legacy school-ERP route — MongoDB removed. Migrate to Supabase later. */
-export async function GET() {
-  return NextResponse.json([]);
-}
+export async function GET(request: Request) {
+  const blocked = erpUnavailable();
+  if (blocked) return blocked;
+  const schoolId = getSchoolId(request.url);
+  if (!schoolId) return NextResponse.json({ message: "schoolId required" }, { status: 400 });
 
-export async function POST() {
+  const supabase = getSupabaseAdmin();
+  const { data, error } = await supabase.from("erp_books").select("*").eq("school_id", schoolId);
+  if (error) return NextResponse.json({ message: error.message }, { status: 500 });
   return NextResponse.json(
-    {
-      message:
-        "This endpoint no longer uses MongoDB. School ERP APIs will be reconnected to Supabase in a later update.",
-    },
-    { status: 503 }
+    (data || []).map((b) => ({
+      id: b.id,
+      _id: b.id,
+      title: b.title,
+      author: b.author,
+      qty: b.qty,
+    }))
   );
 }
 
-export async function PUT() {
-  return NextResponse.json(
-    { message: "Not available — MongoDB removed. Use Supabase migration." },
-    { status: 503 }
-  );
-}
-
-export async function DELETE() {
-  return NextResponse.json(
-    { message: "Not available — MongoDB removed. Use Supabase migration." },
-    { status: 503 }
-  );
+export async function POST(request: Request) {
+  const blocked = erpUnavailable();
+  if (blocked) return blocked;
+  const body = await request.json();
+  if (!body.schoolId || !body.title) {
+    return NextResponse.json({ message: "schoolId and title required" }, { status: 400 });
+  }
+  const id = body.id || newId("bk");
+  const supabase = getSupabaseAdmin();
+  const { data, error } = await supabase
+    .from("erp_books")
+    .insert({
+      id,
+      school_id: body.schoolId,
+      title: body.title,
+      author: body.author || "",
+      qty: Number(body.qty) || 0,
+    })
+    .select()
+    .single();
+  if (error) return NextResponse.json({ message: error.message }, { status: 500 });
+  return NextResponse.json({ id: data.id, _id: data.id, title: data.title, author: data.author, qty: data.qty }, { status: 201 });
 }

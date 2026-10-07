@@ -1,30 +1,32 @@
 import { NextResponse } from "next/server";
+import { erpUnavailable, getSchoolId, getSupabaseAdmin, newId } from "@/lib/erp";
 
-/** Legacy school-ERP route — MongoDB removed. Migrate to Supabase later. */
-export async function GET() {
-  return NextResponse.json([]);
+export async function GET(request: Request) {
+  const blocked = erpUnavailable();
+  if (blocked) return blocked;
+  const schoolId = getSchoolId(request.url);
+  if (!schoolId) return NextResponse.json({ message: "schoolId required" }, { status: 400 });
+
+  const supabase = getSupabaseAdmin();
+  const { data, error } = await supabase.from("erp_subjects").select("*").eq("school_id", schoolId);
+  if (error) return NextResponse.json({ message: error.message }, { status: 500 });
+  return NextResponse.json((data || []).map((s) => ({ id: s.id, _id: s.id, name: s.name })));
 }
 
-export async function POST() {
-  return NextResponse.json(
-    {
-      message:
-        "This endpoint no longer uses MongoDB. School ERP APIs will be reconnected to Supabase in a later update.",
-    },
-    { status: 503 }
-  );
-}
-
-export async function PUT() {
-  return NextResponse.json(
-    { message: "Not available — MongoDB removed. Use Supabase migration." },
-    { status: 503 }
-  );
-}
-
-export async function DELETE() {
-  return NextResponse.json(
-    { message: "Not available — MongoDB removed. Use Supabase migration." },
-    { status: 503 }
-  );
+export async function POST(request: Request) {
+  const blocked = erpUnavailable();
+  if (blocked) return blocked;
+  const body = await request.json();
+  if (!body.schoolId || !body.name) {
+    return NextResponse.json({ message: "schoolId and name required" }, { status: 400 });
+  }
+  const id = body.id || newId("sub");
+  const supabase = getSupabaseAdmin();
+  const { data, error } = await supabase
+    .from("erp_subjects")
+    .insert({ id, school_id: body.schoolId, name: body.name })
+    .select()
+    .single();
+  if (error) return NextResponse.json({ message: error.message }, { status: 500 });
+  return NextResponse.json({ id: data.id, name: data.name }, { status: 201 });
 }
