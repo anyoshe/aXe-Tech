@@ -33,9 +33,9 @@ const pillars = [
   {
     title: "Run",
     subtitle: "Software & ERP",
-    href: "/school-erp",
+    href: "/software",
     icon: LayoutDashboard,
-    text: "School ERP and business systems so operations, fees and records run smoothly.",
+    text: "School ERP and business management — pick the system that matches your organisation.",
   },
   {
     title: "Support",
@@ -265,16 +265,22 @@ export function ErpHighlight() {
           </ul>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
-              href="/school-erp/demo"
+              href="/software"
               className="rounded-xl bg-[var(--color-accent)] text-[var(--color-bg-dark)] font-semibold px-5 py-3 text-sm hover:brightness-110"
             >
-              Try the demo
+              View all software
             </Link>
             <Link
-              href="/school-erp"
+              href="/school-erp/demo"
               className="rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold hover:bg-white/5"
             >
-              Learn more
+              School ERP demo
+            </Link>
+            <Link
+              href="/business-management"
+              className="rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold hover:bg-white/5"
+            >
+              Business system
             </Link>
           </div>
         </div>

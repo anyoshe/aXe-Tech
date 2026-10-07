@@ -12,6 +12,11 @@ const PHONE = "tel:+254736889880";
 
 const solutions = [
   {
+    label: "Software & ERP",
+    href: "/software",
+    description: "School ERP and business management systems",
+  },
+  {
     label: "Labs & Infrastructure",
     href: "/computer-lab-setup",
     description: "Permanent & mobile computer labs, networking",
