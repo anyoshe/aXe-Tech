@@ -1,9 +1,21 @@
 import MobileLabPage from "@/components/MobileLab";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
-export default function BrandingPage() {  // ✅ different name
+export const metadata = {
+  title: "Mobile Computer Labs for Schools | GetAxe Kenya",
+  description:
+    "Scheduled mobile ICT lab sessions for Kenyan schools — devices, support and a clear path to permanent labs. Request a quotation from GetAxe.",
+};
+
+export default function Page() {
   return (
-    <main>
-      <MobileLabPage />
-    </main>
+    <>
+      <Navbar />
+      <main className="pt-16">
+        <MobileLabPage />
+      </main>
+      <Footer />
+    </>
   );
 }
