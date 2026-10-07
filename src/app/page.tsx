@@ -1,24 +1,30 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 import "@/styles/globals.css";
-import Navbar from '../components/Navbar';
-import Hero from '../components/Hero';
-import Services from '../components/Services';
-import Portfolio from '../components/Portfolio';
-import LatestPosts from '../components/LatestPosts';
-import Testimonials from '../components/Testmonials';
-import CTA from '../components/CTA';
-import Footer from '../components/Footer';
-import WhyChooseUs from '../components/WhyChooseUs';
-
+import Navbar from "../components/Navbar";
+import Hero from "../components/Hero";
+import {
+  TrustBar,
+  HomePillars,
+  FeaturedProducts,
+  ErpHighlight,
+  ProcessSection,
+} from "../components/HomeSections";
+import WhyChooseUs from "../components/WhyChooseUs";
+import Testimonials from "../components/Testmonials";
+import CTA from "../components/CTA";
+import Footer from "../components/Footer";
 
 export default async function Home() {
-
   return (
-    <main className="bg-white text-black">
-      <Hero />
+    <main className="bg-[var(--color-bg-dark)] text-white">
       <Navbar />
-      <Services />
+      <Hero />
+      <TrustBar />
+      <HomePillars />
+      <FeaturedProducts />
+      <ErpHighlight />
       <WhyChooseUs />
+      <ProcessSection />
       <Testimonials />
       <CTA />
       <Footer />

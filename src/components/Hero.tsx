@@ -1,183 +1,92 @@
 "use client";
-import { useState } from "react";
-// import Link from 'next/link';
-import { Menu, X } from "lucide-react";
-import { motion, AnimatePresence, Variants } from "framer-motion";
-import Image from 'next/image';
-import styles from "../../styles/Hero.module.css";
 
+import Link from "next/link";
+import { motion } from "framer-motion";
 
-const textFade: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (i = 1) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      delay: i * 0.2,
-      duration: 0.6,
-      ease: "easeOut", // <- Use a string here, not an array
-    },
-  }),
-};
-
+const WA =
+  "https://wa.me/254736889880?text=Hello%20GetAxe%2C%20I%20need%20an%20ICT%20solution.";
 
 export default function Hero() {
-  const [isOpen, setIsOpen] = useState(false);
-
   return (
-    <section id="hero" className={`${styles.heroSection} w-full min-h-screen flex flex-col md:flex-row items-start text-center md:text-left relative`}>
-      {/* Background Video */}
+    <section
+      id="hero"
+      className="relative min-h-[100svh] flex items-center pt-16 text-white overflow-hidden"
+    >
       <video
         autoPlay
         loop
         muted
         playsInline
-        className="absolute top-0 left-0 w-full h-full object-cover z-0 brightness-[0.5] md:brightness-[0.6]"
+        className="absolute inset-0 w-full h-full object-cover z-0 brightness-[0.45]"
       >
         <source src="/samples/bgvd.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
       </video>
-      {/* LOGO & MENU */}
-      <div className={`${styles.logoContainer} flex justify-between items-center z-20 relative`}>
-        <div className={styles.logoBox}>
+      <div className="absolute inset-0 z-[1] bg-gradient-to-b from-[var(--color-bg-dark)]/70 via-transparent to-[var(--color-bg-dark)]" />
 
-          <Image
-            src="/getaxelogobkgd.svg"
-            alt="getaxekenya.com logo"
-            width={160}
-            height={40}
-            className="h-8 md:h-10 w-auto object-contain"
-          />
-
-        </div>
-
-        <div className={styles.hamburgerBox}>
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="text-[var(--color-text-main)] rounded-md transition"
-          >
-            {isOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
-        </div>
-
-        {/* Mobile Menu */}
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-              className="absolute top-full right-0 mt-2 w-[90vw] sm:w-[280px] bg-black bg-opacity-90 text-[var(--color-text-main)] rounded-lg shadow-lg p-6 space-y-4 z-40"
-            >
-              <a href="#hero" className="block hover:underline">Home</a>
-              <a href="/shop" className="block hover:underline">ICT Products</a>
-              <a href="#services" className="block hover:underline">What We Do</a>
-              <a href="/contactus" className="block hover:underline">Contact Us</a>
-              <a href="/digital-talk" className="block hover:underline">Digital Academy</a>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-
-      {/* HERO CONTENT */}
-      <motion.div
-        className={`${styles.heroContent} z-20`}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-      >
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 w-full">
         <motion.p
-          className="text-sm md:text-base mb-4 text-[var(--color-accent)] uppercase tracking-wide"
-          variants={textFade}
-          custom={0}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45 }}
+          className="text-[var(--color-accent)] text-xs sm:text-sm font-semibold tracking-[0.2em] uppercase mb-4"
         >
-          Your Trusted ICT Solutions & Technology Supply Partner
+          Kenya · ICT supply · Labs · Software · Support
         </motion.p>
 
         <motion.h1
-          className="text-3xl md:text-5xl font-bold mb-6 max-w-4xl leading-tight text-[var(--color-text-main)]"
-          variants={textFade}
-          custom={1}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.05 }}
+          className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] max-w-3xl"
         >
-          Affordable ICT Solutions, Laptops, Computers & Smart Technology for Schools and Businesses.
+          ICT that works for Kenyan schools and businesses.
         </motion.h1>
 
-        <hr className="w-20 h-2 bg-[var(--color-accent)] mb-6 mx-auto md:mx-0" />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.15 }}
+          className="mt-5 h-1 w-16 rounded-full bg-[var(--color-accent)]"
+        />
 
         <motion.p
-          className="text-lg md:text-xl mb-4 max-w-2xl text-[var(--color-text-subtle)]"
-          variants={textFade}
-          custom={2}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.12 }}
+          className="mt-6 text-base sm:text-lg text-white/75 max-w-2xl leading-relaxed"
         >
-          We supply laptops, computers, tablets, printers, and essential ICT equipment — plus full ICT setup for schools, SMEs, and institutions. From mobile computer labs, networking and ERPs to maintenance, software, and digital services — we deliver the technology you need, ready to use.
-
+          Devices, computer labs, networking, and school systems — supplied, set
+          up, and supported. One partner from hardware to software.
         </motion.p>
 
-
-
         <motion.div
-          className="w-full flex flex-col md:flex-row gap-3 justify-center md:justify-start mt-6"
-          variants={textFade}
-          custom={4}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="mt-8 flex flex-col sm:flex-row flex-wrap gap-3"
         >
-          <motion.a
-            href="/business-management"
-            className="ctaButton px-8 py-3 bg-[var(--color-accent)] text-black rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition text-center"
-          >
-            Explore Business Management System
-          </motion.a>
-
-          <motion.a
+          <Link
             href="/shop"
-            className="ctaButton px-8 py-3 bg-[var(--color-accent)] text-black rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition text-center"
+            className="inline-flex justify-center items-center rounded-xl bg-[var(--color-accent)] text-[var(--color-bg-dark)] font-semibold px-6 py-3.5 text-sm sm:text-base hover:brightness-110 transition shadow-lg shadow-black/20"
           >
-            Browse Laptops & ICT Products
-          </motion.a>
-
-          <motion.a
-            href="/ict-solutions"
-            className="ctaButton px-8 py-3 bg-[var(--color-primary)] text-[var(--color-text-main)] rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition text-center"
-          >
-            Explore ICT Solutions
-          </motion.a>
-
-          <motion.a
-            href="/mobile-lab"
-            className="ctaButton px-8 py-3 bg-[var(--color-accent)] text-black rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition text-center"
-          >
-            Mobile & Permanent Computer Labs
-          </motion.a>
-
-          <motion.a
+            Browse ICT products
+          </Link>
+          <Link
             href="/contactus"
-            className="ctaButton px-8 py-3 bg-[var(--color-primary)] text-[var(--color-text-main)] rounded-half font-medium hover:bg-[var(--color-primary-hover)] transition text-center"
+            className="inline-flex justify-center items-center rounded-xl border border-white/25 bg-white/5 backdrop-blur-sm font-semibold px-6 py-3.5 text-sm sm:text-base hover:bg-white/10 transition"
           >
-            Book Consultation
-          </motion.a>
+            Request a solution
+          </Link>
+          <a
+            href={WA}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex justify-center items-center rounded-xl text-white/80 font-medium px-4 py-3.5 text-sm hover:text-[var(--color-accent)] transition"
+          >
+            Or chat on WhatsApp →
+          </a>
         </motion.div>
-
-
-      </motion.div>
-      {/* Scroll to Top Arrow */}
-      <button
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        className="fixed bottom-15 right-6 z-50 p-3 rounded-full bg-[var(--color-primary)] text-white shadow-lg hover:bg-[var(--color-primary-hover)] transition duration-300"
-        aria-label="Scroll to top"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-        </svg>
-      </button>
-
+      </div>
     </section>
-
   );
 }
