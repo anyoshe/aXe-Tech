@@ -32,11 +32,6 @@ const solutions = [
     description: "Structured cabling, Wi‑Fi & connectivity",
   },
   {
-    label: "Business Management System",
-    href: "/business-management",
-    description: "Sales, stock & operations for SMEs",
-  },
-  {
     label: "IT Support & Repair",
     href: "/it-support",
     description: "Maintenance, upgrades and support",
@@ -150,8 +145,8 @@ export default function Navbar() {
             <Link href="/shop" className={linkClass}>
               Products
             </Link>
-            <Link href="/school-erp" className={linkClass}>
-              School ERP
+            <Link href="/software" className={linkClass}>
+              Software
             </Link>
             <Link href="/portfolios" className={linkClass}>
               Projects
@@ -222,11 +217,11 @@ export default function Navbar() {
                 Products
               </Link>
               <Link
-                href="/school-erp"
+                href="/software"
                 onClick={() => setOpen(false)}
                 className="block rounded-lg px-3 py-2.5 text-sm font-medium text-white"
               >
-                School ERP
+                Software
               </Link>
               <Link
                 href="/portfolios"
