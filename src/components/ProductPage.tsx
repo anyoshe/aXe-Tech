@@ -194,22 +194,57 @@ export default function ICTProductsPage() {
   ------------------------------------------- */
   return (
     <div className="min-h-screen bg-[var(--color-bg-dark)] text-[var(--color-text-main)] pb-32 md:pb-10">
+      {/* Breadcrumb */}
+      <div className="border-b border-white/10 bg-black/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center gap-2 text-sm text-white/60">
+          <Link href="/" className="inline-flex items-center gap-1.5 text-white/80 hover:text-[var(--color-accent)]">
+            <Home className="w-4 h-4" /> Home
+          </Link>
+          <span className="text-white/30">/</span>
+          <span className="text-white">ICT Products</span>
+        </div>
+      </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
-        {/* -------------------------------------------
-            HEADER + FILTERBAR — MOBILE RESPONSIVE
-        ------------------------------------------- */}
         <div className="flex flex-col gap-6 mb-10">
-
-          <div>
-            <h1 className="text-3xl md:text-4xl font-bold">ICT Products</h1>
-            <p className="text-sm text-[var(--color-text-subtle)] mt-1">
-              Laptops • Tablets • Printers • Accessories • Consumables
-            </p>
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+            <div>
+              <p className="text-sm font-semibold text-[var(--color-accent)] uppercase tracking-wider">
+                Hardware catalogue
+              </p>
+              <h1 className="text-3xl md:text-4xl font-bold mt-1">ICT Products</h1>
+              <p className="text-sm text-[var(--color-text-subtle)] mt-2 max-w-xl">
+                Laptops, lab gear, networking and accessories — priced for schools and businesses.
+                Build a quote and send it on WhatsApp.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-3 text-xs text-white/55">
+                <span>Tested supply</span>
+                <span>·</span>
+                <span>Quote on WhatsApp</span>
+                <span>·</span>
+                <Link href="/" className="hover:text-[var(--color-accent)]">← Home</Link>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <a
+                href="https://wa.me/254736889880?text=Hello%20GetAxe%2C%20I%20need%20an%20ICT%20product%20quote."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl bg-[var(--color-accent)] text-[var(--color-bg-dark)] font-semibold px-4 py-2.5 text-sm"
+              >
+                <MessageCircle className="w-4 h-4" /> WhatsApp quote
+              </a>
+              <a
+                href="tel:+254736889880"
+                className="inline-flex items-center gap-2 rounded-xl border border-white/20 px-4 py-2.5 text-sm font-semibold"
+              >
+                <Phone className="w-4 h-4" /> Call
+              </a>
+            </div>
           </div>
 
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between bg-[#0f0f0f] p-4 rounded-xl">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between bg-[#0f0f0f] p-4 rounded-xl border border-white/10">
 
             <input
               type="search"

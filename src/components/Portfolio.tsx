@@ -124,13 +124,13 @@ export default function Portfolio() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="flex flex-wrap justify-center gap-6">
           {portfolioItems.map((item) => {
             const external = item.link.startsWith("http");
             return (
               <article
                 key={item.title}
-                className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden hover:border-[var(--color-primary)]/40 transition"
+                className="flex flex-col w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)] max-w-md rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden hover:border-[var(--color-primary)]/40 transition"
               >
                 <div className={`relative w-full h-48 ${item.image.includes("logo") || item.image.endsWith(".svg") || item.image.includes("gat-icon") || item.image.includes("my-logo") ? "bg-white flex items-center justify-center p-6" : "bg-black/40"}`}>
                   <Image
