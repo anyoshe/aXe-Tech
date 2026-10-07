@@ -1,57 +1,17 @@
-export const dynamic = 'force-dynamic';
-import { dbConnect } from '@/lib/mongodb';
-import BlogPost from '@/models/BlogPost';
-import Link from 'next/link';
-import Image from 'next/image';
+import Link from "next/link";
+
+export const dynamic = "force-dynamic";
 
 export default async function BlogPage() {
-  await dbConnect();
-  const posts = await BlogPost.find().sort({ date: -1 }).lean();
-
   return (
-    <main className="bg-[var(--color-bg-dark)] text-[var(--color-text-main)] py-20 px-4">
-      <section className="max-w-6xl mx-auto">
-        <h1 className="text-5xl font-extrabold mb-12 text-center text-[var(--color-primary)]">
-          Digital Talk
-        </h1>
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
-          {posts.map((post) => (
-            <Link
-              key={post.slug}
-              href={`/blog/${post.slug}`}
-              className="group block border border-[var(--color-primary)] rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 bg-[var(--color-bg-dark)]"
-            >
-              {post.coverImage && (
-
-                <div className="relative w-full h-48">
-                  <Image
-                    src={post.coverImage}
-                    alt={post.title}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105 rounded-t-2xl"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                </div>
-              )}
-              <div className="p-6">
-                <h2 className="text-2xl font-semibold mb-2 group-hover:text-[var(--color-accent)] transition-colors">
-                  {post.title}
-                </h2>
-                <p className="text-sm text-[var(--color-text-muted)] mb-2 uppercase">
-                  {new Date(post.date).toLocaleDateString(undefined, {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                  })}
-                </p>
-                <p className="text-[var(--color-text-subtle)] text-base leading-relaxed">
-                  {post.description}
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
+    <main className="max-w-3xl mx-auto px-4 py-16 text-center">
+      <h1 className="text-3xl font-bold mb-4">Blog</h1>
+      <p className="text-black/70 mb-6">
+        The blog is being migrated to Supabase. Check back soon.
+      </p>
+      <Link href="/" className="underline text-sm">
+        ← Back home
+      </Link>
     </main>
   );
 }

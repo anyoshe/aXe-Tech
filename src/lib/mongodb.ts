@@ -1,74 +1,23 @@
-import { MongoClient } from "mongodb";
-import mongoose from "mongoose";
+/**
+ * MongoDB has been removed from this project.
+ * Products and new data use Supabase (see src/lib/supabase.ts).
+ * This stub exists only so any leftover import does not crash the app.
+ */
 
-const MONGODB_URI = process.env.MONGODB_URI;
-
-if (!MONGODB_URI) {
+export async function dbConnect(): Promise<null> {
   console.warn(
-    "[mongodb] MONGODB_URI is not set. Set it in .env.local (and Vercel env vars)."
+    "[deprecated] dbConnect() called — MongoDB is removed. Use Supabase (src/lib/supabase.ts)."
   );
+  return null;
 }
 
-declare global {
-  // eslint-disable-next-line no-var
-  var _mongoClientPromise: Promise<MongoClient> | undefined;
-  // eslint-disable-next-line no-var
-  var mongooseCache:
-    | { conn: typeof mongoose | null; promise: Promise<typeof mongoose> | null }
-    | undefined;
-}
+const clientPromise = Promise.reject(
+  new Error(
+    "MongoDB has been removed from this project. Use Supabase (NEXT_PUBLIC_SUPABASE_URL)."
+  )
+);
 
-/** Raw MongoDB client (optional direct collection access) */
-function getClientPromise(): Promise<MongoClient> {
-  if (!MONGODB_URI) {
-    return Promise.reject(new Error("MONGODB_URI is not defined"));
-  }
-  if (!global._mongoClientPromise) {
-    const client = new MongoClient(MONGODB_URI);
-    global._mongoClientPromise = client.connect();
-  }
-  return global._mongoClientPromise;
-}
-
-const clientPromise = MONGODB_URI
-  ? getClientPromise()
-  : Promise.reject(new Error("MONGODB_URI is not defined"));
+// Prevent unhandled rejection noise if something still imports the default export
+clientPromise.catch(() => {});
 
 export default clientPromise;
-
-/** Mongoose connection (use this in API routes + models) */
-if (!global.mongooseCache) {
-  global.mongooseCache = { conn: null, promise: null };
-}
-
-export async function dbConnect() {
-  if (!MONGODB_URI) {
-    throw new Error(
-      "MONGODB_URI is not defined. Add it to .env.local and restart the server."
-    );
-  }
-
-  const cached = global.mongooseCache!;
-
-  if (cached.conn) {
-    return cached.conn;
-  }
-
-  if (!cached.promise) {
-    cached.promise = mongoose
-      .connect(MONGODB_URI, {
-        bufferCommands: false,
-        serverSelectionTimeoutMS: 10000,
-      })
-      .then((m) => m);
-  }
-
-  try {
-    cached.conn = await cached.promise;
-  } catch (e) {
-    cached.promise = null;
-    throw e;
-  }
-
-  return cached.conn;
-}

@@ -1,69 +1,73 @@
 import { NextResponse, NextRequest } from "next/server";
-import { dbConnect } from "@/lib/mongodb";
-import Product from "@/models/Product";
+import { getSupabaseAdmin, isSupabaseConfigured } from "@/lib/supabase";
 
-// 5MB limit per file
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
+/**
+ * Upload an image to Supabase Storage (bucket: product-images)
+ * and optionally append the public URL to a product's images array.
+ */
 export async function POST(request: NextRequest) {
-  await dbConnect();
+  if (!isSupabaseConfigured()) {
+    return NextResponse.json(
+      { message: "Supabase is not configured" },
+      { status: 503 }
+    );
+  }
 
   try {
     const formData = await request.formData();
-    const file = formData.get("file") as File;
-    const productId = formData.get("productId") as string;
-    const type = formData.get("type") as string; // "image" or "video"
+    const file = formData.get("file") as File | null;
+    const productId = formData.get("productId") as string | null;
 
-    if (!file || !productId || !type) {
-      return NextResponse.json(
-        { message: "Missing file, productId, or type" },
-        { status: 400 }
-      );
+    if (!file) {
+      return NextResponse.json({ message: "Missing file" }, { status: 400 });
     }
-
-    // Validate file size
     if (file.size > MAX_FILE_SIZE) {
       return NextResponse.json(
-        { message: `File size exceeds ${MAX_FILE_SIZE / (1024 * 1024)}MB limit` },
+        { message: `File exceeds ${MAX_FILE_SIZE / (1024 * 1024)}MB limit` },
         { status: 413 }
       );
     }
 
-    // Convert file to Base64
-    const buffer = await file.arrayBuffer();
-    const base64 = Buffer.from(buffer).toString("base64");
-    const mimeType = file.type;
-    const base64Data = `data:${mimeType};base64,${base64}`;
+    const supabase = getSupabaseAdmin();
+    const ext = file.name.split(".").pop() || "jpg";
+    const path = `${productId || "misc"}/${Date.now()}.${ext}`;
+    const buffer = Buffer.from(await file.arrayBuffer());
 
-    // Find product and add to images or videos array
-    const product = await Product.findOne({ id: productId });
-    if (!product) {
-      return NextResponse.json({ message: "Product not found" }, { status: 404 });
-    }
+    const { error: uploadError } = await supabase.storage
+      .from("product-images")
+      .upload(path, buffer, {
+        contentType: file.type || "image/jpeg",
+        upsert: true,
+      });
 
-    if (type === "image") {
-      if (!product.images) product.images = [];
-      product.images.push(base64Data);
-    } else if (type === "video") {
-      if (!product.videos) product.videos = [];
-      product.videos.push(base64Data);
-    } else {
+    if (uploadError) {
       return NextResponse.json(
-        { message: "Type must be 'image' or 'video'" },
-        { status: 400 }
+        { message: uploadError.message },
+        { status: 500 }
       );
     }
 
-    await product.save();
-    return NextResponse.json({
-      message: "Upload successful",
-      product,
-    });
+    const { data: pub } = supabase.storage.from("product-images").getPublicUrl(path);
+    const url = pub.publicUrl;
+
+    if (productId) {
+      const { data: product } = await supabase
+        .from("products")
+        .select("images")
+        .eq("id", productId)
+        .maybeSingle();
+
+      if (product) {
+        const images = [...((product.images as string[]) || []), url];
+        await supabase.from("products").update({ images }).eq("id", productId);
+      }
+    }
+
+    return NextResponse.json({ url, path });
   } catch (err) {
-    console.error("Upload error:", err);
-    return NextResponse.json(
-      { message: "Upload failed", error: String(err) },
-      { status: 500 }
-    );
+    const msg = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ message: msg }, { status: 500 });
   }
 }

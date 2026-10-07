@@ -75,3 +75,22 @@ The SQL file includes open write policies for **setup only**. Later:
 
 - **Short term:** admin can still store image URLs or small Base64 strings in `images text[]`
 - **Better:** upload files to the `product-images` bucket and save the public URL in `images`
+
+## Vercel environment variables
+
+Add **all** of these in Vercel → Project → Settings → Environment Variables:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+NEXTAUTH_SECRET=
+NEXTAUTH_URL=https://your-production-domain.com
+ADMIN_EMAIL=your@email.com
+ADMIN_PASSWORD=a-strong-password
+NEXT_PUBLIC_SITE_URL=https://your-production-domain.com
+```
+
+MongoDB (`MONGODB_URI`) is **no longer used**. You can delete it from Vercel.
+
+After saving env vars, **Redeploy** the project.
