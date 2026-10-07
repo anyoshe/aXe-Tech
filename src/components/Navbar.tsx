@@ -27,9 +27,9 @@ const solutions = [
     description: "Structured cabling, Wi‑Fi & connectivity",
   },
   {
-    label: "Software & Business Systems",
+    label: "Business Management System",
     href: "/business-management",
-    description: "ERP, POS and operations software",
+    description: "Sales, stock & operations for SMEs",
   },
   {
     label: "IT Support & Repair",
