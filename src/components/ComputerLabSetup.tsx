@@ -34,17 +34,14 @@ export default function ComputerLabSetupPage() {
   const packages = [
     {
       name: "Starter Lab — 20 Seats",
-      price: "From KES 950,000",
       features: ["20 workstations", "NAS / local server", "Wi‑Fi & cabling", "Furniture & ergonomics"]
     },
     {
       name: "Standard Lab — 40 Seats",
-      price: "From KES 1,750,000",
       features: ["40 workstations", "LMS & content", "Projector + sound", "Teacher training"]
     },
     {
       name: "Campus / Enterprise",
-      price: "Custom",
       features: ["Multi-room design", "Fiber backbone", "Redundancy & monitoring", "SLA-backed support"]
     }
   ];
@@ -163,7 +160,7 @@ export default function ComputerLabSetupPage() {
               <div key={i} className="p-6 bg-gradient-to-br from-[#071021] to-[#04101a] rounded-2xl border border-white/6 hover:scale-[1.02] transition">
                 <div className="flex items-center justify-between mb-3">
                   <div className="font-bold text-lg">{pkg.name}</div>
-                  <div className="text-sm opacity-80">{pkg.price}</div>
+                  <div className="text-sm opacity-90 text-[var(--color-accent)]">Quotation on request</div>
                 </div>
                 <ul className="mb-4 text-sm space-y-1">
                   {pkg.features.map((f, idx) => <li key={idx}>• {f}</li>)}

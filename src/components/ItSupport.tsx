@@ -50,7 +50,6 @@ export default function ITSupportPage() {
         "Monthly system check"
       ],
       responseTime: "4 business hours",
-      price: "KES 8,000/month",
       popular: false,
       color: "from-blue-500 to-cyan-500"
     },
@@ -69,7 +68,6 @@ export default function ITSupportPage() {
         "IT consultation"
       ],
       responseTime: "2 business hours",
-      price: "KES 25,000/month",
       popular: true,
       color: "from-purple-500 to-pink-500"
     },
@@ -89,7 +87,6 @@ export default function ITSupportPage() {
         "Custom SLA agreements"
       ],
       responseTime: "30 minutes",
-      price: "KES 75,000+/month",
       popular: false,
       color: "from-orange-500 to-red-500"
     }
@@ -305,7 +302,7 @@ export default function ITSupportPage() {
                 </h2>
                 <div className="space-y-6">
                   {[
-                    "Average cost of downtime: KES 50,000+ per hour for businesses",
+                    "Downtime costs more than prevention — we help you stay operational",
                     "Lost productivity from staff waiting for IT fixes",
                     "Missed deadlines and customer dissatisfaction",
                     "Data loss from lack of proper backups",
@@ -336,7 +333,7 @@ export default function ITSupportPage() {
                     "Proactive maintenance prevents 95% of issues",
                     "Fast response times (30 min - 4 hours)",
                     "Expert team with local experience",
-                    "Monthly cost as low as KES 8,000",
+                    "Predictable monthly support — priced in your quotation",
                     "24/7 emergency support available"
                   ].map((point, idx) => (
                     <div key={idx} className="flex items-start gap-3">
@@ -396,7 +393,7 @@ export default function ITSupportPage() {
 
                   <div className="mb-6 p-4 bg-white/5 rounded-xl">
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-yellow-300">{plan.price}</div>
+                      <div className="text-sm font-semibold text-[var(--color-accent)]">Monthly support — quotation based</div>
                       <div className="text-sm opacity-70 mt-2">
                         <Clock className="inline w-4 h-4 mr-1" />
                         Response: {plan.responseTime}
@@ -453,7 +450,7 @@ export default function ITSupportPage() {
                 </p>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-blue-300 mb-2">From KES 2,500</div>
+                <div className="text-sm font-semibold text-[var(--color-accent)] mb-2">Quoted per job</div>
                 <div className="text-sm opacity-80 mb-4">Per incident/visit</div>
                 <a
                   href={`${whatsappLink}&text=I%20need%20one-time%20IT%20support`}
@@ -583,14 +580,14 @@ export default function ITSupportPage() {
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   {[
-                    { device: "Laptops", price: "KES 1,500+" },
-                    { device: "Desktops", price: "KES 2,000+" },
-                    { device: "Printers", price: "KES 1,000+" },
-                    { device: "Servers", price: "KES 5,000+" }
+                    { device: "Laptops", price: "Quote" },
+                    { device: "Desktops", price: "Quote" },
+                    { device: "Printers", price: "Quote" },
+                    { device: "Servers", price: "Quote" }
                   ].map((service, idx) => (
                     <div key={idx} className="bg-white/5 rounded-lg p-4 text-center">
                       <div className="font-bold mb-2">{service.device}</div>
-                      <div className="text-sm text-cyan-300">{service.price}</div>
+                      <div className="text-sm text-cyan-300">"On quotation"</div>
                       <div className="text-xs opacity-70 mt-1">Diagnosis + Repair</div>
                     </div>
                   ))}
@@ -617,14 +614,14 @@ export default function ITSupportPage() {
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   {[
-                    { service: "New PC Setup", price: "KES 1,500/device" },
-                    { service: "Software Install", price: "KES 500/app" },
-                    { service: "Network Setup", price: "KES 3,000+" },
-                    { service: "Data Migration", price: "KES 2,500+" }
+                    { service: "New PC Setup", price: "Quote" },
+                    { service: "Software Install", price: "Quote" },
+                    { service: "Network Setup", price: "Quote" },
+                    { service: "Data Migration", price: "Quote" }
                   ].map((item, idx) => (
                     <div key={idx} className="bg-white/5 rounded-lg p-4 text-center">
                       <div className="font-bold mb-2">{item.service}</div>
-                      <div className="text-sm text-purple-300">{item.price}</div>
+                      <div className="text-sm text-purple-300">"On quotation"</div>
                       <div className="text-xs opacity-70 mt-1">One-time service</div>
                     </div>
                   ))}

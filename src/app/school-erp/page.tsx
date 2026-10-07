@@ -1,13 +1,15 @@
-
 import SchoolERPPage from "@/components/SchoolERP";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
-export default function BrandingPage() {
+export default function SchoolErpPage() {
   return (
     <>
-    
-      <main>
+      <Navbar />
+      <main className="pt-16">
         <SchoolERPPage />
       </main>
+      <Footer />
     </>
   );
 }

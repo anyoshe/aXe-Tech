@@ -1,9 +1,15 @@
 import SoftwareERPPage from "@/components/SoftwareERP";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
-export default function BrandingPage() {  // ✅ different name
+export default function SoftwareErpPage() {
   return (
-    <main>
-      <SoftwareERPPage />
-    </main>
+    <>
+      <Navbar />
+      <main className="pt-16">
+        <SoftwareERPPage />
+      </main>
+      <Footer />
+    </>
   );
 }

@@ -72,7 +72,6 @@ export default function NetworkingPage() {
         "Basic security setup",
         "1-year warranty"
       ],
-      price: "KES 35,000",
       popular: false,
       color: "from-blue-500 to-cyan-500"
     },
@@ -90,7 +89,6 @@ export default function NetworkingPage() {
         "Content filtering",
         "3-year warranty"
       ],
-      price: "KES 120,000",
       popular: true,
       color: "from-purple-500 to-pink-500"
     },
@@ -109,7 +107,6 @@ export default function NetworkingPage() {
         "5-year warranty",
         "Priority support"
       ],
-      price: "KES 450,000+",
       popular: false,
       color: "from-orange-500 to-red-500"
     }
@@ -443,7 +440,7 @@ export default function NetworkingPage() {
                   </div>
 
                   <div className="text-center mb-8">
-                    <div className="text-4xl font-bold">{pkg.price}</div>
+                    <div className="text-sm font-semibold text-[var(--color-accent)] mb-2">Request quotation</div>
                     <div className="text-sm opacity-70">One-time installation</div>
                   </div>
 
@@ -628,7 +625,7 @@ export default function NetworkingPage() {
                   </p>
                   <div className="mt-4 grid grid-cols-2 gap-4">
                     <div className="bg-white/5 rounded-lg p-4">
-                      <div className="text-2xl font-bold text-purple-300">KES 15,000</div>
+                      <div className="text-sm font-semibold text-[var(--color-accent)]">Quoted per site survey</div>
                       <div className="text-sm opacity-80">Per month starting</div>
                     </div>
                     <div className="bg-white/5 rounded-lg p-4">

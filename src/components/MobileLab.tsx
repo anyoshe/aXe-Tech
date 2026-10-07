@@ -39,7 +39,7 @@ export default function MobileLabPage() {
     "Zero maintenance - we handle all repairs and updates",
     "Flexible scheduling - perfect for Kenyan school timetables",
     "Includes qualified ICT teacher if needed",
-    "KES Insurance coverage included - no hidden costs"
+    "Insurance options discussed in your quotation — transparent scope"
   ];
 
   const rentalPlans = [
@@ -53,11 +53,8 @@ export default function MobileLabPage() {
         "Basic educational software",
         "On-site setup & pack-up",
         "Basic technical support",
-        "KES Insurance included"
+        "Insurance options available"
       ],
-      price: "KES 4,000/session",
-      monthlyPrice: "KES 12,000/month",
-      monthlyDiscount: "Save KES 4,000",
       popular: false,
       icon: <Calendar className="w-8 h-8" />,
       color: "from-blue-600 to-cyan-600"
@@ -75,9 +72,6 @@ export default function MobileLabPage() {
         "Curriculum materials",
         "KCSE/KCPE exam prep software"
       ],
-      price: "KES 3,000/session",
-      monthlyPrice: "KES 18,000/month",
-      monthlyDiscount: "Save KES 6,000",
       popular: true,
       icon: <Repeat className="w-8 h-8" />,
       color: "from-purple-600 to-pink-600"
@@ -95,9 +89,6 @@ export default function MobileLabPage() {
         "Progress reporting",
         "Parent reports system"
       ],
-      price: "Custom Rate/session",
-      monthlyPrice: "Customized/month",
-      monthlyDiscount: "Bulk discounts available",
       popular: false,
       icon: <Clock className="w-8 h-8" />,
       color: "from-green-600 to-emerald-600"
@@ -138,9 +129,9 @@ export default function MobileLabPage() {
 
   const kenyanFeatures = [
     {
-      title: "KES Pricing",
-      description: "All prices in Kenya Shillings - no dollar conversions",
-      icon: "KES"
+      title: "Clear quotations",
+      description: "Transparent quotations in Kenya Shillings",
+      icon: "Quote"
     },
     {
       title: "Local Support",
@@ -312,16 +303,16 @@ export default function MobileLabPage() {
                   {/* Regular Price */}
                   <div className="mb-4 p-4 bg-white/5 rounded-xl">
                     <div className="text-sm opacity-70 mb-1">Regular Session Rate:</div>
-                    <div className="text-2xl font-bold line-through text-gray-400">{plan.price}</div>
+                    <div className="text-2xl font-bold text-[var(--color-accent)]">"Request quotation"</div>
                   </div>
 
                   {/* Monthly Discount Price */}
                   <div className="mb-6 p-4 bg-gradient-to-r from-green-900/30 to-emerald-900/30 rounded-xl border border-green-500/30">
                     <div className="text-sm opacity-70 mb-1">Monthly Booking Rate:</div>
-                    <div className="text-3xl font-bold text-green-300">{plan.monthlyPrice}</div>
+                    <div className="text-3xl font-bold text-green-300"></div>
                     <div className="text-sm text-yellow-300 font-bold mt-2">
                       <TrendingDown className="inline w-4 h-4 mr-1" />
-                      {plan.monthlyDiscount}
+                      
                     </div>
                   </div>
 
@@ -408,12 +399,12 @@ export default function MobileLabPage() {
                   </thead>
                   <tbody>
                     {[
-                      ["Gharama ya Kuanzia", "KES 0.5M - KES 1.5M", "KES 0"],
-                      ["Matengenezo Kila Mwezi", "KES 20,000 - KES 50,000", "KES 0"],
-                      ["Mshahara wa IT Staff", "KES 20,000 - KES 80,000", "KES 0"],
-                      ["Kuboresha Vifaa (Miaka 3)", "KES 500,000 - KES 800,000", "KES 0"],
-                      ["Bima ya Vifaa", "KES 30,000/mwaka", "KES 0"],
-                      ["Gharama ya Mwezi (8 sessions)", "KES 0", "KES 20,000"]
+                      ["Upfront lab build", "High capital outlay", "No heavy build cost"],
+                      ["Monthly maintenance", "Ongoing facility costs", "Included in service scope"],
+                      ["Dedicated IT staff", "Often required", "GetAxe-supported sessions"],
+                      ["Hardware refresh cycle", "School-owned refresh", "Fleet managed with you"],
+                      ["Insurance", "School arranges", "Discussed in quotation"],
+                      ["Delivery model", "Fixed lab only", "Mobile sessions on schedule"]
                     ].map((row, idx) => (
                       <tr key={idx} className="border-b border-white/10">
                         <td className="py-4">{row[0]}</td>
@@ -427,7 +418,7 @@ export default function MobileLabPage() {
 
               <div className="mt-8 p-6 bg-gradient-to-r from-green-900/30 to-emerald-900/30 rounded-xl">
                 <div className="text-2xl font-bold text-green-300 text-center">
-                  Akiba ya Mwaka: Hadi KES 2.5 Million!
+                  Savings: avoid full lab capital until you are ready
                 </div>
                 <p className="text-center mt-2 opacity-80">
                   Pesa hii unaweza kutumia kwa walimu, ukarabati wa shule, au masomo ya ziada!

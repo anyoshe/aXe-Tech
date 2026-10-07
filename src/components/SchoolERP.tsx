@@ -297,7 +297,8 @@ export default function SchoolERPPage() {
         </div>
       </section>
 
-      {/* Pricing & CTA Section */}
+
+      {/* Packages & quotation CTA — no public pricing */}
       <section className="py-20 bg-gradient-to-r from-blue-900/20 via-purple-900/20 to-pink-900/20">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center">
@@ -305,90 +306,90 @@ export default function SchoolERPPage() {
               Ready to Transform Your School?
             </h2>
             <p className="text-xl mb-10 opacity-90">
-              Flexible plans starting from just $99/term. No hidden fees, cancel anytime.
+              Every school is different. We scope modules, users, and support to your institution — then send a clear quotation. No public price list, no surprises.
             </p>
 
             <div className="grid md:grid-cols-3 gap-8 mb-12">
               {[
                 {
                   name: "Starter",
-                  price: "$99",
                   desc: "Perfect for small schools",
-                  features: ["Up to 200 students", "Basic modules", "Email support"]
+                  features: ["Core student records", "Basic fee tracking", "Email support", "Onboarding guidance"]
                 },
                 {
                   name: "Professional",
-                  price: "$299",
-                  desc: "Most popular choice",
-                  features: ["Unlimited students", "All modules", "Priority support", "Custom reports"],
+                  desc: "Most popular for growing schools",
+                  features: ["Full academic & fees modules", "Staff tools", "Priority support", "Training for your team"],
                   popular: true
                 },
                 {
                   name: "Enterprise",
-                  price: "Custom",
-                  desc: "For large institutions",
-                  features: ["Multi-branch support", "White-label", "Dedicated manager", "API access"]
+                  desc: "For large institutions & networks",
+                  features: ["Multi-branch ready", "Custom workflows", "Dedicated support", "Integration options"]
                 }
               ].map((plan, idx) => (
                 <motion.div
                   key={idx}
-                  whileHover={{ scale: 1.05 }}
-                  className={`rounded-2xl p-8 ${plan.popular ? 'bg-white text-gray-900' : 'bg-white/10 text-white'} border ${plan.popular ? 'border-blue-500' : 'border-white/20'}`}
+                  whileHover={{ scale: 1.02 }}
+                  className={`rounded-2xl p-8 text-left ${plan.popular ? 'bg-white text-gray-900' : 'bg-white/10 text-white'} border ${plan.popular ? 'border-[var(--color-primary)]' : 'border-white/20'}`}
                 >
                   {plan.popular && (
-                    <div className="inline-block bg-blue-500 text-white text-sm font-bold px-4 py-1 rounded-full mb-4">
+                    <div className="inline-block bg-[var(--color-primary)] text-white text-sm font-bold px-4 py-1 rounded-full mb-4">
                       MOST POPULAR
                     </div>
                   )}
                   <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                  <div className="text-4xl font-bold mb-4">{plan.price}<span className="text-lg">/term</span></div>
                   <p className="mb-6 opacity-80">{plan.desc}</p>
                   <ul className="space-y-3 mb-8">
                     {plan.features.map((feature, fIdx) => (
                       <li key={fIdx} className="flex items-center gap-2">
-                        <CheckCircle className="w-5 h-5 text-green-500" />
+                        <CheckCircle className="w-5 h-5 text-[var(--color-accent)]" />
                         <span>{feature}</span>
                       </li>
                     ))}
                   </ul>
                   <Link
-                    href={`/contactus?plan=${plan.name.toLowerCase()}`}
-                    className={`block w-full py-3 rounded-full font-bold ${plan.popular ? 'bg-blue-600 hover:bg-blue-700' : 'bg-white/20 hover:bg-white/30'} transition-colors`}
+                    href={`/contactus?service=school-erp&package=${plan.name.toLowerCase()}`}
+                    className={`block w-full py-3 rounded-full font-bold text-center ${plan.popular ? 'bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white' : 'bg-white/20 hover:bg-white/30'} transition-colors`}
                   >
-                    Get Started
+                    Request quotation
                   </Link>
                 </motion.div>
               ))}
             </div>
 
-            {/* Final CTA */}
             <div className="bg-black/50 rounded-2xl p-8 border border-white/10">
-              <h3 className="text-2xl font-bold mb-4">Still Have Questions?</h3>
+              <h3 className="text-2xl font-bold mb-4">See it before you decide</h3>
               <p className="text-xl mb-6 opacity-90">
-                Book a 30-minute personalized demo. We'll show you exactly how our ERP can solve your specific challenges.
+                Book a short demo or try the interactive demo. We will map the system to your school and follow up with a tailored quotation.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
-                  href="/contactus?demo=personalized"
-                  className="px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-full font-bold text-lg hover:shadow-lg hover:shadow-blue-500/25 transition-all"
+                  href="/school-erp/demo"
+                  className="px-8 py-4 bg-[var(--color-accent)] text-[var(--color-bg-dark)] rounded-full font-bold text-lg hover:brightness-110 transition-all"
                 >
-                  📞 Book Free Demo Call
+                  Try interactive demo
                 </Link>
                 <Link
-                  href="/contactus?quote=free"
+                  href="/contactus?demo=school-erp"
                   className="px-8 py-4 bg-white/10 backdrop-blur-sm rounded-full font-bold text-lg hover:bg-white/20 transition-all border border-white/20"
                 >
-                  Get Free Custom Quote
+                  Book free demo call
                 </Link>
+                <a
+                  href="https://wa.me/254736889880?text=Hello%20GetAxe%2C%20I%20need%20a%20quotation%20for%20School%20ERP"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-8 py-4 bg-white/10 rounded-full font-bold text-lg hover:bg-white/20 border border-white/20"
+                >
+                  WhatsApp quotation
+                </a>
               </div>
-              <p className="mt-6 text-sm opacity-70">
-                <CheckCircle className="inline w-4 h-4 mr-2 text-green-400" />
-                No credit card required • 30-day money-back guarantee
-              </p>
             </div>
           </div>
         </div>
       </section>
+
 
       {/* FAQ Section */}
       <section className="py-16">

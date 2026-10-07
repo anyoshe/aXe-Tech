@@ -88,8 +88,6 @@ export default function SoftwareERPPage() {
         "Email support",
         "Cloud hosting included"
       ],
-      price: "KES 5,000/month",
-      setupFee: "KES 15,000",
       popular: false,
       color: "from-blue-500 to-cyan-500"
     },
@@ -107,8 +105,6 @@ export default function SoftwareERPPage() {
         "Priority support",
         "Training sessions"
       ],
-      price: "KES 10,000/month",
-      setupFee: "KES 45,000",
       popular: true,
       color: "from-purple-500 to-pink-500"
     },
@@ -127,8 +123,6 @@ export default function SoftwareERPPage() {
         "Security audits",
         "Disaster recovery"
       ],
-      price: "KES 100,000+/month",
-      setupFee: "Custom",
       popular: false,
       color: "from-orange-500 to-red-500"
     }
@@ -140,28 +134,24 @@ export default function SoftwareERPPage() {
       description: "Complete school management system",
       icon: <Users className="w-6 h-6" />,
       features: ["Student management", "Fee collection", "Exam management", "Parent portal"],
-      price: "From KES 10,000/month"
     },
     {
       title: "Retail POS",
       description: "Point of sale for shops & supermarkets",
       icon: <CreditCard className="w-6 h-6" />,
       features: ["Barcode scanning", "Inventory tracking", "Sales reports", "Receipt printing"],
-      price: "From KES 10,000/month"
     },
     {
       title: "Hospital System",
       description: "Healthcare management solution",
       icon: <Shield className="w-6 h-6" />,
       features: ["Patient records", "Appointment scheduling", "Pharmacy management", "Lab integration"],
-      price: "From KES 15,000/month"
     },
     {
       title: "Custom Software",
       description: "Tailored solutions for unique needs",
       icon: <Settings className="w-6 h-6" />,
       features: ["Requirements analysis", "Custom development", "Testing & deployment", "Maintenance"],
-      price: "Custom quote"
     }
   ];
 
@@ -462,7 +452,7 @@ export default function SoftwareERPPage() {
               <span className="text-purple-300">Packages</span>
             </h2>
             <p className="text-xl opacity-90 max-w-3xl mx-auto">
-              Complete business management solutions at affordable prices
+              Complete business management solutions — scoped and quoted for your team
             </p>
           </div>
 
@@ -492,9 +482,9 @@ export default function SoftwareERPPage() {
 
                   <div className="mb-6 p-4 bg-white/5 rounded-xl">
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-purple-300">{pkg.price}</div>
+                      <div className="text-sm font-semibold text-[var(--color-accent)]">Tailored quotation</div>
                       <div className="text-sm opacity-70 mt-2">
-                        Setup: {pkg.setupFee}
+                        Setup: "Included in quotation"
                       </div>
                     </div>
                   </div>
@@ -569,7 +559,7 @@ export default function SoftwareERPPage() {
                   ))}
                 </ul>
                 <div className="mt-4 pt-4 border-t border-white/10">
-                  <div className="text-lg font-bold text-cyan-300">{solution.price}</div>
+                  <div className="text-sm font-semibold text-[var(--color-accent)]">Request quotation</div>
                 </div>
               </motion.div>
             ))}
@@ -728,8 +718,8 @@ export default function SoftwareERPPage() {
                 },
                 {
                   icon: "💬",
-                  title: "Quick Quote",
-                  action: "Get Pricing",
+                  title: "Get a quotation",
+                  action: "Request quote",
                   link: whatsappLink,
                   color: "from-cyan-600 to-teal-600"
                 }
