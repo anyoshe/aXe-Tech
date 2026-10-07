@@ -1,206 +1,405 @@
 "use client";
+
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Shield,
-  Zap,
-  Users,
-  CheckCircle,
+  CheckCircle2,
   Phone,
   Wrench,
-  MapPin,
-  BarChart3,
-  Monitor
+  Monitor,
+  Network,
+  GraduationCap,
+  ClipboardList,
+  ArrowRight,
+  Home,
+  MessageCircle,
 } from "lucide-react";
 
+const WA =
+  "https://wa.me/254736889880?text=Hello%20GetAxe%2C%20I%20need%20a%20quotation%20for%20a%20permanent%20computer%20lab.";
+const PHONE = "tel:+254736889880";
+
+const process = [
+  {
+    step: "01",
+    title: "Site survey & design",
+    desc: "We assess power, space, security and teaching goals, then propose a practical lab layout.",
+    icon: ClipboardList,
+  },
+  {
+    step: "02",
+    title: "Supply & install",
+    desc: "Workstations, networking, cabling and classroom setup — configured and tested before handover.",
+    icon: Monitor,
+  },
+  {
+    step: "03",
+    title: "Train & launch",
+    desc: "Teachers and lab managers get hands-on orientation so the room is used from day one.",
+    icon: GraduationCap,
+  },
+  {
+    step: "04",
+    title: "Support & scale",
+    desc: "Maintenance, upgrades and expansion paths as enrolment or programmes grow.",
+    icon: Wrench,
+  },
+];
+
+const packages = [
+  {
+    name: "Starter lab",
+    seats: "About 20 seats",
+    forWho: "Primary / small secondary",
+    features: [
+      "Workstation package sized to your room",
+      "Local networking & shared access",
+      "Basic teacher station setup",
+      "Handover checklist & orientation",
+    ],
+  },
+  {
+    name: "Standard lab",
+    seats: "About 40 seats",
+    forWho: "Secondary schools & centres",
+    features: [
+      "Full class seating plan",
+      "Structured cabling & Wi‑Fi as needed",
+      "Projection / display options",
+      "Teacher training session",
+    ],
+    popular: true,
+  },
+  {
+    name: "Campus / multi-room",
+    seats: "Multiple rooms",
+    forWho: "Larger schools & institutions",
+    features: [
+      "Multi-lab design",
+      "Backbone networking options",
+      "Central management approach",
+      "Phased rollout & SLA-style support options",
+    ],
+  },
+];
+
+const trustPoints = [
+  {
+    title: "One accountable partner",
+    text: "Hardware, network and setup under one team — fewer vendors to chase when something fails.",
+  },
+  {
+    title: "Built for Kenyan schools",
+    text: "We plan for power realities, security, class sizes and the way labs are actually taught.",
+  },
+  {
+    title: "Clear quotation",
+    text: "You get a written scope: seats, network, install and training — no vague “from” price banners.",
+  },
+  {
+    title: "After go-live support",
+    text: "Repairs, upgrades and advice so the lab stays usable beyond installation day.",
+  },
+];
+
+const faqs = [
+  {
+    q: "How do we get a price?",
+    a: "We quote after understanding seat count, room condition, power and whether networking is included. Contact us or WhatsApp for a tailored quotation.",
+  },
+  {
+    q: "How long does a typical install take?",
+    a: "Depends on procurement and room readiness. After equipment is on site, many starter labs complete within a few weeks — we confirm timelines in your proposal.",
+  },
+  {
+    q: "Do you train teachers?",
+    a: "Yes. Orientation for teachers and lab managers is part of a proper handover, not an optional extra we forget.",
+  },
+  {
+    q: "Can you use equipment we already have?",
+    a: "Often yes. We can audit existing PCs and design a hybrid lab that fills gaps instead of replacing everything.",
+  },
+];
+
 export default function ComputerLabSetupPage() {
-  const phoneNumber = "0736889880";
-  const whatsappLink = `https://wa.me/254736889880?text=Hello%20GetAxe,%20I'm%20interested%20in%20your%20Permanent%20Computer%20Lab%20services`;
-
-  const trustStats = [
-    { value: "150+", label: "Schools Equipped" },
-    { value: "1,200+", label: "Networks Installed" },
-    { value: "3 yrs", label: "Typical ROI" },
-    { value: "99.9%", label: "Uptime" }
-  ];
-
-  const process = [
-    { step: "Assess & Design", desc: "Site survey, needs analysis and bespoke design." },
-    { step: "Procure & Install", desc: "Quality hardware, cabling, networking and furniture." },
-    { step: "Train & Launch", desc: "Teacher training, LMS setup and handover." },
-    { step: "Maintain & Scale", desc: "Warranty, monitoring and upgrade paths." }
-  ];
-
-  const packages = [
-    {
-      name: "Starter Lab — 20 Seats",
-      features: ["20 workstations", "NAS / local server", "Wi‑Fi & cabling", "Furniture & ergonomics"]
-    },
-    {
-      name: "Standard Lab — 40 Seats",
-      features: ["40 workstations", "LMS & content", "Projector + sound", "Teacher training"]
-    },
-    {
-      name: "Campus / Enterprise",
-      features: ["Multi-room design", "Fiber backbone", "Redundancy & monitoring", "SLA-backed support"]
-    }
-  ];
-
-  const faqs = [
-    { q: "Do you provide financing support?", a: "Yes — we advise on procurement and can connect you to financing partners and grant options." },
-    { q: "How long does installation take?", a: "Typical Starter Lab installs within 2–3 weeks after procurement; timelines vary by scope." },
-    { q: "Do you train teachers?", a: "We deliver hands-on teacher training and lab management resources as standard." }
-  ];
-
   return (
-    <section className="w-full min-h-screen bg-gradient-to-b from-[#05060a] to-black text-white py-16 px-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Hero */}
-        <div className="grid lg:grid-cols-2 gap-10 items-center mb-12">
-          <div className="space-y-6">
-            <div className="inline-flex items-center gap-3 bg-gradient-to-r from-green-500 to-cyan-400 px-4 py-2 rounded-full shadow-sm">
-              <Shield className="w-5 h-5 text-black" />
-              <span className="font-semibold text-black">Turnkey Computer Labs</span>
+    <div className="w-full min-h-screen bg-[var(--color-bg-dark)] text-white">
+      {/* Breadcrumb / back to home */}
+      <div className="border-b border-white/10 bg-black/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center gap-2 text-sm text-white/60">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-white/80 hover:text-[var(--color-accent)] transition"
+          >
+            <Home className="w-4 h-4" />
+            Home
+          </Link>
+          <span className="text-white/30">/</span>
+          <Link href="/#solutions" className="hover:text-[var(--color-accent)] transition">
+            Solutions
+          </Link>
+          <span className="text-white/30">/</span>
+          <span className="text-white">Computer lab setup</span>
+        </div>
+      </div>
+
+      {/* Hero */}
+      <section className="relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 grid lg:grid-cols-2 gap-10 items-center">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-[var(--color-accent)]/30 bg-[var(--color-accent)]/10 px-3 py-1 text-xs font-semibold text-[var(--color-accent)] mb-4">
+              <Shield className="w-3.5 h-3.5" />
+              Permanent computer labs · Schools & institutions
             </div>
-
-            <h1 className="text-4xl md:text-5xl font-extrabold leading-tight">
-              Build a Future-Ready Computer Lab — Design, Install, Maintain
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight tracking-tight">
+              Computer labs that are ready to teach on day one.
             </h1>
-
-            <p className="text-lg text-gray-300 max-w-2xl">
-              We design and deliver permanent computer labs that improve learning outcomes and reduce long-term costs.
-              From procurement to teacher training, GetAxe handles the full project so your school gets a lab that works from day one.
+            <p className="mt-4 text-base sm:text-lg text-white/70 max-w-xl leading-relaxed">
+              GetAxe designs, supplies and installs permanent ICT labs — workstations,
+              networking and handover — so your school is not left with boxes and no
+              working classroom.
             </p>
-
-            <div className="flex flex-col sm:flex-row gap-3">
-              <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full font-bold text-black shadow-lg hover:scale-[1.02] transition">
-                Get a Quote
+            <div className="mt-8 flex flex-col sm:flex-row flex-wrap gap-3">
+              <a
+                href={WA}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex justify-center items-center gap-2 rounded-xl bg-[var(--color-accent)] text-[var(--color-bg-dark)] font-semibold px-5 py-3 text-sm hover:brightness-110"
+              >
+                <MessageCircle className="w-4 h-4" />
+                Request lab quotation
               </a>
-              <Link href="/contactus?demo=lab" className="inline-flex items-center gap-3 px-6 py-3 border border-white/10 rounded-full font-semibold hover:bg-white/5 transition">
-                Book Consultation
+              <Link
+                href="/contactus?service=computer-lab"
+                className="inline-flex justify-center items-center gap-2 rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold hover:bg-white/5"
+              >
+                Book a consultation
+              </Link>
+              <Link
+                href="/"
+                className="inline-flex justify-center items-center gap-2 text-sm text-white/60 hover:text-[var(--color-accent)] px-2 py-3"
+              >
+                ← Back to home
               </Link>
             </div>
-
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-md">
-              {trustStats.map((s, i) => (
-                <div key={i} className="bg-white/5 rounded-lg p-3 text-center backdrop-blur-sm border border-white/6">
-                  <div className="text-lg font-bold text-green-300">{s.value}</div>
-                  <div className="text-xs opacity-80">{s.label}</div>
-                </div>
-              ))}
-            </motion.div>
+            <div className="mt-8 flex flex-wrap gap-4 text-sm text-white/55">
+              <span className="inline-flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-[var(--color-accent)]" /> Site survey first
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-[var(--color-accent)]" /> Written quotation
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-[var(--color-accent)]" /> Training on handover
+              </span>
+            </div>
           </div>
 
-          <div className="relative">
-            <div className="rounded-3xl bg-gradient-to-tr from-[#0b1220] to-[#071126] p-6 shadow-2xl border border-white/6">
-              <div className="rounded-2xl bg-gradient-to-br from-[#081226] to-[#061224] p-6">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="bg-gradient-to-r from-purple-600 to-pink-500 p-3 rounded-lg">
-                    <Monitor className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <div className="font-bold">Premium Hardware</div>
-                    <div className="text-sm opacity-80">Carefully chosen models for durability</div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-white/3 rounded p-3">
-                    <div className="text-sm opacity-80">Seats</div>
-                    <div className="font-bold">20 — 40+</div>
-                  </div>
-                  <div className="bg-white/3 rounded p-3">
-                    <div className="text-sm opacity-80">Warranty</div>
-                    <div className="font-bold">1–3 Years</div>
-                  </div>
-                </div>
-
-                <div className="mt-6">
-                  <div className="text-sm opacity-80">Quick call</div>
-                  <a href={`tel:${phoneNumber}`} className="inline-block mt-2 px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 rounded-full font-semibold text-black">{phoneNumber}</a>
-                </div>
-              </div>
+          <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+            <Image
+              src="/samples/computerlab.jpg"
+              alt="School computer lab setup by GetAxe"
+              fill
+              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg-dark)]/80 via-transparent to-transparent" />
+            <div className="absolute bottom-4 left-4 right-4 rounded-xl bg-black/50 backdrop-blur-sm border border-white/10 p-4">
+              <p className="text-sm font-medium">From empty room to teaching lab</p>
+              <p className="text-xs text-white/60 mt-1">
+                Layout · power awareness · network · devices · teacher orientation
+              </p>
             </div>
           </div>
         </div>
+      </section>
 
-        {/* Benefits & Process */}
-        <div className="grid lg:grid-cols-3 gap-6 mb-12">
-          <div className="p-6 bg-white/5 rounded-lg">
-            <div className="flex items-center gap-3 mb-3"><Zap className="w-5 h-5 text-yellow-300" /><div className="font-bold">Future-Proof</div></div>
-            <div className="text-sm opacity-90">Scalable labs with upgrade paths and monitoring.</div>
-          </div>
-          <div className="p-6 bg-white/5 rounded-lg">
-            <div className="flex items-center gap-3 mb-3"><Users className="w-5 h-5 text-green-300" /><div className="font-bold">Teacher Training</div></div>
-            <div className="text-sm opacity-90">Hands-on training to maximise classroom impact.</div>
-          </div>
-          <div className="p-6 bg-white/5 rounded-lg">
-            <div className="flex items-center gap-3 mb-3"><Wrench className="w-5 h-5 text-cyan-300" /><div className="font-bold">End-to-End</div></div>
-            <div className="text-sm opacity-90">Design, procurement, install and SLA-backed support.</div>
-          </div>
-        </div>
-
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold mb-4">Simple 4-step Process</h2>
-          <div className="grid md:grid-cols-4 gap-4">
-            {process.map((p, i) => (
-              <div key={i} className="p-4 bg-white/5 rounded-lg text-sm">
-                <div className="font-bold mb-2">{p.step}</div>
-                <div className="opacity-90">{p.desc}</div>
+      {/* Why trust */}
+      <section className="border-t border-white/10 bg-black/20 py-14">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl md:text-3xl font-bold mb-2">Why schools work with GetAxe</h2>
+          <p className="text-white/60 mb-8 max-w-2xl">
+            You are not buying machines only — you are buying a lab that must work for
+            real classes, real teachers and real maintenance constraints.
+          </p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {trustPoints.map((t) => (
+              <div
+                key={t.title}
+                className="rounded-2xl border border-white/10 bg-white/5 p-5"
+              >
+                <h3 className="font-semibold text-[var(--color-accent)]">{t.title}</h3>
+                <p className="mt-2 text-sm text-white/65 leading-relaxed">{t.text}</p>
               </div>
             ))}
           </div>
         </div>
+      </section>
 
-        {/* Packages */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold mb-6">Packages</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {packages.map((pkg, i) => (
-              <div key={i} className="p-6 bg-gradient-to-br from-[#071021] to-[#04101a] rounded-2xl border border-white/6 hover:scale-[1.02] transition">
+      {/* Process */}
+      <section className="py-14 border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl md:text-3xl font-bold mb-2">How a lab project runs</h2>
+          <p className="text-white/60 mb-10 max-w-2xl">
+            A simple, accountable process so parents, boards and administrators know what happens next.
+          </p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {process.map((s, i) => (
+              <motion.div
+                key={s.step}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05 }}
+                className="rounded-2xl border border-white/10 bg-white/[0.03] p-5"
+              >
                 <div className="flex items-center justify-between mb-3">
-                  <div className="font-bold text-lg">{pkg.name}</div>
-                  <div className="text-sm opacity-90 text-[var(--color-accent)]">Quotation on request</div>
+                  <span className="text-[var(--color-accent)] font-bold text-lg">{s.step}</span>
+                  <s.icon className="w-5 h-5 text-[var(--color-primary)]" />
                 </div>
-                <ul className="mb-4 text-sm space-y-1">
-                  {pkg.features.map((f, idx) => <li key={idx}>• {f}</li>)}
+                <h3 className="font-semibold">{s.title}</h3>
+                <p className="mt-2 text-sm text-white/60 leading-relaxed">{s.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Packages — no prices */}
+      <section className="py-14 border-t border-white/10 bg-black/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl md:text-3xl font-bold mb-2">Lab scopes we commonly deliver</h2>
+          <p className="text-white/60 mb-10 max-w-2xl">
+            Packages are starting points. Final scope and quotation depend on your room, power and teaching goals.
+          </p>
+          <div className="grid md:grid-cols-3 gap-5">
+            {packages.map((pkg) => (
+              <div
+                key={pkg.name}
+                className={`rounded-2xl border p-6 flex flex-col ${
+                  pkg.popular
+                    ? "border-[var(--color-primary)] bg-[var(--color-primary)]/10"
+                    : "border-white/10 bg-white/5"
+                }`}
+              >
+                {pkg.popular && (
+                  <span className="text-xs font-bold text-[var(--color-accent)] mb-2">
+                    OFTEN CHOSEN
+                  </span>
+                )}
+                <h3 className="text-xl font-bold">{pkg.name}</h3>
+                <p className="text-sm text-white/50 mt-1">{pkg.seats}</p>
+                <p className="text-sm text-white/70 mt-1">{pkg.forWho}</p>
+                <ul className="mt-5 space-y-2 flex-1">
+                  {pkg.features.map((f) => (
+                    <li key={f} className="flex gap-2 text-sm text-white/75">
+                      <CheckCircle2 className="w-4 h-4 text-[var(--color-accent)] shrink-0 mt-0.5" />
+                      {f}
+                    </li>
+                  ))}
                 </ul>
-                <div className="flex gap-2">
-                  <a href={`${whatsappLink}&text=I%20want%20a%20quote%20for%20${encodeURIComponent(pkg.name)}`} target="_blank" rel="noopener noreferrer" className="flex-1 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full text-black font-bold text-center">Request Quote</a>
-                  <a href={`tel:${phoneNumber}`} className="px-4 py-2 bg-white/10 rounded-full font-semibold">Call</a>
-                </div>
+                <a
+                  href={WA}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-6 block text-center rounded-xl bg-[var(--color-accent)] text-[var(--color-bg-dark)] font-semibold py-2.5 text-sm hover:brightness-110"
+                >
+                  Request quotation
+                </a>
               </div>
             ))}
           </div>
         </div>
+      </section>
 
-        {/* FAQ & CTA */}
-        <div className="grid md:grid-cols-2 gap-6 mb-12">
-          <div className="p-6 bg-white/5 rounded-lg">
-            <h3 className="font-bold mb-4">Frequently Asked Questions</h3>
-            <div className="space-y-3 text-sm">
-              {faqs.map((f, i) => (
-                <div key={i}>
-                  <div className="font-semibold">{f.q}</div>
-                  <div className="opacity-90">{f.a}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="p-6 bg-gradient-to-r from-purple-900/20 to-pink-900/20 rounded-lg flex flex-col justify-between">
-            <div>
-              <h3 className="font-bold text-2xl mb-3">Ready to build a lab that lasts?</h3>
-              <p className="mb-6">Book a discovery call and we’ll walk your leadership team through costs, timelines and funding options.</p>
-            </div>
-            <div className="flex gap-3">
-              <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="flex-1 px-4 py-3 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full text-black font-bold text-center">Get a Quote</a>
-              <Link href="/contactus?demo=lab" className="px-4 py-3 bg-white/10 rounded-full font-semibold text-center">Book Consultation</Link>
-            </div>
+      {/* Related */}
+      <section className="py-12 border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-lg font-semibold mb-4 text-white/80">Related solutions</h2>
+          <div className="flex flex-wrap gap-3">
+            <Link
+              href="/mobile-lab"
+              className="rounded-lg border border-white/15 px-4 py-2 text-sm hover:border-[var(--color-accent)]/50 hover:text-[var(--color-accent)]"
+            >
+              Mobile computer labs
+            </Link>
+            <Link
+              href="/networking"
+              className="rounded-lg border border-white/15 px-4 py-2 text-sm hover:border-[var(--color-accent)]/50 hover:text-[var(--color-accent)]"
+            >
+              Networking
+            </Link>
+            <Link
+              href="/shop"
+              className="rounded-lg border border-white/15 px-4 py-2 text-sm hover:border-[var(--color-accent)]/50 hover:text-[var(--color-accent)]"
+            >
+              ICT products
+            </Link>
+            <Link
+              href="/school-erp"
+              className="rounded-lg border border-white/15 px-4 py-2 text-sm hover:border-[var(--color-accent)]/50 hover:text-[var(--color-accent)]"
+            >
+              School ERP
+            </Link>
           </div>
         </div>
+      </section>
 
-      </div>
-    </section>
+      {/* FAQ */}
+      <section className="py-14 border-t border-white/10 bg-black/20">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold mb-8">Questions schools ask</h2>
+          <div className="space-y-4">
+            {faqs.map((f) => (
+              <div
+                key={f.q}
+                className="rounded-xl border border-white/10 bg-white/5 p-5"
+              >
+                <h3 className="font-semibold">{f.q}</h3>
+                <p className="mt-2 text-sm text-white/65 leading-relaxed">{f.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="py-14 border-t border-white/10">
+        <div className="max-w-3xl mx-auto px-4 text-center">
+          <Network className="w-10 h-10 text-[var(--color-primary)] mx-auto mb-4" />
+          <h2 className="text-2xl md:text-3xl font-bold">
+            Ready to plan your lab?
+          </h2>
+          <p className="mt-3 text-white/65">
+            Tell us seat count and location — we will respond with next steps and a quotation.
+          </p>
+          <div className="mt-8 flex flex-col sm:flex-row justify-center gap-3">
+            <a
+              href={WA}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-xl bg-[var(--color-accent)] text-[var(--color-bg-dark)] font-semibold px-6 py-3 text-sm"
+            >
+              WhatsApp GetAxe
+            </a>
+            <a
+              href={PHONE}
+              className="rounded-xl border border-white/20 font-semibold px-6 py-3 text-sm inline-flex items-center justify-center gap-2"
+            >
+              <Phone className="w-4 h-4" /> +254 736 889 880
+            </a>
+            <Link
+              href="/"
+              className="rounded-xl text-sm font-medium text-white/70 hover:text-[var(--color-accent)] px-6 py-3 inline-flex items-center justify-center gap-1"
+            >
+              <Home className="w-4 h-4" /> Home
+            </Link>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }

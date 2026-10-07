@@ -12,11 +12,6 @@ const PHONE = "tel:+254736889880";
 
 const solutions = [
   {
-    label: "ICT Supply",
-    href: "/shop",
-    description: "Laptops, desktops, printers & accessories",
-  },
-  {
     label: "Labs & Infrastructure",
     href: "/computer-lab-setup",
     description: "Permanent & mobile computer labs, networking",
