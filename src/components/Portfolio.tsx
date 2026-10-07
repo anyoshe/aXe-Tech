@@ -18,7 +18,7 @@ const portfolioItems: PortfolioItem[] = [
   {
     title: "NeuroFlex Kenya",
     client: "NeuroFlex Kenya",
-    image: "/samples/Saas.jpg",
+    image: "/projects/neuroflex-logo.png",
     description:
       "Live organisation website for NeuroFlex Kenya — clear information architecture, modern presentation and a trustworthy public presence for their services.",
     link: "https://neuroflexkenya.com/",
@@ -28,7 +28,7 @@ const portfolioItems: PortfolioItem[] = [
   {
     title: "GetAxe Business Management System",
     client: "GetAxe Technologies",
-    image: "/samples/ERp.jpg",
+    image: "/gat-icon.png",
     description:
       "Operations platform for SMEs — sales, stock, expenses and visibility for owners. Deployed at app.getaxekenya.com and offered to Kenyan businesses.",
     link: "https://app.getaxekenya.com/",
@@ -38,7 +38,7 @@ const portfolioItems: PortfolioItem[] = [
   {
     title: "TJ-U Auto",
     client: "TJ-U Auto",
-    image: "/samples/landing1.jpg",
+    image: "/projects/tj-logo.png",
     description:
       "Automotive business web presence — product and service oriented layout built for clarity on mobile and desktop.",
     link: "https://tj-u-auto.vercel.app/",
@@ -48,7 +48,7 @@ const portfolioItems: PortfolioItem[] = [
   {
     title: "GetAxe Kenya — Company site",
     client: "GetAxe Technologies",
-    image: "/samples/webdevelopment.jpg",
+    image: "/getaxelogobkgd.svg",
     description:
       "ICT company site for hardware, labs, networking, School ERP and support — the platform you are on now.",
     link: "https://getaxekenya.com/",
@@ -68,7 +68,7 @@ const portfolioItems: PortfolioItem[] = [
   {
     title: "Anyoka Eats",
     client: "Anyoka Eats",
-    image: "/samples/ecommerce.jpg",
+    image: "/samples/my-logo.png",
     description:
       "Food ordering platform with menu browsing and ordering flows — full-stack delivery for a local food business.",
     link: "https://www.anyokaeats.com/",
@@ -122,12 +122,12 @@ export default function Portfolio() {
                 key={item.title}
                 className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden hover:border-[var(--color-primary)]/40 transition"
               >
-                <div className="relative w-full h-48 bg-black/40">
+                <div className={`relative w-full h-48 ${item.image.includes("logo") || item.image.endsWith(".svg") || item.image.includes("gat-icon") || item.image.includes("my-logo") ? "bg-white flex items-center justify-center p-6" : "bg-black/40"}`}>
                   <Image
                     src={item.image}
                     alt={item.title}
                     fill
-                    className="object-cover"
+                    className={item.image.includes("logo") || item.image.endsWith(".svg") || item.image.includes("gat-icon") || item.image.includes("my-logo") ? "object-contain p-4" : "object-cover"}
                     sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                   />
                 </div>
