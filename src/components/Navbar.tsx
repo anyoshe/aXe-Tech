@@ -90,7 +90,6 @@ export default function Navbar() {
               alt="GetAxe Kenya"
               fill
               className="object-contain"
-              style={{ filter: "brightness(0) invert(1)" }}
               priority
             />
           </Link>

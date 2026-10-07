@@ -1,15 +1,19 @@
 @import "tailwindcss";
 
+/* GetAxe logo-aligned palette
+   Blue ~ #0090FC from logo wordmark / icon
+   Lime ~ #A3E635 signature accent on "getaxe" branding
+*/
 :root {
-  --color-primary: #4F46E5;         /* Indigo 600 */
-  --color-primary-hover: #4338CA;  /* Indigo 700 */
-  --color-accent: #A3E635;         /* Lime 400 */
-  --color-bg-dark: #111827;        /* Gray-900 */
+  --color-primary: #0090FC;
+  --color-primary-hover: #0076D1;
+  --color-accent: #A3E635;
+  --color-accent-hover: #B8F04A;
+  --color-bg-dark: #0B1220;
   --color-text-main: #ffffff;
-  --color-text-subtle: #d1d5db;    /* Gray-300 */
-  --color-text-muted: #9ca3af;     /* Gray-400 */
+  --color-text-subtle: #d1d5db;
+  --color-text-muted: #9ca3af;
 }
-
 
 @theme inline {
   --color-background: var(--background);
@@ -20,14 +24,12 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #0b1220;
     --foreground: #ededed;
   }
 }
 
 body {
-  /* Use the project's design tokens so UI has consistent readable colors
-     even when the OS color scheme is not set. */
   background: var(--color-bg-dark);
   color: var(--color-text-main);
   font-family: Arial, Helvetica, sans-serif;
