@@ -1,15 +1,21 @@
 import Navbar from "@/components/Navbar";
 import Portfolio from "@/components/Portfolio";
+import Footer from "@/components/Footer";
 
-export default function BrandingPage() {
+export const metadata = {
+  title: "Projects | GetAxe Kenya",
+  description:
+    "Selected live projects by GetAxe — NeuroFlex Kenya, business management system, TJ-U Auto, School ERP and more.",
+};
+
+export default function PortfoliosPage() {
   return (
     <>
-    
-      <main>
-        <Navbar />
+      <Navbar />
+      <main className="pt-16">
         <Portfolio />
       </main>
+      <Footer />
     </>
   );
 }
-

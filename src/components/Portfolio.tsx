@@ -1,136 +1,198 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+import { ExternalLink, Home } from "lucide-react";
 
 type PortfolioItem = {
   title: string;
   image: string;
-  link?: string;
-  description?: string;
-  status?: "Live" | "Unpublished" | "Prototype" | "Concept";
-  type?: "Landing Page" | "E-commerce" | "Design" | "Web App" | "Full-Stack Web App";
+  link: string;
+  description: string;
+  status: "Live" | "In production";
+  type: string;
+  client?: string;
 };
 
 const portfolioItems: PortfolioItem[] = [
-
   {
-    title: "Brand Identity Design",
-    image: "/samples/sda.jpg",
-    description: "A cohesive brand identity concept featuring a bold logo, intentional color palette, and modern typography that reflect the startup’s innovative spirit and trust-first values. Includes hero section, feature highlights, and CTA layout.",
-    link: "/brand-gallary",
+    title: "NeuroFlex Kenya",
+    client: "NeuroFlex Kenya",
+    image: "/samples/Saas.jpg",
+    description:
+      "Live organisation website for NeuroFlex Kenya — clear information architecture, modern presentation and a trustworthy public presence for their services.",
+    link: "https://neuroflexkenya.com/",
     status: "Live",
-    type: "Design",
+    type: "Website · Organisation",
   },
   {
-    title: "E-Commerce Store",
-    image: "/samples/ecommerce1.jpg",
-    description: "A visually engaging e-commerce experience built to inspire trust and drive sales — featuring a clean layout, seamless navigation, and design that reflects a deep understanding of user behavior and brand storytelling.",
-    link: "ecommerce",
+    title: "GetAxe Business Management System",
+    client: "GetAxe Technologies",
+    image: "/samples/ERp.jpg",
+    description:
+      "Operations platform for SMEs — sales, stock, expenses and visibility for owners. Deployed at app.getaxekenya.com and offered to Kenyan businesses.",
+    link: "https://app.getaxekenya.com/",
     status: "Live",
-    type: "E-commerce",
+    type: "Web app · Business software",
   },
   {
-    title: "Startup Landing Page",
-    image: "/samples/landpage.jpg",
-    description: "A high-converting landing page featuring a bold hero section, clear feature highlights, and a compelling CTA — crafted to attract leads and showcase the startup’s value with clarity and impact.",
-    link: "/landing-showcase",
+    title: "TJ-U Auto",
+    client: "TJ-U Auto",
+    image: "/samples/landing1.jpg",
+    description:
+      "Automotive business web presence — product and service oriented layout built for clarity on mobile and desktop.",
+    link: "https://tj-u-auto.vercel.app/",
     status: "Live",
-    type: "Landing Page",
+    type: "Website · SME",
   },
   {
-    title: "Anyoka Eats – Food Delivery Platform",
-    image: "/samples/my-logo.png",
-    description: "A modern food ordering platform with menu browsing, checkout, and admin dashboard built using React and Firebase.",
+    title: "GetAxe Kenya — Company site",
+    client: "GetAxe Technologies",
+    image: "/samples/webdevelopment.jpg",
+    description:
+      "ICT company site for hardware, labs, networking, School ERP and support — the platform you are on now.",
+    link: "https://getaxekenya.com/",
     status: "Live",
-    type: "Full-Stack Web App",
+    type: "Website · ICT company",
+  },
+  {
+    title: "School ERP (demo)",
+    client: "GetAxe Technologies",
+    image: "/samples/computerlab.jpg",
+    description:
+      "Interactive school management demo — students, fees, library and operations for Kenyan school presentations and rollouts.",
+    link: "/school-erp/demo",
+    status: "Live",
+    type: "Web app · Education",
+  },
+  {
+    title: "Anyoka Eats",
+    client: "Anyoka Eats",
+    image: "/samples/ecommerce.jpg",
+    description:
+      "Food ordering platform with menu browsing and ordering flows — full-stack delivery for a local food business.",
     link: "https://www.anyokaeats.com/",
-  },
-  {
-    title: "SaaS Dashboard UI",
-    image: "/samples/social.jpg",
-    description: "A sleek, intuitive SaaS dashboard UI designed for seamless productivity — featuring smart visualizations, modular layouts, and a dark mode interface optimized for decision-making.",
-    status: "Concept",
-    type: "Design",
-  },
-  {
-    title: "Digital Marketing",
-    image: "/samples/socialmarket.jpg",
-    description: "Distinctive digital marketing solutions offering content creation, tailored posts, and scroll-stopping videos — all crafted to generate more leads.",
-    link: "/marketingshowcase",
-    status: "Concept",
-    type: "Design",
+    status: "Live",
+    type: "Web app · E-commerce",
   },
 ];
 
 export default function Portfolio() {
   return (
-    <section id="projects" className="py-24 bg-[var(--color-bg-dark)] text-center text-[var(--color-text-main)]">
-      <div className="max-w-6xl mx-auto px-4 mb-12">
-        <h2 className="text-4xl md:text-5xl font-bold mb-4">Recent Work</h2>
-        <p className="text-lg text-[var(--color-text-subtle)]">
-          Selected projects — from concept to launch-ready designs.
-        </p>
+    <section
+      id="projects"
+      className="min-h-screen bg-[var(--color-bg-dark)] text-[var(--color-text-main)]"
+    >
+      <div className="border-b border-white/10 bg-black/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center gap-2 text-sm text-white/60">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-white/80 hover:text-[var(--color-accent)]"
+          >
+            <Home className="w-4 h-4" /> Home
+          </Link>
+          <span className="text-white/30">/</span>
+          <span className="text-white">Projects</span>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto px-4">
-        {portfolioItems.map((item, idx) => (
-          <div
-            key={idx}
-            className="bg-[var(--color-bg-dark)] border border-[var(--color-primary)] rounded-2xl overflow-hidden shadow-xl group hover:shadow-2xl transition-all duration-300"
-          >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+        <div className="max-w-2xl mb-12">
+          <p className="text-sm font-semibold text-[var(--color-accent)] uppercase tracking-wider">
+            Selected work
+          </p>
+          <h1 className="mt-2 text-3xl md:text-5xl font-bold tracking-tight">
+            Projects that shipped
+          </h1>
+          <p className="mt-4 text-white/65 leading-relaxed">
+            Live systems and sites for organisations and businesses — not mock-only
+            concepts. Want something similar?{" "}
+            <Link href="/contactus" className="text-[var(--color-accent)] hover:underline">
+              Request a quotation
+            </Link>
+            .
+          </p>
+        </div>
 
-            <div className="relative w-full h-64">
-              <Image
-                src={item.image}
-                alt={item.title}
-                fill
-                className="object-cover rounded-t-2xl transition-transform duration-300 group-hover:scale-105"
-                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                placeholder="empty"
-              />
-            </div>
-
-
-            <div className="p-5 text-left">
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="text-xl font-semibold text-white">{item.title}</h3>
-                {item.status && (
-                  <span
-                    className={`text-xs px-2 py-1 rounded-full ${item.status === "Live"
-                        ? "bg-green-600 text-white"
-                        : item.status === "Unpublished"
-                          ? "bg-yellow-700 text-yellow-200"
-                          : "bg-gray-700 text-gray-200"
-                      }`}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {portfolioItems.map((item) => {
+            const external = item.link.startsWith("http");
+            return (
+              <article
+                key={item.title}
+                className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden hover:border-[var(--color-primary)]/40 transition"
+              >
+                <div className="relative w-full h-48 bg-black/40">
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  />
+                </div>
+                <div className="p-5 flex flex-col flex-1 text-left">
+                  <div className="flex items-start justify-between gap-2 mb-1">
+                    <h2 className="text-lg font-semibold text-white leading-snug">
+                      {item.title}
+                    </h2>
+                    <span className="shrink-0 text-[10px] uppercase tracking-wide px-2 py-0.5 rounded-full bg-emerald-600/90 text-white">
+                      {item.status}
+                    </span>
+                  </div>
+                  {item.client && (
+                    <p className="text-xs text-white/45 mb-1">{item.client}</p>
+                  )}
+                  <p className="text-xs font-medium text-[var(--color-accent)] mb-2">
+                    {item.type}
+                  </p>
+                  <p className="text-sm text-white/70 leading-relaxed flex-1">
+                    {item.description}
+                  </p>
+                  <a
+                    href={item.link}
+                    {...(external
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {})}
+                    className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-accent)] hover:underline"
                   >
-                    {item.status}
-                  </span>
-                )}
-              </div>
+                    {external ? "Visit live site" : "Open project"}
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              </article>
+            );
+          })}
+        </div>
 
-              {item.type && (
-                <p className="text-sm text-[var(--color-accent)] mb-2 font-medium">{item.type}</p>
-              )}
-
-              {item.description && (
-                <p className="text-sm text-white/80 leading-relaxed mb-4">{item.description}</p>
-              )}
-
-              {item.link ? (
-                <a
-                  href={item.link}
-                  className="text-[var(--color-accent)] text-sm font-semibold hover:underline"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {item.status === "Unpublished" ? "View Code →" : "View Project →"}
-                </a>
-              ) : (
-                <span className="text-white/50 italic text-sm">Preview not available</span>
-              )}
-            </div>
+        <div className="mt-14 rounded-2xl border border-white/10 bg-black/30 p-8 text-center">
+          <h2 className="text-xl font-bold">Build the next one with GetAxe</h2>
+          <p className="mt-2 text-sm text-white/60 max-w-lg mx-auto">
+            Websites, business systems, School ERP and ICT projects — scoped with a clear quotation.
+          </p>
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <a
+              href="https://wa.me/254736889880?text=Hello%20GetAxe%2C%20I%20saw%20your%20projects%20and%20want%20a%20quotation."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-xl bg-[var(--color-accent)] text-[var(--color-bg-dark)] font-semibold px-5 py-2.5 text-sm"
+            >
+              WhatsApp
+            </a>
+            <Link
+              href="/contactus"
+              className="rounded-xl border border-white/20 font-semibold px-5 py-2.5 text-sm hover:bg-white/5"
+            >
+              Contact
+            </Link>
+            <Link
+              href="/"
+              className="rounded-xl text-sm text-white/70 hover:text-[var(--color-accent)] px-5 py-2.5"
+            >
+              ← Home
+            </Link>
           </div>
-        ))}
+        </div>
       </div>
     </section>
   );
