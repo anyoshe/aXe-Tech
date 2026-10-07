@@ -78,7 +78,7 @@ export default function ICTProductsPage() {
       .catch(() => {
         if (mounted) {
           setProducts([]);
-          setLoadError("Network error — is the server running and MongoDB reachable?");
+          setLoadError("Network error — is the server running and Supabase configured?");
         }
       })
       .finally(() => mounted && setLoading(false));
@@ -260,7 +260,7 @@ export default function ICTProductsPage() {
               <p className="text-red-400 font-medium">Could not load products</p>
               <p className="text-sm text-white/70 max-w-xl mx-auto">{loadError}</p>
               <p className="text-xs text-white/50">
-                Fix MongoDB Atlas Network Access, then refresh. Admin upload: /admin/products
+                Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to .env.local, run schema.sql, then restart npm run dev. Admin: /admin/products
               </p>
             </div>
           ) : filtered.length === 0 ? (
