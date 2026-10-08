@@ -29,21 +29,44 @@ export function CrmShell({
           {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
         </div>
         {nav && nav.length > 0 && (
-          <div className="max-w-[1400px] mx-auto px-4 sm:px-6 flex gap-1 overflow-x-auto pb-0 scrollbar-none">
-            {nav.map((n) => (
-              <Link
-                key={n.href + n.label}
-                href={n.href}
-                className={`shrink-0 px-4 py-2.5 text-sm border-b-2 transition ${
-                  n.active
-                    ? "border-[var(--color-accent)] text-white font-medium"
-                    : "border-transparent text-white/50 hover:text-white/80"
-                }`}
-              >
-                {n.label}
-              </Link>
-            ))}
-          </div>
+          <>
+            {/* Mobile: all tabs visible in a wrapping grid — nothing hidden off-screen */}
+            <div className="max-w-[1400px] mx-auto px-4 sm:hidden pb-3">
+              <div className="grid grid-cols-2 gap-2">
+                {nav.map((n) => (
+                  <Link
+                    key={n.href + n.label}
+                    href={n.href}
+                    className={`text-center rounded-lg px-3 py-2.5 text-sm font-medium border transition ${
+                      n.active
+                        ? "bg-[var(--color-accent)]/15 border-[var(--color-accent)]/50 text-[var(--color-accent)]"
+                        : "bg-white/5 border-white/10 text-white/65"
+                    }`}
+                  >
+                    {n.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+            {/* Desktop / tablet: classic underline tabs */}
+            <div className="hidden sm:block max-w-[1400px] mx-auto px-4 sm:px-6">
+              <div className="flex flex-wrap gap-1 border-b border-transparent">
+                {nav.map((n) => (
+                  <Link
+                    key={n.href + n.label}
+                    href={n.href}
+                    className={`px-4 py-2.5 text-sm border-b-2 transition ${
+                      n.active
+                        ? "border-[var(--color-accent)] text-white font-medium"
+                        : "border-transparent text-white/50 hover:text-white/80"
+                    }`}
+                  >
+                    {n.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </>
         )}
       </div>
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-6">{children}</div>
