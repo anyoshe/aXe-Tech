@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import {
+import { adminCrmNav } from "@/lib/admin-nav";
   CrmShell,
   CrmStat,
   CrmTable,
@@ -110,15 +111,7 @@ export default function AdminDealsPage() {
         <CrmShell
           title="CRM · Deals & payments"
           subtitle="Commission is generated only when a deal is marked PAID (funds cleared)."
-          nav={[
-            { href: "/admin/leads", label: "Leads" },
-            { href: "/admin/partners", label: "Partners" },
-            { href: "/admin/quotes", label: "Quotes" },
-            { href: "/admin/deals", label: "Deals", active: true },
-            { href: "/admin/jobs", label: "Jobs" },
-            { href: "/admin/campaigns", label: "Campaigns" },
-            { href: "/admin/commissions", label: "Commissions" },
-          ]}
+          nav={adminCrmNav("deals")}
           actions={
             <button
               type="button"

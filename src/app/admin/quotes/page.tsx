@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import {
+import { adminCrmNav } from "@/lib/admin-nav";
   CrmShell,
   CrmStat,
   CrmTable,
@@ -135,15 +136,7 @@ export default function AdminQuotesPage() {
         <CrmShell
           title="CRM · Quote approval"
           subtitle="Partners submit requests. You set approved setup / monthly / one-off amounts."
-          nav={[
-            { href: "/admin/leads", label: "Leads" },
-            { href: "/admin/partners", label: "Partners" },
-            { href: "/admin/quotes", label: "Quotes", active: true },
-            { href: "/admin/deals", label: "Deals" },
-            { href: "/admin/jobs", label: "Jobs" },
-            { href: "/admin/campaigns", label: "Campaigns" },
-            { href: "/admin/commissions", label: "Commissions" },
-          ]}
+          nav={adminCrmNav("quotes")}
         >
           <div className="flex flex-wrap gap-3 mb-6">
             <CrmStat label="Total" value={quotes.length} />

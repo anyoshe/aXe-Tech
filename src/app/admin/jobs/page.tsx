@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import {
+import { adminCrmNav } from "@/lib/admin-nav";
   CrmShell,
   CrmStat,
   CrmTable,
@@ -96,15 +97,7 @@ export default function AdminJobsPage() {
         <CrmShell
           title="CRM · Technical jobs"
           subtitle="Surveys, installs, networking — assign technicians and track completion + sign-off."
-          nav={[
-            { href: "/admin/leads", label: "Leads" },
-            { href: "/admin/partners", label: "Partners" },
-            { href: "/admin/quotes", label: "Quotes" },
-            { href: "/admin/deals", label: "Deals" },
-            { href: "/admin/jobs", label: "Jobs", active: true },
-            { href: "/admin/campaigns", label: "Campaigns" },
-            { href: "/admin/commissions", label: "Commissions" },
-          ]}
+          nav={adminCrmNav("jobs")}
           actions={
             <button
               type="button"

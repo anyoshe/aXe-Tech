@@ -17,6 +17,7 @@ import {
   CrmCardField,
 } from "@/components/crm/CrmShell";
 import { PARTNER_STATUSES } from "@/lib/partner-constants";
+import { adminCrmNav } from "@/lib/admin-nav";
 
 type Partner = {
   id: string;
@@ -92,15 +93,7 @@ export default function AdminPartnersPage() {
         <CrmShell
           title="CRM · Partners"
           subtitle="Approve applications and set status through training to ACTIVE."
-          nav={[
-            { href: "/admin/leads", label: "Leads" },
-            { href: "/admin/partners", label: "Partners", active: true },
-            { href: "/admin/quotes", label: "Quotes" },
-            { href: "/admin/deals", label: "Deals" },
-            { href: "/admin/jobs", label: "Jobs" },
-            { href: "/admin/campaigns", label: "Campaigns" },
-            { href: "/admin/commissions", label: "Commissions" },
-          ]}
+          nav={adminCrmNav("partners")}
           actions={
             <Link
               href="/admin/products"

@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import {
+import { adminCrmNav } from "@/lib/admin-nav";
   CrmShell, CrmStat, CrmTable, CrmRow, CrmCell, StageBadge,
   CrmMobileCards, CrmCard, CrmCardField,
 } from "@/components/crm/CrmShell";
@@ -95,15 +96,7 @@ export default function AdminSubscriptionsPage() {
         <CrmShell
           title="CRM · Subscriptions"
           subtitle="Recurring software. Record monthly payment → partner residual commission."
-          nav={[
-            { href: "/admin/leads", label: "Leads" },
-            { href: "/admin/deals", label: "Deals" },
-            { href: "/admin/subscriptions", label: "Subs", active: true },
-            { href: "/admin/commissions", label: "Commissions" },
-            { href: "/admin/tickets", label: "Tickets" },
-            { href: "/admin/jobs", label: "Jobs" },
-            { href: "/admin/partners", label: "Partners" },
-          ]}
+          nav={adminCrmNav("subscriptions")}
           actions={
             <button type="button" onClick={() => setShow((v) => !v)}
               className="rounded-lg bg-[var(--color-accent)] text-[var(--color-bg-dark)] font-semibold px-4 py-2 text-sm">

@@ -17,6 +17,7 @@ import {
   CrmCardField,
 } from "@/components/crm/CrmShell";
 import { LEAD_STAGES } from "@/lib/partner-constants";
+import { adminCrmNav } from "@/lib/admin-nav";
 
 type Lead = {
   id: string;
@@ -90,15 +91,7 @@ export default function AdminLeadsPage() {
         <CrmShell
           title="CRM · All leads"
           subtitle="Company-wide pipeline. Partners only see their own leads."
-          nav={[
-            { href: "/admin/leads", label: "Leads", active: true },
-            { href: "/admin/partners", label: "Partners" },
-            { href: "/admin/quotes", label: "Quotes" },
-            { href: "/admin/deals", label: "Deals" },
-            { href: "/admin/jobs", label: "Jobs" },
-            { href: "/admin/campaigns", label: "Campaigns" },
-            { href: "/admin/commissions", label: "Commissions" },
-          ]}
+          nav={adminCrmNav("leads")}
           actions={
             <Link
               href="/admin/products"

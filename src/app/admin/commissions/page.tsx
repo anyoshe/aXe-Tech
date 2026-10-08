@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import {
+import { adminCrmNav } from "@/lib/admin-nav";
   CrmShell,
   CrmStat,
   CrmTable,
@@ -89,15 +90,7 @@ export default function AdminCommissionsPage() {
               Approve all ELIGIBLE
             </button>
           }
-          nav={[
-            { href: "/admin/leads", label: "Leads" },
-            { href: "/admin/partners", label: "Partners" },
-            { href: "/admin/quotes", label: "Quotes" },
-            { href: "/admin/deals", label: "Deals" },
-            { href: "/admin/jobs", label: "Jobs" },
-            { href: "/admin/campaigns", label: "Campaigns" },
-            { href: "/admin/commissions", label: "Commissions", active: true },
-          ]}
+          nav={adminCrmNav("commissions")}
         >
           <div className="flex flex-wrap gap-3 mb-6">
             <CrmStat label="Entries" value={rows.length} />

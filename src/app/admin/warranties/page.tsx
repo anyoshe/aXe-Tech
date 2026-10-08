@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import {
+import { adminCrmNav } from "@/lib/admin-nav";
   CrmShell, CrmStat, CrmTable, CrmRow, CrmCell, StageBadge,
   CrmMobileCards, CrmCard, CrmCardField,
 } from "@/components/crm/CrmShell";
@@ -74,13 +75,7 @@ export default function AdminWarrantiesPage() {
         <CrmShell
           title="CRM · Warranties"
           subtitle="Track serials, supplier warranty period, and claim status."
-          nav={[
-            { href: "/admin/deals", label: "Deals" },
-            { href: "/admin/warranties", label: "Warranty", active: true },
-            { href: "/admin/tickets", label: "Tickets" },
-            { href: "/admin/jobs", label: "Jobs" },
-            { href: "/admin/leads", label: "Leads" },
-          ]}
+          nav={adminCrmNav("warranties")}
           actions={
             <button type="button" onClick={() => setShow((v) => !v)}
               className="rounded-lg bg-[var(--color-accent)] text-[var(--color-bg-dark)] font-semibold px-4 py-2 text-sm">

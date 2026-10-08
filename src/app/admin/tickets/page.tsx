@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import {
+import { adminCrmNav } from "@/lib/admin-nav";
   CrmShell, CrmStat, CrmTable, CrmRow, CrmCell, StageBadge,
   CrmMobileCards, CrmCard, CrmCardField,
 } from "@/components/crm/CrmShell";
@@ -54,18 +55,7 @@ export default function AdminTicketsPage() {
         <CrmShell
           title="CRM · Support tickets"
           subtitle="Level-1 support intake. Escalate to technical jobs when field work is needed."
-          nav={[
-            { href: "/admin/leads", label: "Leads" },
-            { href: "/admin/partners", label: "Partners" },
-            { href: "/admin/quotes", label: "Quotes" },
-            { href: "/admin/deals", label: "Deals" },
-            { href: "/admin/jobs", label: "Jobs" },
-            { href: "/admin/tickets", label: "Tickets", active: true },
-            { href: "/admin/subscriptions", label: "Subs" },
-            { href: "/admin/warranties", label: "Warranty" },
-            { href: "/admin/campaigns", label: "Campaigns" },
-            { href: "/admin/commissions", label: "Commissions" },
-          ]}
+          nav={adminCrmNav("tickets")}
         >
           <div className="flex flex-wrap gap-3 mb-6">
             <CrmStat label="Open" value={tickets.filter((t) => t.status === "OPEN" || t.status === "IN_PROGRESS").length} />

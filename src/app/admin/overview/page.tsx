@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import { CrmShell, CrmStat, StageBadge } from "@/components/crm/CrmShell";
+import { adminCrmNav } from "@/lib/admin-nav";
 
 type Stats = {
   partners_total: number;
@@ -67,14 +68,7 @@ export default function AdminOverviewPage() {
         <CrmShell
           title="GetAxe CRM · Overview"
           subtitle="Pilot control panel — partners, pipeline, money, delivery."
-          nav={[
-            { href: "/admin/overview", label: "Overview", active: true },
-            { href: "/admin/leads", label: "Leads" },
-            { href: "/admin/partners", label: "Partners" },
-            { href: "/admin/quotes", label: "Quotes" },
-            { href: "/admin/deals", label: "Deals" },
-            { href: "/admin/commissions", label: "Commissions" },
-          ]}
+          nav={adminCrmNav("overview")}
         >
           {error && (
             <p className="mb-4 text-sm text-amber-300/90">

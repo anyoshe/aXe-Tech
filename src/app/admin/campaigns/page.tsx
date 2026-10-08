@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import {
+import { adminCrmNav } from "@/lib/admin-nav";
   CrmShell,
   CrmStat,
   CrmTable,
@@ -88,15 +89,7 @@ export default function AdminCampaignsPage() {
         <CrmShell
           title="CRM · Marketing campaigns"
           subtitle="Create tracking codes. Partners can attach campaign_code / referral_code on leads."
-          nav={[
-            { href: "/admin/leads", label: "Leads" },
-            { href: "/admin/partners", label: "Partners" },
-            { href: "/admin/quotes", label: "Quotes" },
-            { href: "/admin/deals", label: "Deals" },
-            { href: "/admin/jobs", label: "Jobs" },
-            { href: "/admin/campaigns", label: "Campaigns", active: true },
-            { href: "/admin/commissions", label: "Commissions" },
-          ]}
+          nav={adminCrmNav("campaigns")}
           actions={
             <button type="button" onClick={() => setShow((v) => !v)} className="rounded-lg bg-[var(--color-accent)] text-[var(--color-bg-dark)] font-semibold px-4 py-2 text-sm">
               {show ? "Close" : "+ Campaign"}
