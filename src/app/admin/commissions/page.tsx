@@ -64,6 +64,18 @@ export default function AdminCommissionsPage() {
     .filter((c) => c.status === "PAID")
     .reduce((s, c) => s + Number(c.commission_amount), 0);
 
+
+  async function approveAllEligible() {
+    const eligible = rows.filter((c) => c.status === "ELIGIBLE");
+    for (const c of eligible) {
+      await fetch("/api/commissions", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: c.id, status: "APPROVED" }),
+      });
+    }
+    load();
+  }
   return (
     <>
       <Navbar />
@@ -71,6 +83,12 @@ export default function AdminCommissionsPage() {
         <CrmShell
           title="CRM · Commission ledger"
           subtitle="Pay partners only after client funds have cleared. Use M-Pesa number on partner profile."
+          actions={
+            <button type="button" onClick={approveAllEligible}
+              className="rounded-lg border border-white/15 px-4 py-2 text-sm">
+              Approve all ELIGIBLE
+            </button>
+          }
           nav={[
             { href: "/admin/leads", label: "Leads" },
             { href: "/admin/partners", label: "Partners" },

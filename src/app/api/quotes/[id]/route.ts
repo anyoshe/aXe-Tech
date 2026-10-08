@@ -5,6 +5,27 @@ import { getSupabaseAdmin, isSupabaseConfigured } from "@/lib/supabase";
 
 type Ctx = { params: Promise<{ id: string }> };
 
+export async function GET(_req: NextRequest, ctx: Ctx) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!isSupabaseConfigured()) return NextResponse.json({ error: "Supabase not configured" }, { status: 503 });
+
+  const { id } = await ctx.params;
+  const sb = getSupabaseAdmin();
+  const { data, error } = await sb.from("quote_requests").select("*").eq("id", id).maybeSingle();
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (!data) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+  if (session.user.role === "partner" && data.partner_id !== session.user.id) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+  if (session.user.role !== "admin" && session.user.role !== "partner") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  return NextResponse.json({ quote: data });
+}
+
 export async function PATCH(req: NextRequest, ctx: Ctx) {
   const session = await getServerSession(authOptions);
   if (!session?.user || session.user.role !== "admin") {

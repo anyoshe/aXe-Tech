@@ -52,6 +52,30 @@ export default function PartnerCommissionsPage() {
     .filter((c) => c.status === "PAID")
     .reduce((s, c) => s + Number(c.commission_amount), 0);
 
+
+  function exportCsv() {
+    const header = "Customer,Basis,Rate,Commission,Status,Eligible,Paid\n";
+    const lines = rows.map((c) =>
+      [
+        c.deals?.customer_name || c.basis,
+        c.basis_amount,
+        (Number(c.commission_pct) * 100).toFixed(0) + "%",
+        c.commission_amount,
+        c.status,
+        c.eligibility_date || "",
+        c.paid_at || "",
+      ]
+        .map((x) => `"${String(x).replace(/"/g, '""')}"`)
+        .join(",")
+    );
+    const blob = new Blob([header + lines.join("\n")], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "getaxe-commissions.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
   return (
     <>
       <Navbar />
@@ -59,6 +83,12 @@ export default function PartnerCommissionsPage() {
         <CrmShell
           title="My commissions"
           subtitle="Paid only after client money has cleared with GetAxe."
+          actions={
+            <button type="button" onClick={exportCsv}
+              className="rounded-lg border border-white/15 px-4 py-2 text-sm text-white/80">
+              Export CSV
+            </button>
+          }
           nav={[
             { href: "/partners/dashboard", label: "Leads" },
             { href: "/partners/onboarding", label: "Onboarding" },

@@ -247,6 +247,9 @@ export default function PartnerQuotesPage() {
                     <p>Monthly: {q.approved_monthly_fee != null ? `KSh ${Number(q.approved_monthly_fee).toLocaleString()}` : "—"}</p>
                     <p>One-off: {q.approved_one_off != null ? `KSh ${Number(q.approved_one_off).toLocaleString()}` : "—"}</p>
                     {q.approved_notes && <p className="text-white/50">{q.approved_notes}</p>}
+                    <Link href={`/partners/quotes/${q.id}/print`} className="inline-block mt-2 text-[var(--color-accent)] font-medium">
+                      Print / PDF →
+                    </Link>
                   </div>
                 )}
               </CrmCard>
@@ -281,6 +284,7 @@ export default function PartnerQuotesPage() {
                       <div>Setup: {q.approved_setup_fee != null ? Number(q.approved_setup_fee).toLocaleString() : "—"}</div>
                       <div>Monthly: {q.approved_monthly_fee != null ? Number(q.approved_monthly_fee).toLocaleString() : "—"}</div>
                       <div>One-off: {q.approved_one_off != null ? Number(q.approved_one_off).toLocaleString() : "—"}</div>
+                      <Link href={`/partners/quotes/${q.id}/print`} className="text-[var(--color-accent)]">Print</Link>
                     </div>
                   ) : (
                     "—"

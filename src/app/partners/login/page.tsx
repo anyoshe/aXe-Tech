@@ -45,7 +45,7 @@ export default function PartnerLoginPage() {
     setLoading(false);
 
     if (role === "admin") {
-      router.replace("/admin/partners");
+      router.replace("/admin/overview");
       return;
     }
     if (role === "partner") {

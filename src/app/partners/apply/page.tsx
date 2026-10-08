@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-export default function PartnerApplyPage() {
+function PartnerApplyForm() {
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
@@ -26,6 +28,18 @@ export default function PartnerApplyPage() {
   function set(k: string, v: string) {
     setForm((f) => ({ ...f, [k]: v }));
   }
+
+  useEffect(() => {
+    const ref = searchParams.get("ref") || searchParams.get("referral");
+    if (ref) {
+      setForm((f) => ({
+        ...f,
+        network_notes: f.network_notes
+          ? f.network_notes
+          : `Referred by code: ${ref.toUpperCase()}`,
+      }));
+    }
+  }, [searchParams]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -148,5 +162,14 @@ export default function PartnerApplyPage() {
       </main>
       <Footer />
     </>
+  );
+}
+
+
+export default function PartnerApplyPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[var(--color-bg-dark)] text-white flex items-center justify-center">Loading…</div>}>
+      <PartnerApplyForm />
+    </Suspense>
   );
 }
