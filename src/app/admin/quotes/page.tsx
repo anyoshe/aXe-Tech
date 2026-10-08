@@ -140,6 +140,8 @@ export default function AdminQuotesPage() {
             { href: "/admin/partners", label: "Partners" },
             { href: "/admin/quotes", label: "Quotes", active: true },
             { href: "/admin/deals", label: "Deals" },
+            { href: "/admin/jobs", label: "Jobs" },
+            { href: "/admin/campaigns", label: "Campaigns" },
             { href: "/admin/commissions", label: "Commissions" },
           ]}
         >

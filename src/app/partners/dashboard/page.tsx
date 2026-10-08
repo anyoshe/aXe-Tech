@@ -126,6 +126,7 @@ export default function PartnerDashboardPage() {
           subtitle={`${partner?.full_name || session.user?.name || "Partner"} · ${partner?.status || ""} · ${partner?.specialty || ""}`}
           nav={[
             { href: "/partners/dashboard", label: "Leads", active: true },
+            { href: "/partners/onboarding", label: "Onboarding" },
             { href: "/partners/quotes", label: "Quotes" },
             { href: "/partners/commissions", label: "Commissions" },
             { href: "/partners/training", label: "Training" },

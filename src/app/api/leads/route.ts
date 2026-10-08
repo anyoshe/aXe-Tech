@@ -117,6 +117,8 @@ export async function POST(req: NextRequest) {
     next_action: String(body.next_action || "").trim() || null,
     follow_up_at: body.follow_up_at || null,
     protected_until: defaultProtectedUntil(protectionDays),
+    campaign_code: String(body.campaign_code || "").trim().toUpperCase() || null,
+    referral_code: String(body.referral_code || "").trim().toUpperCase() || null,
   };
 
   const { data, error } = await sb.from("leads").insert(row).select().single();

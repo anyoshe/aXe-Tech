@@ -165,3 +165,17 @@ supabase/partners-crm-v2.sql
 | `/admin/commissions` | Approve/pay commissions |
 
 Commission pilot rates (code: `src/lib/commissions.ts`): hardware 25% of GP, connect 8% of margin, setup 15%, sub year-1 15%.
+
+## Sprint 6–8 (onboarding, jobs, campaigns)
+
+Run after v2:
+
+```text
+supabase/partners-crm-v3.sql
+```
+
+| Path | Purpose |
+|------|---------|
+| `/partners/onboarding` | Agreement, quiz, referral code |
+| `/admin/jobs` | Technical jobs dispatch |
+| `/admin/campaigns` | Marketing campaign codes |

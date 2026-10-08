@@ -97,6 +97,8 @@ export default function AdminPartnersPage() {
             { href: "/admin/partners", label: "Partners", active: true },
             { href: "/admin/quotes", label: "Quotes" },
             { href: "/admin/deals", label: "Deals" },
+            { href: "/admin/jobs", label: "Jobs" },
+            { href: "/admin/campaigns", label: "Campaigns" },
             { href: "/admin/commissions", label: "Commissions" },
           ]}
           actions={

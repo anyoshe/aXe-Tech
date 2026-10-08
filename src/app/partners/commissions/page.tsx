@@ -61,6 +61,7 @@ export default function PartnerCommissionsPage() {
           subtitle="Paid only after client money has cleared with GetAxe."
           nav={[
             { href: "/partners/dashboard", label: "Leads" },
+            { href: "/partners/onboarding", label: "Onboarding" },
             { href: "/partners/quotes", label: "Quotes" },
             { href: "/partners/commissions", label: "Commissions", active: true },
             { href: "/partners/training", label: "Training" },

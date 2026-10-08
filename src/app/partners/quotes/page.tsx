@@ -118,6 +118,7 @@ export default function PartnerQuotesPage() {
           subtitle="Submit qualification — GetAxe approves final prices. You never invent complex software prices."
           nav={[
             { href: "/partners/dashboard", label: "Leads" },
+            { href: "/partners/onboarding", label: "Onboarding" },
             { href: "/partners/quotes", label: "Quotes", active: true },
             { href: "/partners/commissions", label: "Commissions" },
             { href: "/partners/training", label: "Training" },
