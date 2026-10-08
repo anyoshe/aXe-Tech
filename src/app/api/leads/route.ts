@@ -78,6 +78,27 @@ export async function POST(req: NextRequest) {
   }
 
   const sb = getSupabaseAdmin();
+
+  // Lead protection: block duplicate active protected leads (same phone)
+  const { data: existing } = await sb
+    .from("leads")
+    .select("id, org_name, partner_id, protected_until, stage")
+    .eq("phone", phone)
+    .not("stage", "in", '("LOST","WON")')
+    .gt("protected_until", new Date().toISOString())
+    .limit(1);
+  if (existing && existing.length > 0 && session.user.role === "partner") {
+    const ex = existing[0];
+    if (ex.partner_id && ex.partner_id !== partnerId) {
+      return NextResponse.json(
+        {
+          error: `Lead protection active: this phone is locked to another partner until ${new Date(ex.protected_until).toLocaleDateString()} (${ex.org_name}).`,
+        },
+        { status: 409 }
+      );
+    }
+  }
+
   const row = {
     partner_id: partnerId,
     org_name,

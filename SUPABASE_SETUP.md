@@ -146,3 +146,22 @@ This creates:
 1. Partner applies → status `APPLIED`
 2. You set `SCREENING` → `APPROVED` → `TRAINING` → `CERTIFIED` → `ACTIVE`
 3. Partner logs in and registers leads (45-day protection by default)
+
+## Sprint 3–5 (quotes, deals, commissions, subscriptions)
+
+Run in SQL Editor **after** `partners-crm.sql`:
+
+```text
+supabase/partners-crm-v2.sql
+```
+
+| Path | Role |
+|------|------|
+| `/partners/training` | Academy content |
+| `/partners/quotes` | Request quotes |
+| `/partners/commissions` | Partner statement |
+| `/admin/quotes` | Approve/reject quotes |
+| `/admin/deals` | Record deals & mark PAID |
+| `/admin/commissions` | Approve/pay commissions |
+
+Commission pilot rates (code: `src/lib/commissions.ts`): hardware 25% of GP, connect 8% of margin, setup 15%, sub year-1 15%.

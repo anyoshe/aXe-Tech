@@ -104,6 +104,15 @@ export default function PartnerDashboardPage() {
               >
                 + Register lead
               </Link>
+              <Link href="/partners/quotes" className="rounded-xl border border-white/20 px-4 py-2 text-sm">
+                Quotes
+              </Link>
+              <Link href="/partners/commissions" className="rounded-xl border border-white/20 px-4 py-2 text-sm">
+                Commissions
+              </Link>
+              <Link href="/partners/training" className="rounded-xl border border-white/20 px-4 py-2 text-sm">
+                Training
+              </Link>
               <button
                 type="button"
                 onClick={() => signOut({ callbackUrl: "/partners/login" })}
