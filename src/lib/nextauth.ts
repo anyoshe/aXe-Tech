@@ -89,3 +89,6 @@ export const authOptions: NextAuthOptions = {
     },
   },
 };
+
+/** Default export for older `import authOptions from ...` call sites */
+export default authOptions;
