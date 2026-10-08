@@ -180,7 +180,12 @@ export default function Navbar() {
           <button
             type="button"
             className="lg:hidden p-2 text-white"
-            onClick={() => setOpen((v) => !v)}
+            onClick={() => {
+              setOpen((v) => {
+                if (v) setSolutionsOpen(false);
+                return !v;
+              });
+            }}
             aria-label="Toggle menu"
           >
             {open ? <X size={24} /> : <Menu size={24} />}
@@ -198,19 +203,40 @@ export default function Navbar() {
             className="lg:hidden border-t border-white/10 bg-[var(--color-bg-dark)] overflow-hidden"
           >
             <div className="px-4 py-4 space-y-1 max-h-[80vh] overflow-y-auto">
-              <p className="text-xs uppercase tracking-wider text-white/40 px-2 mb-2">
-                Solutions
-              </p>
-              {solutions.map((s) => (
-                <Link
-                  key={s.href}
-                  href={s.href}
-                  onClick={() => setOpen(false)}
-                  className="block rounded-lg px-3 py-2.5 text-sm text-white/90 hover:bg-white/5"
-                >
-                  {s.label}
-                </Link>
-              ))}
+              <button
+                type="button"
+                onClick={() => setSolutionsOpen((v) => !v)}
+                aria-expanded={solutionsOpen}
+                className="w-full flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-white hover:bg-white/5"
+              >
+                <span>Solutions</span>
+                <ChevronDown
+                  className={clsx(
+                    "w-4 h-4 text-white/50 transition-transform",
+                    solutionsOpen && "rotate-180"
+                  )}
+                />
+              </button>
+              {solutionsOpen && (
+                <div className="ml-2 border-l border-white/10 pl-2 space-y-0.5 mb-1">
+                  {solutions.map((s) => (
+                    <Link
+                      key={s.href}
+                      href={s.href}
+                      onClick={() => {
+                        setOpen(false);
+                        setSolutionsOpen(false);
+                      }}
+                      className="block rounded-lg px-3 py-2 text-sm text-white/80 hover:bg-white/5"
+                    >
+                      <span className="font-medium text-white/95">{s.label}</span>
+                      {s.description && (
+                        <span className="block text-xs text-white/40 mt-0.5">{s.description}</span>
+                      )}
+                    </Link>
+                  ))}
+                </div>
+              )}
               <div className="h-px bg-white/10 my-2" />
               <Link
                 href="/shop"

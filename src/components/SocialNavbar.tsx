@@ -2,6 +2,7 @@
 
 import { FaTwitter, FaLinkedin, FaTiktok, FaInstagram, FaWhatsapp, FaFacebook } from 'react-icons/fa';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const socials = [
   {
@@ -42,7 +43,26 @@ const socials = [
   },
 ];
 
+function hideSocials(pathname: string | null): boolean {
+  if (!pathname) return false;
+  if (pathname.startsWith('/admin')) return true;
+  // Partner working areas (keep socials on /partners, /apply, /login)
+  if (
+    pathname.startsWith('/partners/dashboard') ||
+    pathname.startsWith('/partners/quotes') ||
+    pathname.startsWith('/partners/commissions') ||
+    pathname.startsWith('/partners/training') ||
+    pathname.startsWith('/partners/leads')
+  ) {
+    return true;
+  }
+  return false;
+}
+
 export default function SocialNavbar() {
+  const pathname = usePathname();
+  if (hideSocials(pathname)) return null;
+
   return (
     <div className="fixed bottom-0 left-1/2 -translate-x-1/2 z-50 bg-gray-900/90 backdrop-blur-md px-4 py-2 rounded-full shadow-xl border border-gray-700/50">
       <div className="flex items-center justify-center space-x-5">
