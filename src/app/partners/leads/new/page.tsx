@@ -25,6 +25,8 @@ export default function NewLeadPage() {
     expected_value: "",
     next_action: "",
     follow_up_at: "",
+    campaign_code: "",
+    referral_code: "",
   });
 
   if (status === "unauthenticated") {
@@ -156,6 +158,24 @@ export default function NewLeadPage() {
                 value={form.follow_up_at}
                 onChange={(e) => set("follow_up_at", e.target.value)}
                 className="mt-1 w-full rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm"
+              />
+            </div>
+            <div>
+              <label className="text-xs text-white/50">Campaign code (optional)</label>
+              <input
+                value={form.campaign_code}
+                onChange={(e) => set("campaign_code", e.target.value)}
+                placeholder="e.g. SCHOOL2026"
+                className="mt-1 w-full rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm font-mono"
+              />
+            </div>
+            <div>
+              <label className="text-xs text-white/50">Referral code (optional)</label>
+              <input
+                value={form.referral_code}
+                onChange={(e) => set("referral_code", e.target.value)}
+                placeholder="Partner GX… code"
+                className="mt-1 w-full rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm font-mono"
               />
             </div>
             {error && <p className="text-sm text-red-400">{error}</p>}

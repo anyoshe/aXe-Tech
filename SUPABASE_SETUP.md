@@ -179,3 +179,19 @@ supabase/partners-crm-v3.sql
 | `/partners/onboarding` | Agreement, quiz, referral code |
 | `/admin/jobs` | Technical jobs dispatch |
 | `/admin/campaigns` | Marketing campaign codes |
+
+## Sprint 9–10 (tickets, warranties)
+
+Run after v3:
+
+```text
+supabase/partners-crm-v4.sql
+```
+
+| Path | Purpose |
+|------|---------|
+| `/admin/tickets` | Support ticket queue |
+| `/admin/subscriptions` | MRR + record monthly payment |
+| `/admin/warranties` | Serial / warranty register |
+| `/partners/tickets` | Partner opens tickets |
+| `/partners/jobs` | Partner / tech job list |
