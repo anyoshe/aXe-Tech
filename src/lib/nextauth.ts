@@ -64,6 +64,8 @@ export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt", maxAge: 60 * 60 * 24 * 7 },
   jwt: { maxAge: 60 * 60 * 24 * 7 },
   secret: process.env.NEXTAUTH_SECRET,
+  // Production (Vercel) must set NEXTAUTH_URL=https://getaxekenya.com
+  useSecureCookies: process.env.NODE_ENV === "production",
   pages: {
     signIn: "/partners/login",
   },
