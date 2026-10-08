@@ -12,6 +12,9 @@ import {
   CrmRow,
   CrmCell,
   StageBadge,
+  CrmMobileCards,
+  CrmCard,
+  CrmCardField,
 } from "@/components/crm/CrmShell";
 
 type Comm = {
@@ -82,6 +85,47 @@ export default function AdminCommissionsPage() {
             <CrmStat label="To pay (KES)" value={eligible.toLocaleString()} />
             <CrmStat label="Paid (KES)" value={paid.toLocaleString()} />
           </div>
+
+          <CrmMobileCards>
+            {rows.length === 0 && (
+              <p className="text-center text-sm text-white/40 py-10">No commissions yet.</p>
+            )}
+            {rows.map((c) => (
+              <CrmCard
+                key={c.id}
+                title={c.partners?.full_name || "—"}
+                badge={<StageBadge stage={c.status} />}
+                footer={
+                  <select
+                    value={c.status}
+                    onChange={(e) => setStatus(c.id, e.target.value)}
+                    className="w-full bg-[#0a101c] border border-white/10 rounded-lg px-3 py-2 text-sm"
+                  >
+                    {["PENDING", "ELIGIBLE", "APPROVED", "PAID", "REVERSED", "CLAWED_BACK"].map(
+                      (s) => (
+                        <option key={s} value={s}>
+                          {s}
+                        </option>
+                      )
+                    )}
+                  </select>
+                }
+              >
+                <CrmCardField label="Customer" value={c.deals?.customer_name || c.basis} />
+                <CrmCardField label="M-Pesa" value={c.partners?.mpesa_number || "—"} />
+                <CrmCardField label="Basis" value={Number(c.basis_amount).toLocaleString()} />
+                <CrmCardField label="Rate" value={`${(Number(c.commission_pct) * 100).toFixed(0)}%`} />
+                <CrmCardField
+                  label="Commission"
+                  value={
+                    <span className="font-semibold text-[var(--color-accent)]">
+                      KSh {Number(c.commission_amount).toLocaleString()}
+                    </span>
+                  }
+                />
+              </CrmCard>
+            ))}
+          </CrmMobileCards>
 
           <CrmTable
             columns={[

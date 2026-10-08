@@ -29,7 +29,7 @@ export function CrmShell({
           {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
         </div>
         {nav && nav.length > 0 && (
-          <div className="max-w-[1400px] mx-auto px-4 sm:px-6 flex gap-1 overflow-x-auto pb-0">
+          <div className="max-w-[1400px] mx-auto px-4 sm:px-6 flex gap-1 overflow-x-auto pb-0 scrollbar-none">
             {nav.map((n) => (
               <Link
                 key={n.href + n.label}
@@ -61,9 +61,11 @@ export function CrmStat({
   hint?: string;
 }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-[#0f1624] px-5 py-4 min-w-[140px]">
-      <p className="text-[11px] uppercase tracking-wider text-white/40 font-medium">{label}</p>
-      <p className="mt-1.5 text-2xl font-semibold tabular-nums tracking-tight">{value}</p>
+    <div className="rounded-xl border border-white/10 bg-[#0f1624] px-4 sm:px-5 py-3 sm:py-4 min-w-[120px] flex-1 sm:flex-none">
+      <p className="text-[10px] sm:text-[11px] uppercase tracking-wider text-white/40 font-medium">
+        {label}
+      </p>
+      <p className="mt-1 text-xl sm:text-2xl font-semibold tabular-nums tracking-tight">{value}</p>
       {hint && <p className="mt-1 text-xs text-white/40">{hint}</p>}
     </div>
   );
@@ -88,10 +90,14 @@ export function StageBadge({ stage }: { stage: string }) {
     REJECTED: "bg-red-500/15 text-red-300 ring-red-500/30",
     PAID: "bg-emerald-500/20 text-emerald-200 ring-emerald-500/40",
     UNPAID: "bg-white/10 text-white/60 ring-white/20",
+    PARTIAL: "bg-amber-500/15 text-amber-300 ring-amber-500/30",
     ELIGIBLE: "bg-lime-500/15 text-lime-300 ring-lime-500/30",
     ACTIVE: "bg-emerald-500/15 text-emerald-300 ring-emerald-500/30",
     APPLIED: "bg-sky-500/15 text-sky-300 ring-sky-500/30",
     CERTIFIED: "bg-lime-500/15 text-lime-300 ring-lime-500/30",
+    SCREENING: "bg-blue-500/15 text-blue-300 ring-blue-500/30",
+    TRAINING: "bg-violet-500/15 text-violet-300 ring-violet-500/30",
+    SUSPENDED: "bg-red-500/15 text-red-300 ring-red-500/30",
   };
   const c = colors[stage] || "bg-white/10 text-white/70 ring-white/15";
   return (
@@ -103,19 +109,19 @@ export function StageBadge({ stage }: { stage: string }) {
   );
 }
 
+/** Desktop table only — pair with CrmMobileCards */
 export function CrmTable({
   columns,
   children,
-  empty,
 }: {
   columns: string[];
   children: ReactNode;
   empty?: string;
 }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-[#0f1624] overflow-hidden shadow-xl shadow-black/20">
+    <div className="hidden md:block rounded-2xl border border-white/10 bg-[#0f1624] overflow-hidden shadow-xl shadow-black/20">
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse min-w-[900px]">
+        <table className="w-full text-left border-collapse min-w-[800px]">
           <thead>
             <tr className="border-b border-white/10 bg-[#121a2b]">
               {columns.map((col) => (
@@ -131,6 +137,63 @@ export function CrmTable({
           <tbody className="divide-y divide-white/5">{children}</tbody>
         </table>
       </div>
+    </div>
+  );
+}
+
+/** Mobile card stack — pair with CrmTable */
+export function CrmMobileCards({ children }: { children: ReactNode }) {
+  return <div className="md:hidden space-y-3">{children}</div>;
+}
+
+export function CrmCard({
+  title,
+  badge,
+  onClick,
+  children,
+  footer,
+}: {
+  title: ReactNode;
+  badge?: ReactNode;
+  onClick?: () => void;
+  children: ReactNode;
+  footer?: ReactNode;
+}) {
+  return (
+    <div
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onClick={onClick}
+      onKeyDown={
+        onClick
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") onClick();
+            }
+          : undefined
+      }
+      className={`rounded-2xl border border-white/10 bg-[#0f1624] p-4 shadow-lg shadow-black/15 ${
+        onClick ? "active:scale-[0.99] cursor-pointer" : ""
+      }`}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="font-semibold text-base leading-snug text-white min-w-0 flex-1">{title}</div>
+        {badge && <div className="shrink-0">{badge}</div>}
+      </div>
+      <div className="mt-3 space-y-2 text-sm">{children}</div>
+      {footer && (
+        <div className="mt-4 pt-3 border-t border-white/10" onClick={(e) => e.stopPropagation()}>
+          {footer}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function CrmCardField({ label, value }: { label: string; value: ReactNode }) {
+  return (
+    <div className="flex justify-between gap-3 text-sm">
+      <span className="text-white/40 shrink-0">{label}</span>
+      <span className="text-white/85 text-right min-w-0 break-words">{value}</span>
     </div>
   );
 }

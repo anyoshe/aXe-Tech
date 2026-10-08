@@ -13,6 +13,9 @@ import {
   CrmRow,
   CrmCell,
   StageBadge,
+  CrmMobileCards,
+  CrmCard,
+  CrmCardField,
 } from "@/components/crm/CrmShell";
 import { LEAD_STAGES } from "@/lib/partner-constants";
 
@@ -177,6 +180,52 @@ export default function PartnerDashboardPage() {
               ))}
             </select>
           </div>
+
+          <CrmMobileCards>
+            {filtered.length === 0 && (
+              <p className="text-center text-sm text-white/40 py-10">No leads match.</p>
+            )}
+            {filtered.map((l) => (
+              <CrmCard
+                key={l.id}
+                title={l.org_name}
+                badge={<StageBadge stage={l.stage} />}
+                onClick={() => setSelected(l)}
+                footer={
+                  <select
+                    value={l.stage}
+                    disabled={updating === l.id}
+                    onChange={(e) => setStage(l.id, e.target.value)}
+                    className="w-full bg-[#0a101c] border border-white/10 rounded-lg px-3 py-2 text-sm"
+                  >
+                    {LEAD_STAGES.map((s) => (
+                      <option key={s} value={s}>
+                        {s.replace(/_/g, " ")}
+                      </option>
+                    ))}
+                  </select>
+                }
+              >
+                <CrmCardField label="Contact" value={l.contact_name} />
+                <CrmCardField label="Phone" value={l.phone} />
+                {l.county && <CrmCardField label="County" value={l.county} />}
+                <CrmCardField label="Pillar" value={<span className="capitalize">{l.pillar}</span>} />
+                <CrmCardField
+                  label="Value"
+                  value={
+                    l.expected_value != null
+                      ? `KSh ${Number(l.expected_value).toLocaleString()}`
+                      : "—"
+                  }
+                />
+                <CrmCardField
+                  label="Follow-up"
+                  value={l.follow_up_at ? new Date(l.follow_up_at).toLocaleDateString() : "—"}
+                />
+                <p className="text-xs text-white/45 line-clamp-2 pt-1">{l.requirement}</p>
+              </CrmCard>
+            ))}
+          </CrmMobileCards>
 
           <CrmTable
             columns={[

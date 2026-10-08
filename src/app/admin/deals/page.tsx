@@ -12,6 +12,9 @@ import {
   CrmRow,
   CrmCell,
   StageBadge,
+  CrmMobileCards,
+  CrmCard,
+  CrmCardField,
 } from "@/components/crm/CrmShell";
 
 type Partner = { id: string; full_name: string };
@@ -204,6 +207,40 @@ export default function AdminDealsPage() {
               </button>
             </form>
           )}
+
+          <CrmMobileCards>
+            {deals.length === 0 && (
+              <p className="text-center text-sm text-white/40 py-10">No deals yet.</p>
+            )}
+            {deals.map((d) => {
+              const gp = Number(d.invoice_amount) - Number(d.cost_amount);
+              return (
+                <CrmCard
+                  key={d.id}
+                  title={d.customer_name}
+                  badge={<StageBadge stage={d.payment_status} />}
+                  footer={
+                    d.payment_status !== "PAID" ? (
+                      <button
+                        type="button"
+                        onClick={() => markPaid(d.id)}
+                        className="w-full rounded-lg bg-emerald-600/90 font-semibold py-2.5 text-sm"
+                      >
+                        Mark PAID
+                      </button>
+                    ) : null
+                  }
+                >
+                  <CrmCardField label="Partner" value={d.partners?.full_name || "—"} />
+                  <CrmCardField label="Pillar" value={<span className="capitalize">{d.pillar}</span>} />
+                  <CrmCardField label="Invoice" value={Number(d.invoice_amount).toLocaleString()} />
+                  <CrmCardField label="Cost" value={Number(d.cost_amount).toLocaleString()} />
+                  <CrmCardField label="Gross profit" value={<span className="text-emerald-300">{gp.toLocaleString()}</span>} />
+                  <CrmCardField label="Reference" value={d.payment_ref || "—"} />
+                </CrmCard>
+              );
+            })}
+          </CrmMobileCards>
 
           <CrmTable
             columns={[
