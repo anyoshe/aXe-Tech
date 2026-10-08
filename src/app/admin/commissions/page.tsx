@@ -3,18 +3,28 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import {
+  CrmShell,
+  CrmStat,
+  CrmTable,
+  CrmRow,
+  CrmCell,
+  StageBadge,
+} from "@/components/crm/CrmShell";
 
 type Comm = {
   id: string;
   basis: string;
+  basis_amount: number;
   commission_amount: number;
   commission_pct: number;
   status: string;
-  partners?: { full_name: string; mpesa_number: string } | null;
-  deals?: { customer_name: string } | null;
+  eligibility_date?: string | null;
+  paid_at?: string | null;
+  partners?: { full_name: string; mpesa_number: string; email?: string } | null;
+  deals?: { customer_name: string; invoice_amount?: number } | null;
 };
 
 export default function AdminCommissionsPage() {
@@ -45,47 +55,96 @@ export default function AdminCommissionsPage() {
     load();
   }
 
+  const eligible = rows
+    .filter((c) => ["ELIGIBLE", "APPROVED"].includes(c.status))
+    .reduce((s, c) => s + Number(c.commission_amount), 0);
+  const paid = rows
+    .filter((c) => c.status === "PAID")
+    .reduce((s, c) => s + Number(c.commission_amount), 0);
+
   return (
     <>
       <Navbar />
-      <main className="pt-16 min-h-screen bg-[var(--color-bg-dark)] text-white">
-        <div className="max-w-5xl mx-auto px-4 py-10">
-          <div className="flex justify-between flex-wrap gap-2">
-            <h1 className="text-2xl font-bold">Admin · Commission ledger</h1>
-            <Link href="/admin/deals" className="text-sm text-[var(--color-accent)]">
-              ← Deals
-            </Link>
+      <main className="pt-16">
+        <CrmShell
+          title="CRM · Commission ledger"
+          subtitle="Pay partners only after client funds have cleared. Use M-Pesa number on partner profile."
+          nav={[
+            { href: "/admin/leads", label: "Leads" },
+            { href: "/admin/partners", label: "Partners" },
+            { href: "/admin/quotes", label: "Quotes" },
+            { href: "/admin/deals", label: "Deals" },
+            { href: "/admin/commissions", label: "Commissions", active: true },
+          ]}
+        >
+          <div className="flex flex-wrap gap-3 mb-6">
+            <CrmStat label="Entries" value={rows.length} />
+            <CrmStat label="To pay (KES)" value={eligible.toLocaleString()} />
+            <CrmStat label="Paid (KES)" value={paid.toLocaleString()} />
           </div>
-          <div className="mt-8 space-y-2">
+
+          <CrmTable
+            columns={[
+              "Partner",
+              "Customer / basis",
+              "Basis amount",
+              "Rate",
+              "Commission",
+              "Status",
+              "Eligible",
+              "Update status",
+            ]}
+            empty="No commissions yet. Mark a deal PAID to generate entries."
+          >
             {rows.map((c) => (
-              <div key={c.id} className="rounded-xl border border-white/10 p-4 flex flex-wrap justify-between gap-3 text-sm">
-                <div>
-                  <p className="font-medium">
-                    {c.partners?.full_name} · {c.deals?.customer_name || c.basis}
-                  </p>
-                  <p className="text-xs text-white/50">
-                    M-Pesa: {c.partners?.mpesa_number || "—"} · {(Number(c.commission_pct) * 100).toFixed(0)}%
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold">KSh {Number(c.commission_amount).toLocaleString()}</span>
+              <CrmRow key={c.id}>
+                <CrmCell>
+                  <div className="font-semibold">{c.partners?.full_name || "—"}</div>
+                  <div className="text-xs text-white/40 mt-0.5">{c.partners?.email}</div>
+                  <div className="text-xs text-white/35 mt-0.5">
+                    M-Pesa: {c.partners?.mpesa_number || "—"}
+                  </div>
+                </CrmCell>
+                <CrmCell>
+                  <div>{c.deals?.customer_name || c.basis}</div>
+                  <div className="text-xs text-white/40 capitalize mt-0.5">{c.basis}</div>
+                </CrmCell>
+                <CrmCell className="tabular-nums" muted>
+                  {Number(c.basis_amount).toLocaleString()}
+                </CrmCell>
+                <CrmCell className="tabular-nums">
+                  {(Number(c.commission_pct) * 100).toFixed(0)}%
+                </CrmCell>
+                <CrmCell className="tabular-nums font-semibold text-[var(--color-accent)]">
+                  {Number(c.commission_amount).toLocaleString()}
+                </CrmCell>
+                <CrmCell>
+                  <StageBadge stage={c.status} />
+                </CrmCell>
+                <CrmCell muted>
+                  {c.eligibility_date
+                    ? new Date(c.eligibility_date).toLocaleDateString()
+                    : "—"}
+                </CrmCell>
+                <CrmCell>
                   <select
                     value={c.status}
                     onChange={(e) => setStatus(c.id, e.target.value)}
-                    className="bg-black/50 border border-white/10 rounded-lg text-xs px-2 py-1"
+                    className="bg-[#0a101c] border border-white/10 rounded-md text-xs px-2 py-1.5"
                   >
-                    {["PENDING", "ELIGIBLE", "APPROVED", "PAID", "REVERSED", "CLAWED_BACK"].map((s) => (
-                      <option key={s} value={s}>
-                        {s}
-                      </option>
-                    ))}
+                    {["PENDING", "ELIGIBLE", "APPROVED", "PAID", "REVERSED", "CLAWED_BACK"].map(
+                      (s) => (
+                        <option key={s} value={s}>
+                          {s}
+                        </option>
+                      )
+                    )}
                   </select>
-                </div>
-              </div>
+                </CrmCell>
+              </CrmRow>
             ))}
-            {rows.length === 0 && <p className="text-white/50">No commissions yet. Mark a deal PAID first.</p>}
-          </div>
-        </div>
+          </CrmTable>
+        </CrmShell>
       </main>
       <Footer />
     </>

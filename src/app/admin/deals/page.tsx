@@ -3,19 +3,29 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import {
+  CrmShell,
+  CrmStat,
+  CrmTable,
+  CrmRow,
+  CrmCell,
+  StageBadge,
+} from "@/components/crm/CrmShell";
 
 type Partner = { id: string; full_name: string };
 type Deal = {
   id: string;
   customer_name: string;
   pillar: string;
+  description?: string | null;
   invoice_amount: number;
   cost_amount: number;
   payment_status: string;
   payment_ref: string | null;
+  paid_at?: string | null;
+  created_at?: string;
   partners?: { full_name: string } | null;
 };
 
@@ -24,6 +34,7 @@ export default function AdminDealsPage() {
   const router = useRouter();
   const [deals, setDeals] = useState<Deal[]>([]);
   const [partners, setPartners] = useState<Partner[]>([]);
+  const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({
     customer_name: "",
     partner_id: "",
@@ -63,6 +74,7 @@ export default function AdminDealsPage() {
         cost_amount: Number(form.cost_amount || 0),
       }),
     });
+    setShowForm(false);
     setForm({
       customer_name: "",
       partner_id: "",
@@ -85,113 +97,176 @@ export default function AdminDealsPage() {
     load();
   }
 
+  const paidTotal = deals
+    .filter((d) => d.payment_status === "PAID")
+    .reduce((s, d) => s + Number(d.invoice_amount), 0);
+
   return (
     <>
       <Navbar />
-      <main className="pt-16 min-h-screen bg-[var(--color-bg-dark)] text-white">
-        <div className="max-w-5xl mx-auto px-4 py-10">
-          <div className="flex justify-between flex-wrap gap-2">
-            <h1 className="text-2xl font-bold">Admin · Deals & payments</h1>
-            <Link href="/admin/commissions" className="text-sm text-[var(--color-accent)]">
-              Commissions →
-            </Link>
-          </div>
-          <p className="text-sm text-white/55 mt-1">
-            Commission is created only when status is PAID (money cleared).
-          </p>
-
-          <form onSubmit={createDeal} className="mt-8 grid sm:grid-cols-2 gap-3 rounded-2xl border border-white/10 p-5 bg-white/5">
-            <input
-              required
-              placeholder="Customer name"
-              value={form.customer_name}
-              onChange={(e) => setForm({ ...form, customer_name: e.target.value })}
-              className="rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm"
-            />
-            <select
-              value={form.partner_id}
-              onChange={(e) => setForm({ ...form, partner_id: e.target.value })}
-              className="rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm"
-            >
-              <option value="">Partner (optional)</option>
-              {partners.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.full_name}
-                </option>
-              ))}
-            </select>
-            <select
-              value={form.pillar}
-              onChange={(e) => setForm({ ...form, pillar: e.target.value })}
-              className="rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm"
-            >
-              <option value="equip">EQUIP</option>
-              <option value="connect">CONNECT</option>
-              <option value="run">RUN</option>
-              <option value="support">SUPPORT</option>
-              <option value="mixed">Mixed</option>
-            </select>
-            <select
-              value={form.payment_status}
-              onChange={(e) => setForm({ ...form, payment_status: e.target.value })}
-              className="rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm"
-            >
-              <option value="UNPAID">UNPAID</option>
-              <option value="PAID">PAID</option>
-              <option value="PARTIAL">PARTIAL</option>
-            </select>
-            <input
-              placeholder="Invoice amount"
-              value={form.invoice_amount}
-              onChange={(e) => setForm({ ...form, invoice_amount: e.target.value })}
-              className="rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm"
-            />
-            <input
-              placeholder="Cost (for GP / hardware commission)"
-              value={form.cost_amount}
-              onChange={(e) => setForm({ ...form, cost_amount: e.target.value })}
-              className="rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm"
-            />
-            <input
-              placeholder="Payment ref (M-Pesa/bank)"
-              value={form.payment_ref}
-              onChange={(e) => setForm({ ...form, payment_ref: e.target.value })}
-              className="rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm sm:col-span-2"
-            />
+      <main className="pt-16">
+        <CrmShell
+          title="CRM · Deals & payments"
+          subtitle="Commission is generated only when a deal is marked PAID (funds cleared)."
+          nav={[
+            { href: "/admin/leads", label: "Leads" },
+            { href: "/admin/partners", label: "Partners" },
+            { href: "/admin/quotes", label: "Quotes" },
+            { href: "/admin/deals", label: "Deals", active: true },
+            { href: "/admin/commissions", label: "Commissions" },
+          ]}
+          actions={
             <button
-              type="submit"
-              className="sm:col-span-2 rounded-xl bg-[var(--color-accent)] text-[var(--color-bg-dark)] font-semibold py-2 text-sm"
+              type="button"
+              onClick={() => setShowForm((v) => !v)}
+              className="rounded-lg bg-[var(--color-accent)] text-[var(--color-bg-dark)] font-semibold px-4 py-2 text-sm"
             >
-              Create deal
+              {showForm ? "Close form" : "+ New deal"}
             </button>
-          </form>
-
-          <div className="mt-8 space-y-2">
-            {deals.map((d) => (
-              <div key={d.id} className="rounded-xl border border-white/10 p-4 flex flex-wrap justify-between gap-2 text-sm">
-                <div>
-                  <p className="font-medium">{d.customer_name}</p>
-                  <p className="text-xs text-white/50">
-                    {d.partners?.full_name || "No partner"} · {d.pillar} · inv{" "}
-                    {Number(d.invoice_amount).toLocaleString()}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs">{d.payment_status}</span>
-                  {d.payment_status !== "PAID" && (
-                    <button
-                      type="button"
-                      onClick={() => markPaid(d.id)}
-                      className="rounded-lg bg-emerald-600 px-3 py-1 text-xs font-semibold"
-                    >
-                      Mark PAID
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))}
+          }
+        >
+          <div className="flex flex-wrap gap-3 mb-6">
+            <CrmStat label="Deals" value={deals.length} />
+            <CrmStat label="Paid volume (KES)" value={paidTotal.toLocaleString()} />
+            <CrmStat
+              label="Unpaid"
+              value={deals.filter((d) => d.payment_status !== "PAID").length}
+            />
           </div>
-        </div>
+
+          {showForm && (
+            <form
+              onSubmit={createDeal}
+              className="mb-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-3 rounded-2xl border border-white/10 bg-[#0f1624] p-5"
+            >
+              <input
+                required
+                placeholder="Customer name"
+                value={form.customer_name}
+                onChange={(e) => setForm({ ...form, customer_name: e.target.value })}
+                className="rounded-lg bg-[#0a101c] border border-white/10 px-3 py-2.5 text-sm"
+              />
+              <select
+                value={form.partner_id}
+                onChange={(e) => setForm({ ...form, partner_id: e.target.value })}
+                className="rounded-lg bg-[#0a101c] border border-white/10 px-3 py-2.5 text-sm"
+              >
+                <option value="">Partner (optional)</option>
+                {partners.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.full_name}
+                  </option>
+                ))}
+              </select>
+              <select
+                value={form.pillar}
+                onChange={(e) => setForm({ ...form, pillar: e.target.value })}
+                className="rounded-lg bg-[#0a101c] border border-white/10 px-3 py-2.5 text-sm"
+              >
+                <option value="equip">EQUIP</option>
+                <option value="connect">CONNECT</option>
+                <option value="run">RUN</option>
+                <option value="support">SUPPORT</option>
+                <option value="mixed">Mixed</option>
+              </select>
+              <input
+                placeholder="Invoice amount (KES)"
+                value={form.invoice_amount}
+                onChange={(e) => setForm({ ...form, invoice_amount: e.target.value })}
+                className="rounded-lg bg-[#0a101c] border border-white/10 px-3 py-2.5 text-sm"
+              />
+              <input
+                placeholder="Cost (for gross profit)"
+                value={form.cost_amount}
+                onChange={(e) => setForm({ ...form, cost_amount: e.target.value })}
+                className="rounded-lg bg-[#0a101c] border border-white/10 px-3 py-2.5 text-sm"
+              />
+              <select
+                value={form.payment_status}
+                onChange={(e) => setForm({ ...form, payment_status: e.target.value })}
+                className="rounded-lg bg-[#0a101c] border border-white/10 px-3 py-2.5 text-sm"
+              >
+                <option value="UNPAID">UNPAID</option>
+                <option value="PAID">PAID</option>
+                <option value="PARTIAL">PARTIAL</option>
+              </select>
+              <input
+                placeholder="Payment reference"
+                value={form.payment_ref}
+                onChange={(e) => setForm({ ...form, payment_ref: e.target.value })}
+                className="rounded-lg bg-[#0a101c] border border-white/10 px-3 py-2.5 text-sm sm:col-span-2"
+              />
+              <button
+                type="submit"
+                className="rounded-lg bg-[var(--color-accent)] text-[var(--color-bg-dark)] font-semibold py-2.5 text-sm"
+              >
+                Save deal
+              </button>
+            </form>
+          )}
+
+          <CrmTable
+            columns={[
+              "Customer",
+              "Partner",
+              "Pillar",
+              "Invoice",
+              "Cost",
+              "Gross profit",
+              "Payment",
+              "Reference",
+              "Actions",
+            ]}
+            empty="No deals yet. Create one when a sale is confirmed."
+          >
+            {deals.map((d) => {
+              const gp = Number(d.invoice_amount) - Number(d.cost_amount);
+              return (
+                <CrmRow key={d.id}>
+                  <CrmCell>
+                    <div className="font-semibold">{d.customer_name}</div>
+                    {d.description && (
+                      <div className="text-xs text-white/40 mt-1 line-clamp-2">{d.description}</div>
+                    )}
+                  </CrmCell>
+                  <CrmCell muted>{d.partners?.full_name || "—"}</CrmCell>
+                  <CrmCell className="capitalize">{d.pillar}</CrmCell>
+                  <CrmCell className="tabular-nums font-medium">
+                    {Number(d.invoice_amount).toLocaleString()}
+                  </CrmCell>
+                  <CrmCell className="tabular-nums" muted>
+                    {Number(d.cost_amount).toLocaleString()}
+                  </CrmCell>
+                  <CrmCell className="tabular-nums text-emerald-300/90">
+                    {gp.toLocaleString()}
+                  </CrmCell>
+                  <CrmCell>
+                    <StageBadge stage={d.payment_status} />
+                    {d.paid_at && (
+                      <div className="text-[10px] text-white/35 mt-1">
+                        {new Date(d.paid_at).toLocaleDateString()}
+                      </div>
+                    )}
+                  </CrmCell>
+                  <CrmCell muted className="text-xs">
+                    {d.payment_ref || "—"}
+                  </CrmCell>
+                  <CrmCell>
+                    {d.payment_status !== "PAID" && (
+                      <button
+                        type="button"
+                        onClick={() => markPaid(d.id)}
+                        className="rounded-md bg-emerald-600/90 hover:bg-emerald-500 px-3 py-1.5 text-xs font-semibold"
+                      >
+                        Mark PAID
+                      </button>
+                    )}
+                  </CrmCell>
+                </CrmRow>
+              );
+            })}
+          </CrmTable>
+        </CrmShell>
       </main>
       <Footer />
     </>
