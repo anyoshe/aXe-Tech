@@ -57,9 +57,10 @@ export default function Navbar() {
 
   useEffect(() => {
     const onDoc = (e: MouseEvent) => {
-      if (dropRef.current && !dropRef.current.contains(e.target as Node)) {
-        setSolutionsOpen(false);
-      }
+      const target = e.target as HTMLElement | null;
+      // Ignore clicks inside any Solutions control/menu (desktop + mobile)
+      if (target?.closest?.("[data-solutions-menu]")) return;
+      setSolutionsOpen(false);
     };
     document.addEventListener("mousedown", onDoc);
     return () => document.removeEventListener("mousedown", onDoc);
@@ -91,17 +92,17 @@ export default function Navbar() {
 
           {/* Desktop */}
           <nav className="hidden lg:flex items-center gap-7">
-            <div
-              className="relative"
-              ref={dropRef}
-              onMouseEnter={() => setSolutionsOpen(true)}
-              onMouseLeave={() => setSolutionsOpen(false)}
-            >
+            <div className="relative" ref={dropRef} data-solutions-menu>
               <button
                 type="button"
                 className={clsx(linkClass, "inline-flex items-center gap-1")}
-                onClick={() => setSolutionsOpen((v) => !v)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setSolutionsOpen((v) => !v);
+                }}
                 aria-expanded={solutionsOpen}
+                aria-haspopup="true"
               >
                 Solutions
                 <ChevronDown
@@ -203,10 +204,16 @@ export default function Navbar() {
             className="lg:hidden border-t border-white/10 bg-[var(--color-bg-dark)] overflow-hidden"
           >
             <div className="px-4 py-4 space-y-1 max-h-[80vh] overflow-y-auto">
+              <div data-solutions-menu>
               <button
                 type="button"
-                onClick={() => setSolutionsOpen((v) => !v)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setSolutionsOpen((v) => !v);
+                }}
                 aria-expanded={solutionsOpen}
+                aria-haspopup="true"
                 className="w-full flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-white hover:bg-white/5"
               >
                 <span>Solutions</span>
@@ -237,6 +244,7 @@ export default function Navbar() {
                   ))}
                 </div>
               )}
+              </div>
               <div className="h-px bg-white/10 my-2" />
               <Link
                 href="/shop"
