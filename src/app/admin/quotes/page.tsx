@@ -3,9 +3,19 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import {
+  CrmShell,
+  CrmStat,
+  CrmTable,
+  CrmRow,
+  CrmCell,
+  StageBadge,
+  CrmMobileCards,
+  CrmCard,
+  CrmCardField,
+} from "@/components/crm/CrmShell";
 
 type Quote = {
   id: string;
@@ -13,6 +23,10 @@ type Quote = {
   solution_summary: string;
   status: string;
   qualification: Record<string, string>;
+  approved_setup_fee?: number | null;
+  approved_monthly_fee?: number | null;
+  approved_one_off?: number | null;
+  created_at?: string;
   partners?: { full_name: string; email: string } | null;
   leads?: { org_name: string; phone: string } | null;
 };
@@ -64,82 +78,142 @@ export default function AdminQuotesPage() {
     load();
   }
 
+  const pending = quotes.filter((q) => q.status === "PENDING").length;
+
+  function ApproveFields({ id }: { id: string }) {
+    return (
+      <div className="space-y-2">
+        <div className="grid grid-cols-2 gap-2">
+          <input
+            placeholder="Setup fee"
+            value={setup[id] || ""}
+            onChange={(e) => setSetup({ ...setup, [id]: e.target.value })}
+            className="rounded-lg bg-[#0a101c] border border-white/10 px-2 py-2 text-sm"
+          />
+          <input
+            placeholder="Monthly"
+            value={monthly[id] || ""}
+            onChange={(e) => setMonthly({ ...monthly, [id]: e.target.value })}
+            className="rounded-lg bg-[#0a101c] border border-white/10 px-2 py-2 text-sm"
+          />
+          <input
+            placeholder="One-off"
+            value={oneOff[id] || ""}
+            onChange={(e) => setOneOff({ ...oneOff, [id]: e.target.value })}
+            className="rounded-lg bg-[#0a101c] border border-white/10 px-2 py-2 text-sm"
+          />
+          <input
+            placeholder="Notes"
+            value={notes[id] || ""}
+            onChange={(e) => setNotes({ ...notes, [id]: e.target.value })}
+            className="rounded-lg bg-[#0a101c] border border-white/10 px-2 py-2 text-sm"
+          />
+        </div>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => approve(id)}
+            className="flex-1 rounded-lg bg-[var(--color-accent)] text-[var(--color-bg-dark)] font-semibold text-sm py-2"
+          >
+            Approve
+          </button>
+          <button
+            type="button"
+            onClick={() => reject(id)}
+            className="flex-1 rounded-lg border border-red-400/40 text-red-300 text-sm py-2"
+          >
+            Reject
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <Navbar />
-      <main className="pt-16 min-h-screen bg-[var(--color-bg-dark)] text-white">
-        <div className="max-w-5xl mx-auto px-4 py-10">
-          <div className="flex flex-wrap gap-3 justify-between">
-            <h1 className="text-2xl font-bold">Admin · Quote approval</h1>
-            <div className="flex gap-2 text-sm">
-              <Link href="/admin/partners">Partners</Link>
-              <Link href="/admin/deals">Deals</Link>
-              <Link href="/admin/commissions">Commissions</Link>
-            </div>
+      <main className="pt-16">
+        <CrmShell
+          title="CRM · Quote approval"
+          subtitle="Partners submit requests. You set approved setup / monthly / one-off amounts."
+          nav={[
+            { href: "/admin/leads", label: "Leads" },
+            { href: "/admin/partners", label: "Partners" },
+            { href: "/admin/quotes", label: "Quotes", active: true },
+            { href: "/admin/deals", label: "Deals" },
+            { href: "/admin/commissions", label: "Commissions" },
+          ]}
+        >
+          <div className="flex flex-wrap gap-3 mb-6">
+            <CrmStat label="Total" value={quotes.length} />
+            <CrmStat label="Pending review" value={pending} />
+            <CrmStat
+              label="Approved"
+              value={quotes.filter((q) => q.status === "APPROVED").length}
+            />
           </div>
-          <div className="mt-8 space-y-4">
+
+          <CrmMobileCards>
+            {quotes.length === 0 && (
+              <p className="text-center text-sm text-white/40 py-10">No quote requests.</p>
+            )}
             {quotes.map((q) => (
-              <div key={q.id} className="rounded-2xl border border-white/10 p-5 bg-white/5">
-                <div className="flex justify-between gap-2 flex-wrap">
-                  <div>
-                    <p className="font-semibold">{q.leads?.org_name || "—"} · {q.pillar}</p>
-                    <p className="text-xs text-white/50">
-                      {q.partners?.full_name} · {q.partners?.email}
-                    </p>
-                  </div>
-                  <span className="text-xs px-2 py-1 rounded-full bg-white/10">{q.status}</span>
-                </div>
-                <p className="mt-2 text-sm text-white/70">{q.solution_summary}</p>
-                <p className="text-xs text-white/40 mt-1">
-                  Qual: {JSON.stringify(q.qualification || {})}
-                </p>
-                {q.status === "PENDING" && (
-                  <div className="mt-4 grid sm:grid-cols-4 gap-2">
-                    <input
-                      placeholder="Setup fee"
-                      value={setup[q.id] || ""}
-                      onChange={(e) => setSetup({ ...setup, [q.id]: e.target.value })}
-                      className="rounded-lg bg-black/40 border border-white/10 px-2 py-1.5 text-sm"
-                    />
-                    <input
-                      placeholder="Monthly"
-                      value={monthly[q.id] || ""}
-                      onChange={(e) => setMonthly({ ...monthly, [q.id]: e.target.value })}
-                      className="rounded-lg bg-black/40 border border-white/10 px-2 py-1.5 text-sm"
-                    />
-                    <input
-                      placeholder="One-off"
-                      value={oneOff[q.id] || ""}
-                      onChange={(e) => setOneOff({ ...oneOff, [q.id]: e.target.value })}
-                      className="rounded-lg bg-black/40 border border-white/10 px-2 py-1.5 text-sm"
-                    />
-                    <input
-                      placeholder="Notes"
-                      value={notes[q.id] || ""}
-                      onChange={(e) => setNotes({ ...notes, [q.id]: e.target.value })}
-                      className="rounded-lg bg-black/40 border border-white/10 px-2 py-1.5 text-sm"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => approve(q.id)}
-                      className="rounded-lg bg-[var(--color-accent)] text-[var(--color-bg-dark)] font-semibold text-sm py-1.5"
-                    >
-                      Approve
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => reject(q.id)}
-                      className="rounded-lg border border-red-400/40 text-red-300 text-sm py-1.5"
-                    >
-                      Reject
-                    </button>
-                  </div>
-                )}
-              </div>
+              <CrmCard
+                key={q.id}
+                title={q.leads?.org_name || "—"}
+                badge={<StageBadge stage={q.status} />}
+                footer={q.status === "PENDING" ? <ApproveFields id={q.id} /> : undefined}
+              >
+                <CrmCardField label="Partner" value={q.partners?.full_name || "—"} />
+                <CrmCardField label="Pillar" value={<span className="capitalize">{q.pillar}</span>} />
+                <p className="text-xs text-white/60 leading-relaxed">{q.solution_summary}</p>
+                <p className="text-[10px] text-white/35">Qual: {JSON.stringify(q.qualification || {})}</p>
+              </CrmCard>
             ))}
-            {quotes.length === 0 && <p className="text-white/50">No quote requests.</p>}
-          </div>
-        </div>
+          </CrmMobileCards>
+
+          <CrmTable
+            columns={[
+              "Client",
+              "Partner",
+              "Pillar",
+              "Summary",
+              "Status",
+              "Review / amounts",
+            ]}
+          >
+            {quotes.map((q) => (
+              <CrmRow key={q.id}>
+                <CrmCell>
+                  <div className="font-semibold">{q.leads?.org_name || "—"}</div>
+                  <div className="text-xs text-white/40">{q.leads?.phone}</div>
+                </CrmCell>
+                <CrmCell>
+                  <div>{q.partners?.full_name}</div>
+                  <div className="text-xs text-white/40">{q.partners?.email}</div>
+                </CrmCell>
+                <CrmCell className="capitalize">{q.pillar}</CrmCell>
+                <CrmCell>
+                  <div className="max-w-[240px] text-white/75 line-clamp-3">{q.solution_summary}</div>
+                </CrmCell>
+                <CrmCell>
+                  <StageBadge stage={q.status} />
+                </CrmCell>
+                <CrmCell>
+                  {q.status === "PENDING" ? (
+                    <ApproveFields id={q.id} />
+                  ) : (
+                    <div className="text-xs text-white/50 space-y-0.5">
+                      <div>Setup: {q.approved_setup_fee ?? "—"}</div>
+                      <div>Monthly: {q.approved_monthly_fee ?? "—"}</div>
+                      <div>One-off: {q.approved_one_off ?? "—"}</div>
+                    </div>
+                  )}
+                </CrmCell>
+              </CrmRow>
+            ))}
+          </CrmTable>
+        </CrmShell>
       </main>
       <Footer />
     </>

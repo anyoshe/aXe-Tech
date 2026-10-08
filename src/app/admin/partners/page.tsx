@@ -1,11 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import {
+  CrmShell,
+  CrmStat,
+  CrmTable,
+  CrmRow,
+  CrmCell,
+  StageBadge,
+  CrmMobileCards,
+  CrmCard,
+  CrmCardField,
+} from "@/components/crm/CrmShell";
 import { PARTNER_STATUSES } from "@/lib/partner-constants";
 
 type Partner = {
@@ -17,6 +28,8 @@ type Partner = {
   specialty: string;
   status: string;
   occupation: string | null;
+  mpesa_number?: string | null;
+  target_market?: string | null;
   created_at: string;
   admin_notes: string | null;
 };
@@ -26,6 +39,8 @@ export default function AdminPartnersPage() {
   const router = useRouter();
   const [partners, setPartners] = useState<Partner[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [q, setQ] = useState("");
+  const [filter, setFilter] = useState("ALL");
 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/partners/login");
@@ -57,80 +72,160 @@ export default function AdminPartnersPage() {
     await load();
   }
 
+  const filtered = useMemo(() => {
+    return partners.filter((p) => {
+      if (filter !== "ALL" && p.status !== filter) return false;
+      if (!q.trim()) return true;
+      const s = q.toLowerCase();
+      return (
+        p.full_name.toLowerCase().includes(s) ||
+        p.email.toLowerCase().includes(s) ||
+        p.phone.includes(s) ||
+        (p.county || "").toLowerCase().includes(s)
+      );
+    });
+  }, [partners, filter, q]);
+
   return (
     <>
       <Navbar />
-      <main className="pt-16 min-h-screen bg-[var(--color-bg-dark)] text-white">
-        <div className="max-w-6xl mx-auto px-4 py-10">
-          <div className="flex flex-wrap justify-between gap-3">
-            <div>
-              <h1 className="text-2xl font-bold">Admin · Partners</h1>
-              <p className="text-sm text-white/55">Approve applications and set status.</p>
-            </div>
-            <div className="flex gap-2 text-sm flex-wrap">
-              <Link href="/admin/leads" className="rounded-lg border border-white/20 px-3 py-2">All leads</Link>
-              <Link href="/admin/quotes" className="rounded-lg border border-white/20 px-3 py-2">Quotes</Link>
-              <Link href="/admin/deals" className="rounded-lg border border-white/20 px-3 py-2">Deals</Link>
-              <Link href="/admin/commissions" className="rounded-lg border border-white/20 px-3 py-2">Commissions</Link>
-              <Link href="/admin/products" className="rounded-lg border border-white/20 px-3 py-2">Products</Link>
-            </div>
+      <main className="pt-16">
+        <CrmShell
+          title="CRM · Partners"
+          subtitle="Approve applications and set status through training to ACTIVE."
+          nav={[
+            { href: "/admin/leads", label: "Leads" },
+            { href: "/admin/partners", label: "Partners", active: true },
+            { href: "/admin/quotes", label: "Quotes" },
+            { href: "/admin/deals", label: "Deals" },
+            { href: "/admin/commissions", label: "Commissions" },
+          ]}
+          actions={
+            <Link
+              href="/admin/products"
+              className="rounded-lg border border-white/15 px-4 py-2 text-sm text-white/70"
+            >
+              Products
+            </Link>
+          }
+        >
+          {error && <p className="mb-4 text-sm text-red-400">{error}</p>}
+
+          <div className="flex flex-wrap gap-3 mb-6">
+            <CrmStat label="Total" value={partners.length} />
+            <CrmStat
+              label="Applied"
+              value={partners.filter((p) => p.status === "APPLIED").length}
+            />
+            <CrmStat
+              label="Active / certified"
+              value={partners.filter((p) => ["ACTIVE", "CERTIFIED"].includes(p.status)).length}
+            />
           </div>
-          {error && <p className="mt-4 text-red-400 text-sm">{error}</p>}
-          <div className="mt-8 overflow-x-auto rounded-xl border border-white/10">
-            <table className="w-full text-sm text-left">
-              <thead className="bg-black/40 text-xs uppercase text-white/50">
-                <tr>
-                  <th className="px-3 py-2">Name</th>
-                  <th className="px-3 py-2">Contact</th>
-                  <th className="px-3 py-2">Specialty</th>
-                  <th className="px-3 py-2">Status</th>
-                  <th className="px-3 py-2">Applied</th>
-                </tr>
-              </thead>
-              <tbody>
-                {partners.map((p) => (
-                  <tr key={p.id} className="border-t border-white/5">
-                    <td className="px-3 py-3">
-                      <div className="font-medium">{p.full_name}</div>
-                      <div className="text-xs text-white/45">{p.occupation || p.county}</div>
-                    </td>
-                    <td className="px-3 py-3">
-                      <div>{p.email}</div>
-                      <div className="text-xs text-white/45">{p.phone}</div>
-                    </td>
-                    <td className="px-3 py-3 capitalize">{p.specialty}</td>
-                    <td className="px-3 py-3">
-                      <select
-                        value={p.status}
-                        onChange={(e) => setStatus(p.id, e.target.value)}
-                        className="bg-black/50 border border-white/10 rounded-lg px-2 py-1 text-xs"
-                      >
-                        {PARTNER_STATUSES.map((s) => (
-                          <option key={s} value={s}>
-                            {s}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                    <td className="px-3 py-3 text-xs text-white/50">
-                      {new Date(p.created_at).toLocaleDateString()}
-                    </td>
-                  </tr>
-                ))}
-                {partners.length === 0 && (
-                  <tr>
-                    <td colSpan={5} className="px-3 py-8 text-center text-white/50">
-                      No applications yet.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+
+          <div className="flex flex-wrap gap-3 mb-4">
+            <input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Search name, email, phone, county…"
+              className="flex-1 min-w-[180px] rounded-lg bg-[#0f1624] border border-white/10 px-4 py-2.5 text-sm"
+            />
+            <select
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              className="rounded-lg bg-[#0f1624] border border-white/10 px-3 py-2.5 text-sm"
+            >
+              <option value="ALL">All statuses</option>
+              {PARTNER_STATUSES.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
+            </select>
           </div>
+
+          <CrmMobileCards>
+            {filtered.length === 0 && (
+              <p className="text-center text-sm text-white/40 py-10">No partners match.</p>
+            )}
+            {filtered.map((p) => (
+              <CrmCard
+                key={p.id}
+                title={p.full_name}
+                badge={<StageBadge stage={p.status} />}
+                footer={
+                  <select
+                    value={p.status}
+                    onChange={(e) => setStatus(p.id, e.target.value)}
+                    className="w-full bg-[#0a101c] border border-white/10 rounded-lg px-3 py-2 text-sm"
+                  >
+                    {PARTNER_STATUSES.map((s) => (
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
+                    ))}
+                  </select>
+                }
+              >
+                <CrmCardField label="Email" value={p.email} />
+                <CrmCardField label="Phone" value={p.phone} />
+                <CrmCardField label="M-Pesa" value={p.mpesa_number || "—"} />
+                <CrmCardField label="County" value={p.county || "—"} />
+                <CrmCardField label="Specialty" value={<span className="capitalize">{p.specialty}</span>} />
+                <CrmCardField label="Applied" value={new Date(p.created_at).toLocaleDateString()} />
+              </CrmCard>
+            ))}
+          </CrmMobileCards>
+
+          <CrmTable
+            columns={[
+              "Name",
+              "Contact",
+              "County",
+              "Specialty",
+              "M-Pesa",
+              "Status",
+              "Applied",
+            ]}
+          >
+            {filtered.map((p) => (
+              <CrmRow key={p.id}>
+                <CrmCell>
+                  <div className="font-semibold">{p.full_name}</div>
+                  <div className="text-xs text-white/40 mt-0.5">{p.occupation || "—"}</div>
+                </CrmCell>
+                <CrmCell>
+                  <div>{p.email}</div>
+                  <div className="text-xs text-white/50 mt-0.5">{p.phone}</div>
+                </CrmCell>
+                <CrmCell muted>{p.county || "—"}</CrmCell>
+                <CrmCell className="capitalize">{p.specialty}</CrmCell>
+                <CrmCell muted>{p.mpesa_number || "—"}</CrmCell>
+                <CrmCell>
+                  <div className="flex flex-col gap-2">
+                    <StageBadge stage={p.status} />
+                    <select
+                      value={p.status}
+                      onChange={(e) => setStatus(p.id, e.target.value)}
+                      className="bg-[#0a101c] border border-white/10 rounded-md px-2 py-1 text-xs max-w-[140px]"
+                    >
+                      {PARTNER_STATUSES.map((s) => (
+                        <option key={s} value={s}>
+                          {s}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </CrmCell>
+                <CrmCell muted>{new Date(p.created_at).toLocaleDateString()}</CrmCell>
+              </CrmRow>
+            ))}
+          </CrmTable>
+
           <p className="mt-4 text-xs text-white/40">
-            Partners can log in from APPROVED onward. Lead registration requires CERTIFIED or ACTIVE.
+            Partners can log in from APPROVED upward. Lead registration requires CERTIFIED or ACTIVE.
           </p>
-        </div>
+        </CrmShell>
       </main>
       <Footer />
     </>
