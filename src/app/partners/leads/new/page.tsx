@@ -5,7 +5,6 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 export default function NewLeadPage() {
   const { status } = useSession();
@@ -170,7 +169,6 @@ export default function NewLeadPage() {
           </form>
         </div>
       </main>
-      <Footer />
     </>
   );
 }

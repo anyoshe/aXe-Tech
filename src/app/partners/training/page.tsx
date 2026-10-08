@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 const sessions = [
   {
@@ -79,7 +78,6 @@ export default function PartnerTrainingPage() {
           </div>
         </div>
       </main>
-      <Footer />
     </>
   );
 }

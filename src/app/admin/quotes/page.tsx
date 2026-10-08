@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import {
   CrmShell,
   CrmStat,
@@ -215,7 +214,6 @@ export default function AdminQuotesPage() {
           </CrmTable>
         </CrmShell>
       </main>
-      <Footer />
     </>
   );
 }

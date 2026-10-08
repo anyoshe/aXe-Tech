@@ -5,7 +5,6 @@ import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import {
   CrmShell,
   CrmStat,
@@ -361,7 +360,6 @@ export default function PartnerDashboardPage() {
           )}
         </CrmShell>
       </main>
-      <Footer />
     </>
   );
 }
