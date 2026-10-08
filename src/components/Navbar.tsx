@@ -148,6 +148,9 @@ export default function Navbar() {
             <Link href="/software" className={linkClass}>
               Software
             </Link>
+            <Link href="/partners" className={linkClass}>
+              Partners
+            </Link>
             <Link href="/portfolios" className={linkClass}>
               Projects
             </Link>
@@ -222,6 +225,13 @@ export default function Navbar() {
                 className="block rounded-lg px-3 py-2.5 text-sm font-medium text-white"
               >
                 Software
+              </Link>
+              <Link
+                href="/partners"
+                onClick={() => setOpen(false)}
+                className="block rounded-lg px-3 py-2.5 text-sm font-medium text-white"
+              >
+                Partners
               </Link>
               <Link
                 href="/portfolios"

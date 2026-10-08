@@ -1,13 +1,18 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import type { NextAuthOptions } from "next-auth";
+import {
+  canPartnerLogin,
+  findPartnerByEmail,
+  verifyPassword,
+} from "./partners";
 
 /**
- * Auth without MongoDB.
- * Set in .env.local / Vercel:
- *   ADMIN_EMAIL=you@example.com
- *   ADMIN_PASSWORD=a-strong-password
- *   NEXTAUTH_SECRET=...
- *   NEXTAUTH_URL=https://your-domain.com
+ * Auth: env admin OR approved partners (Supabase partners table).
+ *
+ * Env:
+ *   ADMIN_EMAIL / ADMIN_PASSWORD
+ *   NEXTAUTH_SECRET / NEXTAUTH_URL
+ *   Supabase keys for partner lookup
  */
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -18,54 +23,69 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const email = (process.env.ADMIN_EMAIL || "").trim().toLowerCase();
-        const password = process.env.ADMIN_PASSWORD || "";
-
-        if (!email || !password) {
-          console.error(
-            "[auth] ADMIN_EMAIL and ADMIN_PASSWORD must be set (MongoDB user store removed)."
-          );
-          return null;
-        }
-
         const inputEmail = (credentials?.email || "").trim().toLowerCase();
         const inputPassword = credentials?.password || "";
+        if (!inputEmail || !inputPassword) return null;
 
-        if (inputEmail === email && inputPassword === password) {
+        // 1) Platform admin
+        const adminEmail = (process.env.ADMIN_EMAIL || "").trim().toLowerCase();
+        const adminPassword = process.env.ADMIN_PASSWORD || "";
+        if (adminEmail && adminPassword && inputEmail === adminEmail && inputPassword === adminPassword) {
           return {
             id: "admin",
-            email,
+            email: adminEmail,
             role: "admin",
-            schoolId: null,
+            name: "GetAxe Admin",
           };
         }
-        return null;
+
+        // 2) Sales partner
+        try {
+          const partner = await findPartnerByEmail(inputEmail);
+          if (!partner || !partner.password_hash) return null;
+          if (!canPartnerLogin(partner.status)) return null;
+          const ok = await verifyPassword(inputPassword, partner.password_hash);
+          if (!ok) return null;
+          return {
+            id: partner.id,
+            email: partner.email,
+            role: "partner",
+            name: partner.full_name,
+            partnerStatus: partner.status,
+            specialty: partner.specialty,
+          };
+        } catch (e) {
+          console.error("[auth] partner login", e);
+          return null;
+        }
       },
     }),
   ],
-  session: { strategy: "jwt", maxAge: 60 * 60 * 24 },
-  jwt: { maxAge: 60 * 60 * 24 },
+  session: { strategy: "jwt", maxAge: 60 * 60 * 24 * 7 },
+  jwt: { maxAge: 60 * 60 * 24 * 7 },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: "/auth/signin",
+    signIn: "/partners/login",
   },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
         token.role = (user as { role?: string }).role;
-        token.schoolId = (user as { schoolId?: string | null }).schoolId;
+        token.partnerStatus = (user as { partnerStatus?: string }).partnerStatus;
+        token.specialty = (user as { specialty?: string }).specialty;
+        token.uid = user.id;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        (session.user as { role?: string }).role = token.role as string | undefined;
-        (session.user as { schoolId?: string | null }).schoolId =
-          token.schoolId as string | null | undefined;
+        (session.user as { id?: string }).id = (token.uid as string) || token.sub;
+        (session.user as { role?: string }).role = token.role as string;
+        (session.user as { partnerStatus?: string }).partnerStatus =
+          token.partnerStatus as string;
+        (session.user as { specialty?: string }).specialty = token.specialty as string;
       }
       return session;
     },
   },
 };
-
-export default authOptions;

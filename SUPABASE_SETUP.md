@@ -108,3 +108,41 @@ Demo seed: open `/school-erp/demo` and use the seed action, or:
 ```bash
 curl -X POST http://localhost:3000/api/schools/demo-school/seed
 ```
+
+## Partner CRM (Sprint 1–2)
+
+In Supabase SQL Editor, also run:
+
+```text
+supabase/partners-crm.sql
+```
+
+This creates:
+
+- `partners` — applications, status, specialty, password hash
+- `leads` — CRM with ownership + protection window
+- `lead_activities` — notes / stage history
+
+### Routes
+
+| Path | Purpose |
+|------|---------|
+| `/partners` | Public partner programme page |
+| `/partners/apply` | Application form |
+| `/partners/login` | Partner + admin login |
+| `/partners/dashboard` | Partner leads pipeline |
+| `/partners/leads/new` | Register a lead |
+| `/admin/partners` | Approve / set partner status |
+| `/admin/leads` | All leads |
+
+### Login rules
+
+- **Admin:** `ADMIN_EMAIL` / `ADMIN_PASSWORD` (env)
+- **Partner:** can sign in from status `APPROVED` upward
+- **Register leads:** only `CERTIFIED` or `ACTIVE`
+
+### Recommended admin flow
+
+1. Partner applies → status `APPLIED`
+2. You set `SCREENING` → `APPROVED` → `TRAINING` → `CERTIFIED` → `ACTIVE`
+3. Partner logs in and registers leads (45-day protection by default)
