@@ -26,7 +26,19 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
   }
   if (body.payment_status) {
     updates.payment_status = body.payment_status;
-    if (body.payment_status === "PAID") updates.paid_at = new Date().toISOString();
+    if (body.payment_status === "PAID") {
+      const ref = body.payment_ref !== undefined
+        ? String(body.payment_ref || "").trim()
+        : String(existing.payment_ref || "").trim();
+      if (!ref) {
+        return NextResponse.json(
+          { error: "payment_ref is required when marking PAID (M-Pesa/bank reference)." },
+          { status: 400 }
+        );
+      }
+      if (body.payment_ref !== undefined) updates.payment_ref = ref;
+      updates.paid_at = new Date().toISOString();
+    }
   }
 
   const { data: deal, error } = await sb.from("deals").update(updates).eq("id", id).select().single();

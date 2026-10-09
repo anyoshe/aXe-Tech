@@ -67,6 +67,10 @@ export default function AdminDealsPage() {
 
   async function createDeal(e: React.FormEvent) {
     e.preventDefault();
+    if (form.payment_status === "PAID" && !form.payment_ref.trim()) {
+      alert("Payment reference is required when status is PAID.");
+      return;
+    }
     await fetch("/api/deals", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -92,11 +96,23 @@ export default function AdminDealsPage() {
   }
 
   async function markPaid(id: string) {
-    await fetch(`/api/deals/${id}`, {
+    const payment_ref = window.prompt(
+      "Enter M-Pesa / bank payment reference (required before commission):"
+    );
+    if (!payment_ref || !payment_ref.trim()) {
+      alert("Payment reference is required to mark PAID.");
+      return;
+    }
+    const res = await fetch(`/api/deals/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ payment_status: "PAID" }),
+      body: JSON.stringify({ payment_status: "PAID", payment_ref: payment_ref.trim() }),
     });
+    const data = await res.json();
+    if (!res.ok) {
+      alert(data.error || "Failed to mark PAID");
+      return;
+    }
     load();
   }
 

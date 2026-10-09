@@ -195,3 +195,11 @@ supabase/partners-crm-v4.sql
 | `/admin/warranties` | Serial / warranty register |
 | `/partners/tickets` | Partner opens tickets |
 | `/partners/jobs` | Partner / tech job list |
+
+## Harden (v5 — customers)
+
+```text
+supabase/partners-crm-v5.sql
+```
+
+Security: product write APIs and upload require admin session. Marking a deal PAID requires `payment_ref`.

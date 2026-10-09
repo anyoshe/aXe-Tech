@@ -23,6 +23,7 @@ function PartnerApplyForm() {
     target_market: "",
     network_notes: "",
     mpesa_number: "",
+    role: "SALES_PARTNER",
   });
 
   function set(k: string, v: string) {
@@ -108,6 +109,18 @@ function PartnerApplyForm() {
                   />
                 </div>
               ))}
+              <div>
+                <label className="text-xs text-white/50">Partner type</label>
+                <select
+                  value={form.role}
+                  onChange={(e) => set("role", e.target.value)}
+                  className="mt-1 w-full rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm"
+                >
+                  <option value="SALES_PARTNER">Sales partner</option>
+                  <option value="MARKETING_PARTNER">Marketing partner</option>
+                  <option value="TECHNICIAN">Technical / field technician</option>
+                </select>
+              </div>
               <div>
                 <label className="text-xs text-white/50">Primary specialty</label>
                 <select

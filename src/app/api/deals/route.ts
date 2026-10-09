@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/nextauth";
 import { getSupabaseAdmin, isSupabaseConfigured } from "@/lib/supabase";
 import { computeDealCommission } from "@/lib/commissions";
+import { upsertCustomer } from "@/lib/customers";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -39,21 +40,38 @@ export async function POST(req: NextRequest) {
   const cost_amount = Number(body.cost_amount || 0);
   const pillar = body.pillar || "equip";
   const payment_status = body.payment_status || "UNPAID";
+  const payment_ref = String(body.payment_ref || "").trim() || null;
+
+  if (payment_status === "PAID" && !payment_ref) {
+    return NextResponse.json(
+      { error: "payment_ref is required when marking PAID (M-Pesa/bank reference)." },
+      { status: 400 }
+    );
+  }
 
   const sb = getSupabaseAdmin();
+  const customer_id = await upsertCustomer({
+    name: customer_name,
+    phone: body.contact_phone || null,
+    email: body.email || null,
+    county: body.county || null,
+    partner_id: body.partner_id || null,
+  });
+
   const { data: deal, error } = await sb
     .from("deals")
     .insert({
       lead_id: body.lead_id || null,
       quote_id: body.quote_id || null,
       partner_id: body.partner_id || null,
+      customer_id,
       customer_name,
       pillar,
       description: body.description || null,
       invoice_amount,
       cost_amount,
       payment_status,
-      payment_ref: body.payment_ref || null,
+      payment_ref,
       paid_at: payment_status === "PAID" ? new Date().toISOString() : null,
     })
     .select()

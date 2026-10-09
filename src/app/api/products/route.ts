@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { requireAdminSession } from "@/lib/require-admin";
 import {
   getSupabaseAdmin,
   isSupabaseConfigured,
@@ -52,7 +53,10 @@ export async function GET() {
 export async function POST(request: Request) {
   if (!isSupabaseConfigured()) return notConfigured();
 
-  try {
+  
+  const auth = await requireAdminSession();
+  if (auth.error) return auth.error;
+try {
     const body = await request.json();
 
     if (!body?.id) {
@@ -118,7 +122,10 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   if (!isSupabaseConfigured()) return notConfigured();
 
-  try {
+  
+  const auth = await requireAdminSession();
+  if (auth.error) return auth.error;
+try {
     const body = await request.json();
     const { id, ...rest } = body;
 
@@ -170,7 +177,10 @@ export async function PUT(request: Request) {
 export async function DELETE(request: Request) {
   if (!isSupabaseConfigured()) return notConfigured();
 
-  try {
+  
+  const auth = await requireAdminSession();
+  if (auth.error) return auth.error;
+try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
 

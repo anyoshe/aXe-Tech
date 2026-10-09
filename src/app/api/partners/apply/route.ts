@@ -22,6 +22,10 @@ export async function POST(req: NextRequest) {
     const target_market = String(body.target_market || "").trim() || null;
     const network_notes = String(body.network_notes || "").trim() || null;
     const mpesa_number = String(body.mpesa_number || "").trim() || null;
+    const roleRaw = String(body.role || "SALES_PARTNER").trim().toUpperCase();
+    const role = ["SALES_PARTNER", "MARKETING_PARTNER", "TECHNICIAN"].includes(roleRaw)
+      ? roleRaw
+      : "SALES_PARTNER";
 
     if (!full_name || !email || !phone) {
       return NextResponse.json({ error: "Name, email and phone are required." }, { status: 400 });
@@ -51,7 +55,7 @@ export async function POST(req: NextRequest) {
         mpesa_number,
         password_hash,
         status: "APPLIED",
-        role: "SALES_PARTNER",
+        role,
       })
       .select("id, full_name, email, status, specialty, created_at")
       .single();

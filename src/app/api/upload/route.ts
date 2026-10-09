@@ -1,5 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { getSupabaseAdmin, isSupabaseConfigured } from "@/lib/supabase";
+import { requireAdminSession } from "@/lib/require-admin";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
@@ -8,6 +9,9 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024;
  * and optionally append the public URL to a product's images array.
  */
 export async function POST(request: NextRequest) {
+  const auth = await requireAdminSession();
+  if (auth.error) return auth.error;
+
   if (!isSupabaseConfigured()) {
     return NextResponse.json(
       { message: "Supabase is not configured" },
