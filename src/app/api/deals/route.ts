@@ -4,6 +4,8 @@ import { authOptions } from "@/lib/nextauth";
 import { getSupabaseAdmin, isSupabaseConfigured } from "@/lib/supabase";
 import { computeDealCommission } from "@/lib/commissions";
 import { upsertCustomer } from "@/lib/customers";
+import { writeAuditLog } from "@/lib/audit";
+import { notifyUser } from "@/lib/notifications";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -98,11 +100,26 @@ export async function POST(req: NextRequest) {
       eligibility_date: new Date().toISOString(),
       notes: `Auto from deal ${deal.id}`,
     });
+    await notifyUser({
+      user_key: deal.partner_id,
+      title: "Commission eligible",
+      body: `Deal ${deal.customer_name} marked PAID.`,
+      link: "/partners/commissions",
+    });
   }
 
   if (body.lead_id && payment_status === "PAID") {
     await sb.from("leads").update({ stage: "PAYMENT", updated_at: new Date().toISOString() }).eq("id", body.lead_id);
   }
+
+  await writeAuditLog({
+    actor_id: session.user.id,
+    actor_role: session.user.role,
+    action: payment_status === "PAID" ? "deal.paid" : "deal.create",
+    entity_type: "deal",
+    entity_id: deal.id,
+    meta: { payment_status, payment_ref, invoice_amount },
+  });
 
   return NextResponse.json({ deal });
 }

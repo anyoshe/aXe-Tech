@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/nextauth";
 import { getSupabaseAdmin, isSupabaseConfigured } from "@/lib/supabase";
 import { computeDealCommission } from "@/lib/commissions";
+import { writeAuditLog } from "@/lib/audit";
+import { notifyUser } from "@/lib/notifications";
 
 type Ctx = { params: Promise<{ id: string }> };
 
@@ -72,7 +74,21 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
         status: "ELIGIBLE",
         eligibility_date: new Date().toISOString(),
       });
+      await notifyUser({
+        user_key: deal.partner_id,
+        title: "Commission eligible",
+        body: `Deal ${deal.customer_name} marked PAID.`,
+        link: "/partners/commissions",
+      });
     }
+    await writeAuditLog({
+      actor_id: session.user.id,
+      actor_role: session.user.role,
+      action: "deal.paid",
+      entity_type: "deal",
+      entity_id: deal.id,
+      meta: { payment_ref: deal.payment_ref, invoice_amount: deal.invoice_amount },
+    });
   }
 
   return NextResponse.json({ deal });

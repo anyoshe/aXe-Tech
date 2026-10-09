@@ -203,3 +203,12 @@ supabase/partners-crm-v5.sql
 ```
 
 Security: product write APIs and upload require admin session. Marking a deal PAID requires `payment_ref`.
+
+## v6 — audit + notifications
+
+```text
+supabase/partners-crm-v6.sql
+```
+
+Optional email: set `RESEND_API_KEY` and `NOTIFY_FROM_EMAIL` on Vercel.  
+Marketer lead fee: `MARKETER_LEAD_FEE_KES` (default 500).

@@ -12,6 +12,7 @@ export function adminCrmNav(active: string) {
     { href: "/admin/warranties", label: "Warranty" },
     { href: "/admin/campaigns", label: "Campaigns" },
     { href: "/admin/commissions", label: "Commissions" },
+    { href: "/admin/audit", label: "Audit" },
   ];
   return items.map((item) => ({
     ...item,

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/nextauth";
 import { getSupabaseAdmin, isSupabaseConfigured } from "@/lib/supabase";
+import { notifyUser, MARKETER_LEAD_FEE_KES } from "@/lib/notifications";
+import { writeAuditLog } from "@/lib/audit";
 import {
   canPartnerOwnLeads,
   defaultProtectedUntil,
@@ -134,6 +136,52 @@ export async function POST(req: NextRequest) {
       activity_type: "system",
       body: "Lead registered",
     });
+  }
+
+  
+  // Notify admin of new lead
+  await notifyUser({
+    user_key: "admin",
+    title: "New lead registered",
+    body: `${data.org_name} — ${data.contact_name} (${data.phone})`,
+    link: "/admin/leads",
+  });
+  await writeAuditLog({
+    actor_id: session.user.id,
+    actor_role: session.user.role,
+    action: "lead.create",
+    entity_type: "lead",
+    entity_id: data.id,
+    meta: { org_name: data.org_name, campaign_code: data.campaign_code },
+  });
+
+  // Marketer lead fee if campaign code maps to a marketer
+  const campCode = data.campaign_code ? String(data.campaign_code).toUpperCase() : null;
+  if (campCode && MARKETER_LEAD_FEE_KES > 0) {
+    const { data: camp } = await sb
+      .from("marketing_campaigns")
+      .select("id, marketer_partner_id, status")
+      .eq("code", campCode)
+      .eq("status", "ACTIVE")
+      .maybeSingle();
+    if (camp?.marketer_partner_id) {
+      await sb.from("commissions").insert({
+        partner_id: camp.marketer_partner_id,
+        basis: "lead_fee",
+        basis_amount: MARKETER_LEAD_FEE_KES,
+        commission_pct: 1,
+        commission_amount: MARKETER_LEAD_FEE_KES,
+        status: "ELIGIBLE",
+        eligibility_date: new Date().toISOString(),
+        notes: `Lead fee for campaign ${campCode} / lead ${data.id}`,
+      });
+      await notifyUser({
+        user_key: camp.marketer_partner_id,
+        title: "Lead fee earned",
+        body: `KES ${MARKETER_LEAD_FEE_KES} for attributed lead ${data.org_name}`,
+        link: "/partners/commissions",
+      });
+    }
   }
 
   return NextResponse.json({ lead: data });

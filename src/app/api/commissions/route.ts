@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/nextauth";
 import { getSupabaseAdmin, isSupabaseConfigured } from "@/lib/supabase";
+import { writeAuditLog } from "@/lib/audit";
+import { notifyUser } from "@/lib/notifications";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -40,5 +42,23 @@ export async function PATCH(req: NextRequest) {
   const sb = getSupabaseAdmin();
   const { data, error } = await sb.from("commissions").update(updates).eq("id", id).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  await writeAuditLog({
+    actor_id: session.user.id,
+    actor_role: session.user.role,
+    action: `commission.${body.status || "update"}`,
+    entity_type: "commission",
+    entity_id: id,
+    meta: { status: body.status, payment_ref: body.payment_ref },
+  });
+  if (body.status === "PAID" && data.partner_id) {
+    await notifyUser({
+      user_key: data.partner_id,
+      title: "Commission paid",
+      body: `KES ${Number(data.commission_amount).toLocaleString()} marked paid.`,
+      link: "/partners/commissions",
+    });
+  }
+
   return NextResponse.json({ commission: data });
 }

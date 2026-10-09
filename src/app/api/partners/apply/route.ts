@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin, isSupabaseConfigured } from "@/lib/supabase";
 import { hashPassword } from "@/lib/partners";
+import { notifyUser } from "@/lib/notifications";
+import { writeAuditLog } from "@/lib/audit";
 
 export async function POST(req: NextRequest) {
   try {
@@ -67,6 +69,19 @@ export async function POST(req: NextRequest) {
       console.error("[partners/apply]", error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
+
+    await notifyUser({
+      user_key: "admin",
+      title: "New partner application",
+      body: `${data.full_name} (${data.email}) — ${data.specialty}`,
+      link: "/admin/partners",
+    });
+    await writeAuditLog({
+      action: "partner.apply",
+      entity_type: "partner",
+      entity_id: data.id,
+      meta: { email: data.email },
+    });
 
     return NextResponse.json({
       ok: true,

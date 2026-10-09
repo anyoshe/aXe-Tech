@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/nextauth";
 import { getSupabaseAdmin, isSupabaseConfigured } from "@/lib/supabase";
 import { PARTNER_STATUSES, type PartnerStatus } from "@/lib/partners";
+import { notifyUser } from "@/lib/notifications";
+import { writeAuditLog } from "@/lib/audit";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -47,5 +49,24 @@ export async function PATCH(req: NextRequest) {
   const sb = getSupabaseAdmin();
   const { data, error } = await sb.from("partners").update(updates).eq("id", id).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  if (body.status) {
+    await notifyUser({
+      user_key: id,
+      title: `Partner status: ${body.status}`,
+      body: "Your GetAxe partner account status was updated. Sign in to continue.",
+      link: "/partners/login",
+      email: data.email,
+    });
+    await writeAuditLog({
+      actor_id: session.user.id,
+      actor_role: "admin",
+      action: "partner.status",
+      entity_type: "partner",
+      entity_id: id,
+      meta: { status: body.status },
+    });
+  }
+
   return NextResponse.json({ partner: data });
 }
