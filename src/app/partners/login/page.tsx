@@ -28,12 +28,11 @@ export default function PartnerLoginPage() {
     if (res?.error) {
       setLoading(false);
       setError(
-        "Login failed. For admin: set ADMIN_EMAIL and ADMIN_PASSWORD on Vercel (Production), set NEXTAUTH_URL=https://getaxekenya.com, then Redeploy. For partners: account must be APPROVED+."
+        "Incorrect email or password, or your account is not yet approved. Contact GetAxe if you need help."
       );
       return;
     }
 
-    // Wait for session cookie to be readable
     let role: string | undefined;
     for (let i = 0; i < 8; i++) {
       const session = await getSession();
@@ -53,9 +52,7 @@ export default function PartnerLoginPage() {
       return;
     }
 
-    setError(
-      "Signed in but no role on session. Check NEXTAUTH_SECRET and NEXTAUTH_URL on Vercel, then clear site cookies and try again."
-    );
+    setError("Sign-in could not be completed. Please try again or contact GetAxe support.");
   }
 
   return (
@@ -63,11 +60,10 @@ export default function PartnerLoginPage() {
       <Navbar />
       <main className="pt-16 min-h-screen bg-[var(--color-bg-dark)] text-white flex items-center">
         <div className="max-w-md w-full mx-auto px-4 py-12">
-          <h1 className="text-2xl font-bold">Partner / Admin login</h1>
+          <h1 className="text-2xl font-bold">Partner sign in</h1>
           <p className="mt-2 text-sm text-white/60">
-            Partners sign in after approval. Admin uses the email/password from Vercel env vars{" "}
-            <code className="text-white/80">ADMIN_EMAIL</code> /{" "}
-            <code className="text-white/80">ADMIN_PASSWORD</code>.
+            Use the email and password from your partner application. Access is available after GetAxe
+            approves your account.
           </p>
           <form onSubmit={onSubmit} className="mt-8 space-y-4">
             <div>
@@ -92,7 +88,7 @@ export default function PartnerLoginPage() {
                 className="mt-1 w-full rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm"
               />
             </div>
-            {error && <p className="text-sm text-red-400 whitespace-pre-wrap">{error}</p>}
+            {error && <p className="text-sm text-red-400">{error}</p>}
             <button
               type="submit"
               disabled={loading}
