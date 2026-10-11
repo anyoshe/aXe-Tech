@@ -81,9 +81,19 @@ const portfolioItems: PortfolioItem[] = [
     image: "/samples/my-logo.png",
     description:
       "Food ordering platform with menu browsing and ordering flows — full-stack delivery for a local food business.",
-    link: "https://www.anyokaeats.com/",
+    link: "https://anyokaeats.netlify.app/",
     status: "Live",
     type: "Web app · E-commerce",
+  },
+  {
+    title: "Life Legacy",
+    client: "GetAxe Technologies",
+    image: "/samples/Saas.jpg",
+    description:
+      "Life and legacy planning journal — a GetAxe product for families to organise important life records and plans.",
+    link: "https://my-life-legacy-journal.netlify.app/",
+    status: "Live",
+    type: "Web app · Life planning",
   },
 ];
 

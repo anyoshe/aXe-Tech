@@ -18,7 +18,7 @@ import Footer from "@/components/Footer";
 export const metadata: Metadata = {
   title: "Software & ERP | GetAxe Kenya",
   description:
-    "GetAxe software: School ERP, Business Management System, Chama Fund Vault, and Life Legacy (coming soon). Demo and quotation available.",
+    "GetAxe software: School ERP, Business Management System, Chama Fund Vault, and Life Legacy. Demo and quotation available.",
 };
 
 const WA =
@@ -90,20 +90,24 @@ const products = [
     title: "Life Legacy",
     audience: "Families & estate planning",
     icon: Heart,
-    status: "coming_soon" as const,
-    text: "A GetAxe product in development — focused on life and legacy planning tools. Join the interest list for early access when we launch.",
+    status: "live" as const,
+    text: "Life and legacy planning journal — organise important records and plans. Live product from GetAxe.",
     points: [
-      "In active development",
-      "Early access on request",
+      "Live on the web",
       "Built for Kenyan families",
-      "Announcements via GetAxe",
+      "Clear, guided experience",
+      "Quotation for custom needs",
     ],
     primary: {
-      href: "https://wa.me/254736889880?text=Hello%20GetAxe%2C%20I%20am%20interested%20in%20Life%20Legacy%20(coming%20soon).",
-      label: "Register interest",
+      href: "https://my-life-legacy-journal.netlify.app/",
+      label: "Open Life Legacy",
       external: true,
     },
-    secondary: null,
+    secondary: {
+      href: "https://wa.me/254736889880?text=Hello%20GetAxe%2C%20I%20want%20a%20quotation%20for%20Life%20Legacy.",
+      label: "Request quotation",
+      external: true,
+    },
   },
 ];
 
