@@ -24,13 +24,27 @@ export const metadata: Metadata = {
 const WA =
   "https://wa.me/254736889880?text=Hello%20GetAxe%2C%20I%20want%20to%20discuss%20software%20%2F%20ERP.";
 
-const products = [
+type SoftwareStatus = "live" | "coming_soon";
+
+type SoftwareProduct = {
+  id: string;
+  title: string;
+  audience: string;
+  icon: typeof GraduationCap;
+  status: SoftwareStatus;
+  text: string;
+  points: string[];
+  primary: { href: string; label: string; external?: boolean };
+  secondary: { href: string; label: string; external?: boolean } | null;
+};
+
+const products: SoftwareProduct[] = [
   {
     id: "school-erp",
     title: "School ERP",
     audience: "Schools & institutions",
     icon: GraduationCap,
-    status: "live" as const,
+    status: "live",
     text: "Students, classes, fees, staff tools and day-to-day school operations — with an interactive demo you can try before you decide.",
     points: [
       "Student & class records",
@@ -46,7 +60,7 @@ const products = [
     title: "Business Management System",
     audience: "SMEs & shops",
     icon: Store,
-    status: "live" as const,
+    status: "live",
     text: "Sales, stock, expenses and customers in one place so owners run the business on facts — including a live system you can open.",
     points: [
       "Sales & stock visibility",
@@ -66,7 +80,7 @@ const products = [
     title: "Chama Fund Vault",
     audience: "Chamas & savings groups",
     icon: Users,
-    status: "live" as const,
+    status: "live",
     text: "Digital tools for chama contributions, records and transparency — so groups track funds with less paper and more trust.",
     points: [
       "Group fund tracking",
@@ -90,7 +104,7 @@ const products = [
     title: "Life Legacy",
     audience: "Families & estate planning",
     icon: Heart,
-    status: "live" as const,
+    status: "live",
     text: "Life and legacy planning journal — organise important records and plans. Live product from GetAxe.",
     points: [
       "Live on the web",
