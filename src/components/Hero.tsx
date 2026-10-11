@@ -19,7 +19,9 @@ export default function Hero() {
         playsInline
         className="absolute inset-0 w-full h-full object-cover z-0 brightness-[0.45]"
       >
-        <source src="/samples/bgvd.mp4" type="video/mp4" />
+        {/* <source src="/samples/bgvd.mp4" type="video/mp4" /> */}
+        <source src="/samples/worldglobe.mp4" type="video/mp4" />
+
       </video>
       <div className="absolute inset-0 z-[1] bg-gradient-to-b from-[var(--color-bg-dark)]/70 via-transparent to-[var(--color-bg-dark)]" />
 
