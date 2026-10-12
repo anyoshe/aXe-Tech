@@ -58,7 +58,7 @@ const products: SoftwareProduct[] = [
       label: "Open live app",
       external: true,
     },
-  },,
+  },
   {
     id: "school-erp",
     title: "School ERP",
