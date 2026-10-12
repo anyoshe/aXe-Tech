@@ -56,12 +56,12 @@ const portfolioItems: PortfolioItem[] = [
     type: "Website · ICT company",
   },
   {
-    title: "School ERP (demo)",
+    title: "GetAxe School ERP",
     client: "GetAxe Technologies",
     image: "/samples/computerlab.jpg",
     description:
-      "Interactive school management demo — students, fees, library and operations for Kenyan school presentations and rollouts.",
-    link: "/school-erp/demo",
+      "Live school ERP — students, fees, staff and operations. Sign up and try the product as it continues to develop.",
+    link: "https://getaxe-school-erp.netlify.app/",
     status: "Live",
     type: "Web app · Education",
   },

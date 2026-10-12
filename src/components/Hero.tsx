@@ -41,7 +41,7 @@ export default function Hero() {
           transition={{ duration: 0.5, delay: 0.05 }}
           className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] max-w-3xl"
         >
-          ICT that works for Kenyan schools and businesses.
+          ICT that works for Kenyan businesses and schools.
         </motion.h1>
 
         <motion.div
@@ -57,8 +57,9 @@ export default function Hero() {
           transition={{ duration: 0.5, delay: 0.12 }}
           className="mt-6 text-base sm:text-lg text-white/75 max-w-2xl leading-relaxed"
         >
-          Devices, computer labs, networking, and school systems — supplied, set
-          up, and supported. One partner from hardware to software.
+          Hardware, computer labs, networking, and software for SMEs and
+          institutions — supplied, set up, and supported. One partner from
+          devices to systems.
         </motion.p>
 
         <motion.div
@@ -72,6 +73,12 @@ export default function Hero() {
             className="inline-flex justify-center items-center rounded-xl bg-[var(--color-accent)] text-[var(--color-bg-dark)] font-semibold px-6 py-3.5 text-sm sm:text-base hover:brightness-110 transition shadow-lg shadow-black/20"
           >
             Browse ICT products
+          </Link>
+          <Link
+            href="/software"
+            className="inline-flex justify-center items-center rounded-xl border border-white/25 bg-white/5 backdrop-blur-sm font-semibold px-6 py-3.5 text-sm sm:text-base hover:bg-white/10 transition"
+          >
+            Business & school software
           </Link>
           <Link
             href="/contactus"

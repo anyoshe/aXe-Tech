@@ -242,20 +242,20 @@ export function ErpHighlight() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-10 items-center">
         <div>
           <p className="text-[var(--color-accent)] text-sm font-semibold uppercase tracking-wider">
-            School ERP
+            Software
           </p>
           <h2 className="mt-2 text-3xl md:text-4xl font-bold leading-tight">
-            Run admissions, fees and academics in one system.
+            Systems for businesses and schools.
           </h2>
           <p className="mt-4 text-white/65 leading-relaxed">
-            Built for Kenyan schools — students, staff, invoicing and reporting
-            with training and support included when you roll out.
+            Business management for SMEs and School ERP for institutions — live
+            products you can try, with training and support when you roll out.
           </p>
           <ul className="mt-6 space-y-2 text-sm text-white/80">
             {[
-              "Students, classes and staff records",
-              "Fees and invoices",
-              "Assignments and operations visibility",
+              "Business: sales, stock, expenses and reports",
+              "Schools: students, fees, staff and operations",
+              "Sign up and try live products",
             ].map((t) => (
               <li key={t} className="flex gap-2">
                 <CheckCircle2 className="w-4 h-4 text-[var(--color-accent)] shrink-0 mt-0.5" />
@@ -270,12 +270,14 @@ export function ErpHighlight() {
             >
               View all software
             </Link>
-            <Link
-              href="/school-erp/demo"
+            <a
+              href="https://getaxe-school-erp.netlify.app/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold hover:bg-white/5"
             >
-              School ERP demo
-            </Link>
+              Try School ERP
+            </a>
             <Link
               href="/business-management"
               className="rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold hover:bg-white/5"

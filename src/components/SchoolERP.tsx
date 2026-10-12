@@ -116,7 +116,7 @@ const faqs = [
   },
   {
     q: "Can we try before buying?",
-    a: "Yes — use the interactive demo and/or book a live walkthrough tailored to your school.",
+    a: "Yes — sign up at the live School ERP and try it yourself, or book a walkthrough with GetAxe.",
   },
   {
     q: "Do you train staff?",
@@ -151,15 +151,15 @@ export default function SchoolERPPage() {
           </h1>
           <p className="mt-4 text-lg text-white/70 max-w-xl leading-relaxed">
             GetAxe School ERP is built for how schools work: admissions and records,
-            fees, staff tools and visibility for leadership — with demo, training and
-            a clear quotation for your institution.
+            fees, staff tools and visibility for leadership — with a live system you can
+            sign up to try, training, and a clear quotation for your institution.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row flex-wrap gap-3">
             <Link
-              href="/school-erp/demo"
+              href="https://getaxe-school-erp.netlify.app/"
               className="inline-flex justify-center items-center gap-2 rounded-xl bg-[var(--color-accent)] text-[var(--color-bg-dark)] font-semibold px-5 py-3 text-sm hover:brightness-110"
             >
-              Try interactive demo
+              Try live ERP (sign up)
             </Link>
             <a
               href={WA}
@@ -290,8 +290,8 @@ export default function SchoolERPPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-lg font-semibold mb-4 text-white/80">Related</h2>
           <div className="flex flex-wrap gap-3">
-            <Link href="/school-erp/demo" className="rounded-lg border border-white/15 px-4 py-2 text-sm hover:text-[var(--color-accent)]">
-              Interactive demo
+            <Link href="https://getaxe-school-erp.netlify.app/" className="rounded-lg border border-white/15 px-4 py-2 text-sm hover:text-[var(--color-accent)]">
+              Live ERP
             </Link>
             <Link href="/business-management" className="rounded-lg border border-white/15 px-4 py-2 text-sm hover:text-[var(--color-accent)]">
               Business management (SMEs)
@@ -325,7 +325,7 @@ export default function SchoolERPPage() {
         </p>
         <div className="mt-8 flex flex-col sm:flex-row justify-center flex-wrap gap-3">
           <Link
-            href="/school-erp/demo"
+            href="https://getaxe-school-erp.netlify.app/"
             className="rounded-xl bg-[var(--color-accent)] text-[var(--color-bg-dark)] font-semibold px-6 py-3 text-sm"
           >
             Open demo

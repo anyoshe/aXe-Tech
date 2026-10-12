@@ -40,22 +40,6 @@ type SoftwareProduct = {
 
 const products: SoftwareProduct[] = [
   {
-    id: "school-erp",
-    title: "School ERP",
-    audience: "Schools & institutions",
-    icon: GraduationCap,
-    status: "live",
-    text: "Students, classes, fees, staff tools and day-to-day school operations — with an interactive demo you can try before you decide.",
-    points: [
-      "Student & class records",
-      "Fees and invoices",
-      "Assignments & operations",
-      "Training on rollout",
-    ],
-    primary: { href: "/school-erp", label: "School ERP overview" },
-    secondary: { href: "/school-erp/demo", label: "Try demo", external: false },
-  },
-  {
     id: "business",
     title: "Business Management System",
     audience: "SMEs & shops",
@@ -74,6 +58,22 @@ const products: SoftwareProduct[] = [
       label: "Open live app",
       external: true,
     },
+  },,
+  {
+    id: "school-erp",
+    title: "School ERP",
+    audience: "Schools & institutions",
+    icon: GraduationCap,
+    status: "live",
+    text: "Students, classes, fees, staff tools and day-to-day school operations — sign up and try the live ERP as we continue developing it.",
+    points: [
+      "Student & class records",
+      "Fees and invoices",
+      "Staff and operations tools",
+      "Sign up and try live",
+    ],
+    primary: { href: "/school-erp", label: "School ERP overview" },
+    secondary: { href: "https://getaxe-school-erp.netlify.app/", label: "Try live ERP (sign up)", external: true },
   },
   {
     id: "chama",
@@ -148,7 +148,7 @@ export default function SoftwareHubPage() {
             Software & ERP
           </p>
           <h1 className="mt-2 text-3xl md:text-5xl font-bold tracking-tight max-w-3xl">
-            Software for schools, businesses, chamas — and more on the way.
+            Software for businesses, schools, and groups — live products you can try.
           </h1>
           <p className="mt-4 text-white/65 max-w-2xl leading-relaxed">
             Live products you can open today, plus upcoming builds. Each solves a
