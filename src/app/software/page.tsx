@@ -113,14 +113,14 @@ const products: SoftwareProduct[] = [
       "Quotation for custom needs",
     ],
     primary: {
-      href: "https://my-life-legacy-journal.netlify.app/",
-      label: "Open Life Legacy",
+      href: "https://journal.getaxekenya.com/",
+      label: "Open Life Legacy journal",
       external: true,
     },
     secondary: {
-      href: "https://wa.me/254736889880?text=Hello%20GetAxe%2C%20I%20want%20a%20quotation%20for%20Life%20Legacy.",
-      label: "Request quotation",
-      external: true,
+      href: "/life-legacy",
+      label: "About Life Legacy",
+      external: false,
     },
   },
 ];

@@ -86,5 +86,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: route.priority,
   }));
 
-  return routes;
+  const productSites: MetadataRoute.Sitemap = [
+    {
+      url: "https://journal.getaxekenya.com/",
+      lastModified: new Date().toISOString(),
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
+    {
+      url: "https://getaxe-school-erp.netlify.app/",
+      lastModified: new Date().toISOString(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: "https://app.getaxekenya.com/",
+      lastModified: new Date().toISOString(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+  ];
+
+  return [...routes, ...productSites];
 }

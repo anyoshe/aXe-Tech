@@ -90,8 +90,8 @@ const portfolioItems: PortfolioItem[] = [
     client: "GetAxe Technologies",
     image: "/samples/Saas.jpg",
     description:
-      "Life and legacy planning journal — a GetAxe product for families to organise important life records and plans.",
-    link: "https://my-life-legacy-journal.netlify.app/",
+      "Life Legacy journal at journal.getaxekenya.com — organise important life records and plans for families.",
+    link: "https://journal.getaxekenya.com/",
     status: "Live",
     type: "Web app · Life planning",
   },
