@@ -90,10 +90,10 @@ const portfolioItems: PortfolioItem[] = [
     client: "GetAxe Technologies",
     image: "/samples/Saas.jpg",
     description:
-      "Life Legacy journal at journal.getaxekenya.com — organise important life records and plans for families.",
+      "Personal life journal at journal.getaxekenya.com — goals, vision, to-dos, finances and relationships tracked in one focused platform.",
     link: "https://journal.getaxekenya.com/",
     status: "Live",
-    type: "Web app · Life planning",
+    type: "Web app · Life organisation",
   },
 ];
 
