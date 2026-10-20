@@ -6,16 +6,16 @@ import Footer from "@/components/Footer";
 const JOURNAL_URL = "https://journal.getaxekenya.com/";
 
 export const metadata: Metadata = {
-  title: "Life Legacy Journal — Goals, Plans & Focus | GetAxe Kenya",
+  title: "Life & Legacy Journal | GetAxe Kenya",
   description:
-    "Life Legacy by GetAxe keeps you organised: goals, vision and mission, to-do lists, finances, relationships, dreams and targets — tracked in one platform so you stay focused and achieve what you set out to do.",
+    "Plan your life. Organize your goals. Track your progress. Build your legacy. Life & Legacy Journal helps you turn vision into goals, organize daily tasks, manage finances and relationships, and stay intentional.",
   alternates: {
     canonical: "https://getaxekenya.com/life-legacy",
   },
   openGraph: {
-    title: "Life Legacy Journal | GetAxe Kenya",
+    title: "Life & Legacy Journal | GetAxe Kenya",
     description:
-      "Organise your plans, goals, to-dos, finances and relationships in one focused life platform.",
+      "Plan your life. Organize your goals. Track your progress. Build your legacy.",
     url: "https://getaxekenya.com/life-legacy",
     siteName: "GetAxe Kenya",
     type: "website",
@@ -24,28 +24,28 @@ export const metadata: Metadata = {
 
 const pillars = [
   {
-    title: "Goals & targets",
-    text: "Key in what you want to achieve and track progress against clear targets and timelines.",
+    title: "Vision → goals",
+    text: "Turn your life purpose and vision into actionable goals with clear targets and timelines.",
   },
   {
-    title: "Vision & mission",
-    text: "Write your direction once, then use it as the guideline for decisions and daily focus.",
-  },
-  {
-    title: "To-do lists that matter",
-    text: "Daily and weekly tasks linked to your goals — so your list moves you forward, not just keeps you busy.",
+    title: "Daily tasks",
+    text: "Organize what you need to do each day so everyday actions connect to the life you are building.",
   },
   {
     title: "Finances & relationships",
-    text: "Keep money and people dimensions visible alongside plans, not scattered across apps and notes.",
+    text: "Manage money and relationships alongside your plans — not in separate, forgotten notes.",
   },
   {
-    title: "Dreams with deadlines",
-    text: "Turn dreams into timed targets so life has structure, not only intention.",
+    title: "Dreams & progress",
+    text: "Pursue dreams and track progress so you stay accountable and intentional.",
   },
   {
-    title: "One focused platform",
-    text: "Plans, goals, and follow-through in one place — so you always know what to do next.",
+    title: "Focus & accountability",
+    text: "One platform that links purpose to daily action, so you stay focused on the life you want.",
+  },
+  {
+    title: "Build your legacy",
+    text: "Consistent plans and follow-through compound into the legacy you set out to create.",
   },
 ];
 
@@ -64,7 +64,7 @@ export default function LifeLegacyPage() {
               Software
             </Link>
             <span className="text-white/30">/</span>
-            <span className="text-white">Life Legacy</span>
+            <span className="text-white">Life &amp; Legacy</span>
           </div>
         </div>
 
@@ -74,13 +74,20 @@ export default function LifeLegacyPage() {
               GetAxe product · journal.getaxekenya.com
             </p>
             <h1 className="mt-3 text-3xl md:text-5xl font-bold tracking-tight leading-tight">
-              Stay organised. Know what to do. Live with focus.
+              Life &amp; Legacy Journal
             </h1>
-            <p className="mt-5 text-lg text-white/70 leading-relaxed">
-              <strong className="text-white/90">Life Legacy</strong> is a journal platform for a
-              focused life: your plans, goals, vision and mission, finances, relationships, dreams
-              and targets — keyed in, tracked, and followed in one place. Your to-do list becomes a
-              path toward the goals you set, on the timelines you choose.
+            <p className="mt-4 text-xl md:text-2xl font-medium text-white/90 leading-snug">
+              Plan your life. Organize your goals. Track your progress. Build your legacy.
+            </p>
+            <p className="mt-6 text-base md:text-lg text-white/70 leading-relaxed">
+              Life &amp; Legacy Journal is a personal life-management platform that helps you
+              turn your vision into actionable goals, organize your daily tasks, manage your
+              finances and relationships, pursue your dreams, and track your progress against
+              clear targets and timelines.
+            </p>
+            <p className="mt-4 text-base text-white/65 leading-relaxed">
+              It connects your life purpose with your everyday actions, helping you stay focused,
+              accountable, and intentional about the life you want to build.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row flex-wrap gap-3">
               <a
@@ -89,10 +96,10 @@ export default function LifeLegacyPage() {
                 rel="noopener noreferrer"
                 className="inline-flex justify-center rounded-xl bg-[var(--color-accent)] text-[var(--color-bg-dark)] font-semibold px-6 py-3.5 text-sm hover:brightness-110"
               >
-                Open Life Legacy →
+                Open Life &amp; Legacy Journal →
               </a>
               <a
-                href="https://wa.me/254736889880?text=Hello%20GetAxe%2C%20I%20want%20to%20know%20more%20about%20Life%20Legacy."
+                href="https://wa.me/254736889880?text=Hello%20GetAxe%2C%20I%20want%20to%20know%20more%20about%20Life%20%26%20Legacy%20Journal."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex justify-center rounded-xl border border-white/20 px-6 py-3.5 text-sm font-semibold hover:bg-white/5"
@@ -120,23 +127,12 @@ export default function LifeLegacyPage() {
             ))}
           </div>
 
-          <div className="mt-14 max-w-2xl rounded-2xl border border-white/10 bg-black/30 p-6 md:p-8">
-            <h2 className="text-xl font-bold">How it helps</h2>
-            <p className="mt-3 text-sm text-white/65 leading-relaxed">
-              When you use Life Legacy, you keep and track a to-do list that is connected to real
-              goals — so day-to-day actions accumulate into achievement. Guidelines and targets are
-              set for specific periods, so you always know what matters next and how your life is
-              resolving against the plan you wrote.
-            </p>
-            <a
-              href={JOURNAL_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex mt-5 text-sm font-semibold text-[var(--color-accent)] hover:underline"
-            >
-              Start at journal.getaxekenya.com →
+          <p className="mt-12 text-xs text-white/40">
+            Live app:{" "}
+            <a href={JOURNAL_URL} className="text-white/60 underline break-all">
+              {JOURNAL_URL}
             </a>
-          </div>
+          </p>
         </div>
       </main>
       <Footer />

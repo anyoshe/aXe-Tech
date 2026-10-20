@@ -18,7 +18,7 @@ import Footer from "@/components/Footer";
 export const metadata: Metadata = {
   title: "Software & ERP | GetAxe Kenya",
   description:
-    "GetAxe software: business systems, School ERP, Chama Fund Vault, and Life Legacy journal for goals and focused living.",
+    "GetAxe software: business systems, School ERP, Chama Fund Vault, and Life & Legacy Journal.",
 };
 
 const WA =
@@ -101,25 +101,25 @@ const products: SoftwareProduct[] = [
   },
   {
     id: "life-legacy",
-    title: "Life Legacy",
-    audience: "Personal focus & life organisation",
+    title: "Life & Legacy Journal",
+    audience: "Personal life management",
     icon: Heart,
     status: "live",
-    text: "One platform for a focused life — plans, goals, vision and mission, to-dos, finances, relationships, dreams and timed targets. Track what you set so daily tasks move you toward achievement.",
+    text: "Plan your life. Organize your goals. Track your progress. Build your legacy. Turn vision into goals, organize daily tasks, manage finances and relationships, and stay intentional.",
     points: [
-      "Goals, vision & mission tracked",
-      "To-do lists tied to targets",
-      "Finances & relationships in view",
-      "Dreams with timelines",
+      "Vision into actionable goals",
+      "Daily tasks & progress tracking",
+      "Finances & relationships",
+      "Focus, accountability, purpose",
     ],
     primary: {
       href: "https://journal.getaxekenya.com/",
-      label: "Open Life Legacy journal",
+      label: "Open Life & Legacy Journal",
       external: true,
     },
     secondary: {
       href: "/life-legacy",
-      label: "About Life Legacy",
+      label: "About Life & Legacy",
       external: false,
     },
   },
