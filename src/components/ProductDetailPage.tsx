@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import ProductImage from "@/components/ProductImage";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingCart, X, Plus, Minus, Trash2, Star, Shield, Battery, Cpu, HardDrive, ArrowLeft } from "lucide-react";
+import { ShoppingCart, X, Plus, Minus, Trash2, ShieldCheck, ClipboardCheck, PackageCheck, Cpu, HardDrive, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { productImageList } from '@/lib/product-images';
 
@@ -248,16 +248,16 @@ export default function ProductDetailPage() {
             {/* Trust Badges */}
             <div className="grid grid-cols-3 gap-4 pt-4">
               <div className="text-center p-3 bg-white/5 rounded-lg">
-                <Shield className="w-6 h-6 text-[var(--color-accent)] mx-auto mb-2" />
-                <p className="text-xs text-white/70">Warranty Included</p>
+                <ShieldCheck className="w-6 h-6 text-[var(--color-accent)] mx-auto mb-2" />
+                <p className="text-xs text-white/70">Written quote</p>
               </div>
               <div className="text-center p-3 bg-white/5 rounded-lg">
-                <Battery className="w-6 h-6 text-[var(--color-accent)] mx-auto mb-2" />
-                <p className="text-xs text-white/70">Quality Checked</p>
+                <ClipboardCheck className="w-6 h-6 text-[var(--color-accent)] mx-auto mb-2" />
+                <p className="text-xs text-white/70">Scope confirmed</p>
               </div>
               <div className="text-center p-3 bg-white/5 rounded-lg">
-                <Star className="w-6 h-6 text-[var(--color-accent)] mx-auto mb-2" />
-                <p className="text-xs text-white/70">Premium Support</p>
+                <PackageCheck className="w-6 h-6 text-[var(--color-accent)] mx-auto mb-2" />
+                <p className="text-xs text-white/70">Terms disclosed</p>
               </div>
             </div>
           </div>
