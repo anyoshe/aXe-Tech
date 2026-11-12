@@ -6,6 +6,7 @@ const isAnalyze = process.env.ANALYZE === 'true';
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   experimental: {
+    agentUpgrade: 'security',
     serverActions: {},
   },
   async headers() {
