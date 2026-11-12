@@ -372,10 +372,10 @@ export default function ICTProductsPage() {
                 transition={{ duration: 0.35 }}
                 className="group flex flex-col overflow-hidden rounded-2xl border border-white/[0.08] bg-[#111925] shadow-lg shadow-black/10 transition-all duration-200 hover:-translate-y-1 hover:border-emerald-300/30 hover:shadow-[0_20px_55px_-35px_rgba(52,211,153,0.45)]"
               >
-                <div className="relative aspect-[16/10] w-full overflow-hidden bg-gradient-to-br from-slate-50 via-white to-slate-100">
+                <div className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-slate-50 via-white to-slate-100">
                   {p.featured && <span className="absolute left-3 top-3 z-10 rounded-full border border-emerald-200/70 bg-emerald-300 px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-slate-950">Featured</span>}
                   {p.availability === "on_order" && <span className="absolute right-3 top-3 z-10 rounded-full border border-slate-900/10 bg-white/90 px-3 py-1 text-[10px] font-semibold text-slate-700">Available on order</span>}
-                  <ProductImage productId={p.id} src={productImageList(p)[0]} alt={p.title} className="object-contain p-5 sm:p-7 transition-transform duration-300 group-hover:scale-[1.04]" sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw" />
+                  <ProductImage productId={p.id} src={productImageList(p)[0]} alt={p.title} className="object-contain object-center p-3 sm:p-4 transition-transform duration-300 group-hover:scale-[1.03]" sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw" />
                   {p.imageSources?.[productImageList(p)[0]]?.rights?.includes("CC BY-SA 4.0") && (
                     <span className="absolute bottom-2 right-2 rounded bg-slate-950/80 px-2 py-1 text-[9px] text-white/85">
                       Photo: <a href={p.imageSources[productImageList(p)[0]].sourcePage} target="_blank" rel="noopener noreferrer" className="underline">IT Photography</a>
@@ -460,7 +460,7 @@ export default function ICTProductsPage() {
                     {quoteItems.map((it) => (
                       <li key={it.product.id} className="flex gap-3">
                         <div className="relative w-20 h-16 bg-white rounded overflow-hidden">
-                          <ProductImage productId={it.product.id} src={productImageList(it.product)[0]} alt={it.product.title} className="object-contain p-1" sizes="80px" />
+                          <ProductImage productId={it.product.id} src={productImageList(it.product)[0]} alt={it.product.title} className="object-contain object-center p-1" sizes="80px" />
                         </div>
 
                         <div className="flex-1">

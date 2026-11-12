@@ -217,7 +217,7 @@ export default function ProductDetailPage() {
           <div className="space-y-4">
             {/* Main Image */}
             <div className="relative aspect-square rounded-2xl overflow-hidden bg-black/20">
-              <ProductImage productId={product.id} src={images[selectedImage]} alt={product.title} className="object-contain p-5" priority sizes="(max-width: 1024px) 100vw, 50vw" />
+              <ProductImage productId={product.id} src={images[selectedImage]} alt={product.title} className="object-contain object-center p-4" priority sizes="(max-width: 1024px) 100vw, 50vw" />
             </div>
             {product.imageSources?.[images[selectedImage]]?.rights?.includes("CC BY-SA 4.0") && (
               <p className="text-right text-xs text-white/60">
@@ -239,7 +239,7 @@ export default function ProductDetailPage() {
                         : "border-transparent hover:border-white/30"
                     }`}
                   >
-                    <ProductImage productId={product.id} src={image} alt={`${product.title} view ${index + 1}`} className="object-contain p-1" sizes="80px" />
+                    <ProductImage productId={product.id} src={image} alt={`${product.title} view ${index + 1}`} className="object-contain object-center p-1.5" sizes="80px" />
                   </button>
                 ))}
               </div>
@@ -443,7 +443,7 @@ export default function ProductDetailPage() {
                         animate={{ opacity: 1, scale: 1 }}
                       >
                         <div className="relative w-16 h-16 bg-black/30 rounded overflow-hidden flex-shrink-0">
-                          <ProductImage productId={it.product.id} src={productImageList(it.product)[0]} alt={it.product.title} className="object-contain p-1" sizes="64px" />
+                          <ProductImage productId={it.product.id} src={productImageList(it.product)[0]} alt={it.product.title} className="object-contain object-center p-1" sizes="64px" />
                         </div>
 
                         <div className="flex-1 min-w-0">

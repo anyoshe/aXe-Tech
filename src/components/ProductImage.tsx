@@ -15,26 +15,67 @@ type Props = {
   priority?: boolean;
 };
 
-export default function ProductImage({ productId, src, alt, className = "", sizes, priority = false }: Props) {
-  const original = src || catalogueImageFallbacks[productId]?.[0];
-  const fallback = catalogueImageFallbacks[productId]?.[0];
-  const [failedOriginal, setFailedOriginal] = useState(false);
-  const [failedFallback, setFailedFallback] = useState(false);
+function withImageFit(className: string) {
+  const hasContain = className.includes("object-contain");
+  const hasCover = className.includes("object-cover");
+  const fit = hasContain || hasCover ? "" : "object-contain ";
+  const hasPos =
+    className.includes("object-center") ||
+    className.includes("object-top") ||
+    className.includes("object-bottom") ||
+    className.includes("object-left") ||
+    className.includes("object-right");
+  const center = hasPos ? "" : "object-center ";
+  return `${fit}${center}${className}`.trim();
+}
+
+export default function ProductImage({
+  productId,
+  src,
+  alt,
+  className = "",
+  sizes,
+  priority = false,
+}: Props) {
+  const fitClass = withImageFit(className);
+  const fallbacks = catalogueImageFallbacks[productId] ?? [];
+  const candidates = Array.from(
+    new Set([src, ...fallbacks].filter(Boolean) as string[])
+  );
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    setFailedOriginal(false);
-    setFailedFallback(false);
-  }, [original, fallback]);
+    setIndex(0);
+  }, [productId, src]);
 
-  const current = failedOriginal ? fallback : original;
-  if (!current || failedFallback || (failedOriginal && (!fallback || fallback === original))) {
-    return <div className={`flex h-full w-full flex-col items-center justify-center gap-2 bg-slate-100 text-slate-400 ${className}`}><ImageOff size={24} /><span className="text-xs">Photo coming soon</span></div>;
+  const current = candidates[index];
+
+  if (!current || index >= candidates.length) {
+    return (
+      <div
+        className={`flex h-full w-full flex-col items-center justify-center gap-2 bg-slate-100 text-slate-400 ${className}`}
+      >
+        <ImageOff size={24} />
+        <span className="text-xs">Photo coming soon</span>
+      </div>
+    );
   }
 
+  const onError = () => {
+    if (index < candidates.length - 1) setIndex((i) => i + 1);
+    else setIndex(candidates.length);
+  };
+
   if (isBase64(current)) {
-    // Legacy base64 product uploads predate the existing Supabase Storage flow.
     // eslint-disable-next-line @next/next/no-img-element
-    return <img src={current} alt={alt} className={className} onError={() => setFailedFallback(true)} />;
+    return (
+      <img
+        src={current}
+        alt={alt}
+        className={`h-full w-full ${fitClass}`}
+        onError={onError}
+      />
+    );
   }
 
   return (
@@ -44,12 +85,9 @@ export default function ProductImage({ productId, src, alt, className = "", size
       fill
       sizes={sizes || "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"}
       priority={priority}
-      unoptimized={current.startsWith("/products/")}
-      className={className}
-      onError={() => {
-        if (!failedOriginal && fallback && fallback !== original) setFailedOriginal(true);
-        else setFailedFallback(true);
-      }}
+      unoptimized={current.startsWith("/products/") || current.startsWith("/samples/")}
+      className={fitClass}
+      onError={onError}
     />
   );
 }
