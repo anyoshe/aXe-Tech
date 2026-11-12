@@ -23,10 +23,12 @@ export async function GET() {
   if (!isSupabaseConfigured()) return notConfigured();
 
   try {
+    const admin = await requireAdminSession();
     const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
       .from("products")
       .select("*")
+      .order("display_order", { ascending: true })
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -41,7 +43,13 @@ export async function GET() {
       );
     }
 
-    const products = ((data ?? []) as ProductRow[]).map(rowToProduct);
+    const products = ((data ?? []) as ProductRow[]).map(rowToProduct)
+      .filter((product) => admin.session?.user?.role === "admin" || product.published !== false)
+      .map((product) => {
+        if (admin.session?.user?.role === "admin") return product;
+        const { internalCost: _cost, targetPrice: _target, bulkPrice: _bulk, marketNotes: _notes, supplierReference: _supplier, ...publicProduct } = product;
+        return publicProduct;
+      });
     return NextResponse.json(products);
   } catch (err) {
     const errorMsg = err instanceof Error ? err.message : String(err);
@@ -98,6 +106,7 @@ try {
       short: body.short,
       description: body.description,
       specs: body.specs ?? {},
+      ...body,
     });
 
     const { data, error } = await supabase
@@ -145,6 +154,7 @@ try {
       short: rest.short,
       description: rest.description,
       specs: rest.specs,
+      ...rest,
     });
 
     const update: Record<string, unknown> = { updated_at: new Date().toISOString() };

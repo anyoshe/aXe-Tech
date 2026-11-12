@@ -45,6 +45,13 @@ type Product = {
   image?: string;
   short?: string;
   description?: string;
+  brand?: string;
+  condition?: string;
+  availability?: string;
+  published?: boolean;
+  featured?: boolean;
+  startingPrice?: boolean;
+  specs?: Record<string, unknown>;
 };
 
 type QuoteItem = { product: Product; qty: number };
@@ -89,6 +96,9 @@ export default function ICTProductsPage() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
   const [sortBy, setSortBy] = useState("featured");
+  const [brand, setBrand] = useState("All");
+  const [condition, setCondition] = useState("All");
+  const [maxPrice, setMaxPrice] = useState(1000000);
   const [quoteItems, setQuoteItems] = useState<QuoteItem[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -99,6 +109,8 @@ export default function ICTProductsPage() {
     const cats = Array.from(new Set(products.map((p) => p.category)));
     return ["All", ...cats];
   }, [products]);
+  const brands = useMemo(() => ["All", ...Array.from(new Set(products.map((p) => p.brand).filter(Boolean) as string[]))], [products]);
+  const conditions = useMemo(() => ["All", ...Array.from(new Set(products.map((p) => p.condition).filter(Boolean) as string[]))], [products]);
 
   /* -------------------------------------------
      FILTER + SORT
@@ -112,7 +124,7 @@ export default function ICTProductsPage() {
           !q ||
           p.title.toLowerCase().includes(q) ||
           (p.short ?? "").toLowerCase().includes(q);
-        return matchCategory && matchQuery;
+        return matchCategory && matchQuery && (brand === "All" || p.brand === brand) && (condition === "All" || p.condition === condition) && p.price <= maxPrice;
       });
 
 
@@ -120,7 +132,7 @@ export default function ICTProductsPage() {
     else if (sortBy === "price-desc") list.sort((a, b) => b.price - a.price);
 
     return list;
-  }, [products, query, category, sortBy]);
+  }, [products, query, category, sortBy, brand, condition, maxPrice]);
 
   /* -------------------------------------------
      QUOTE HANDLERS
@@ -166,13 +178,13 @@ export default function ICTProductsPage() {
      SEND QUOTE ACTIONS
   ------------------------------------------- */
   const buildMessage = () => {
-    let msg = "Hello getaxekenya.com,\nI would like a quote for:\n\n";
+    let msg = "Hello GetAxe,\nPlease provide a formal quotation for:\n\n";
     quoteItems.forEach((it, idx) => {
       msg += `${idx + 1}. ${it.product.title} — Qty: ${it.qty} — ${currency(
         it.product.price
       )}\n`;
     });
-    msg += `\nApprox Total: ${currency(quoteTotal)}\n\nThank you.`;
+    msg += `\nIndicative estimate only: ${currency(quoteTotal)}\nPlease confirm model, availability, configuration and final price.\n\nThank you.`;
     return msg;
   };
 
@@ -264,6 +276,10 @@ export default function ICTProductsPage() {
               ))}
             </select>
 
+            <select className="w-full md:w-auto px-4 py-2 bg-[#111] rounded-lg text-sm" value={brand} onChange={(e) => setBrand(e.target.value)} aria-label="Filter by brand">{brands.map((b) => <option key={b}>{b}</option>)}</select>
+            <select className="w-full md:w-auto px-4 py-2 bg-[#111] rounded-lg text-sm" value={condition} onChange={(e) => setCondition(e.target.value)} aria-label="Filter by condition">{conditions.map((c) => <option key={c}>{c}</option>)}</select>
+            <label className="text-xs text-white/60">Max KES {maxPrice.toLocaleString("en-KE")} <input type="range" min="1000" max="1000000" step="1000" value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))} aria-label="Maximum price" /></label>
+
             <select
               className="w-full md:w-1/4 px-4 py-2 bg-[#111] rounded-lg text-sm"
               value={sortBy}
@@ -330,8 +346,11 @@ export default function ICTProductsPage() {
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="text-xl font-bold">{currency(p.price)}</div>
+                      <div className="text-xl font-bold">{p.startingPrice !== false ? "From " : ""}{currency(p.price)}</div>
+                      <div className="text-[11px] text-white/45">Indicative; final price confirmed by quotation</div>
                       <div className="text-xs text-white/50">{p.category}</div>
+                      <div className="text-xs text-white/50">{p.brand}{p.condition ? ` · ${p.condition}` : ""}{p.availability === "on_order" ? " · Available on order" : ""}</div>
+                      {p.specs && <ul className="mt-2 text-xs text-white/55">{Object.entries(p.specs).slice(0, 3).map(([k, v]) => <li key={k}>{k}: {String(v)}</li>)}</ul>}
                     </div>
 
                     <div className="flex flex-col items-end gap-2">

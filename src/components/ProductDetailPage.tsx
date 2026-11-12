@@ -29,6 +29,11 @@ export type Product = {
   specs?: ProductSpecs;
   createdAt?: string;
   updatedAt?: string;
+  brand?: string;
+  condition?: string;
+  availability?: string;
+  startingPrice?: boolean;
+  warranty?: string;
 };
 
 type QuoteItem = { product: Product; qty: number };
@@ -150,11 +155,11 @@ export default function ProductDetailPage() {
   const quoteTotal = quoteItems.reduce((sum, it) => sum + it.product.price * it.qty, 0);
 
   const buildMessage = () => {
-    let msg = `Hello getaxekenya.com,\nI would like a quote for:\n\n`;
+    let msg = `Hello GetAxe,\nPlease provide a formal quotation for:\n\n`;
     quoteItems.forEach((it, idx) => {
       msg += `${idx + 1}. ${it.product.title} — Qty: ${it.qty} — ${currency(it.product.price)}\n`;
     });
-    msg += `\nApprox Total: ${currency(quoteTotal)}\n\nThank you.`;
+    msg += `\nIndicative estimate only: ${currency(quoteTotal)}\nPlease confirm model, availability, configuration and final price.\n\nThank you.`;
     return msg;
   };
 
@@ -320,7 +325,7 @@ export default function ProductDetailPage() {
             {/* Price */}
             <div className="flex items-center gap-4">
               <div className="text-3xl font-bold text-[var(--color-accent)]">
-                {currency(product.price)}
+                {product.startingPrice !== false ? "From " : ""}{currency(product.price)}
               </div>
               {product.createdAt && (
                 <span className="text-sm text-white/50">
@@ -328,6 +333,9 @@ export default function ProductDetailPage() {
                 </span>
               )}
             </div>
+            <p className="text-xs text-white/55">Indicative starting price only. Final configuration, availability and price are confirmed in a formal quotation.</p>
+            <div className="flex flex-wrap gap-2 text-sm text-white/70">{product.brand && <span>Brand: {product.brand}</span>}{product.condition && <span>· {product.condition}</span>}{product.availability === "on_order" && <span>· Available on order</span>}{product.availability === "available" && <span>· Confirm stock</span>}</div>
+            {product.warranty && <p className="text-sm text-white/65">Warranty: {product.warranty}</p>}
 
             {/* Description */}
             <div className="prose prose-invert max-w-none">

@@ -1,135 +1,21 @@
-/**
- * Sample ICT products for seeding into Supabase.
- * Image paths point at files in /public/samples (served as /samples/...).
- */
+/** GetAxe ICT catalogue. Public targets are indicative and require a formal quote. */
+const researchedOn = "2026-11-12";
+const img = (path: string) => [path];
 export const sampleProducts = [
-  {
-    id: "lap-hp-840",
-    title: "HP EliteBook 840 G6 — Core i5, 8GB, 256GB SSD",
-    price: 48000,
-    category: "Laptops",
-    images: ["/samples/HP-eliteboo-840-g6.jpeg", "/samples/ui-ux-nxt-with-laptop.jpg"],
-    short: "Business laptop for office work, teaching, and light development.",
-    description:
-      "Reliable HP EliteBook 840 G6. Solid build, good keyboard, suitable for schools and SMEs. Tested and ready for deployment.",
-    features: [
-      "Intel Core i5",
-      "8GB RAM",
-      "256GB SSD",
-      "14-inch display",
-      "Windows 11 ready",
-    ],
-    videos: [],
-  },
-  {
-    id: "lap-dell-7400",
-    title: "Dell Latitude 7400 — Core i5/i7, SSD",
-    price: 52000,
-    category: "Laptops",
-    images: ["/samples/dell7400.jpeg", "/samples/office-with-computer-glass-table.jpg"],
-    short: "Premium ultrabook for professionals and managers.",
-    description:
-      "Dell Latitude 7400 — portable, durable, strong battery life. Ideal for field officers and office staff.",
-    features: ["Intel Core i5/i7 options", "SSD storage", "Lightweight", "Business-grade security"],
-    videos: [],
-  },
-  {
-    id: "lab-desktop-setup",
-    title: "Computer Lab Workstation Package",
-    price: 35000,
-    category: "Lab Equipment",
-    images: ["/samples/computerlab.jpg", "/samples/mobilecomputerlab.jpg"],
-    short: "Desktop/workstation package for school computer labs.",
-    description:
-      "Complete workstation setup for digital literacy labs. Can be bundled with networking and lab installation.",
-    features: ["Lab-ready PC", "Monitor options", "Keyboard & mouse", "Installation support available"],
-    videos: ["/samples/computertech.mp4"],
-  },
-  {
-    id: "net-router-office",
-    title: "Office / School Networking Kit",
-    price: 18500,
-    category: "Networking",
-    images: ["/samples/network.jpg", "/samples/hardwaredisplay.jpg"],
-    short: "Router, switch, and cabling essentials for small networks.",
-    description:
-      "Starter networking package for offices and schools. Structured cabling and access points available on request.",
-    features: ["Router", "Switch options", "Cat6 cabling support", "Site survey available"],
-    videos: [],
-  },
-  {
-    id: "repair-service",
-    title: "Laptop & PC Repair / Upgrade Service",
-    price: 2500,
-    category: "Services",
-    images: [
-      "/samples/computer repair.jpg",
-      "/samples/close-up-man-repairing-computer-chips.jpg",
-    ],
-    short: "Diagnosis, repair, SSD upgrades, and maintenance.",
-    description:
-      "Hardware diagnosis, component replacement, SSD upgrades, OS install, and preventive maintenance for laptops and desktops.",
-    features: ["Diagnosis", "SSD upgrade", "RAM upgrade", "OS installation", "Cleaning & thermal service"],
-    videos: [],
-  },
-  {
-    id: "erp-school",
-    title: "School ERP / Management System",
-    price: 150000,
-    category: "Software",
-    images: ["/samples/ERp.jpg", "/samples/Saas.jpg"],
-    short: "Digital school management — students, fees, staff, reports.",
-    description:
-      "Custom school ERP covering admissions, fees, academics, and reporting. Deployed for Kenyan schools with training included.",
-    features: ["Students & staff", "Fees & invoices", "Reports", "Multi-school ready", "Training & support"],
-    videos: ["/samples/schoolvideo.mp4"],
-  },
-  {
-    id: "web-business",
-    title: "Business Website & Landing Pages",
-    price: 45000,
-    category: "Software",
-    images: ["/samples/webdevelopment.jpg", "/samples/landing1.jpg", "/samples/landpage.jpg"],
-    short: "Modern marketing site for SMEs and institutions.",
-    description:
-      "Responsive website or landing pages with contact forms, SEO basics, and optional CMS. Hosted and maintained on request.",
-    features: ["Responsive design", "Contact forms", "SEO basics", "Hosting options"],
-    videos: [],
-  },
-  {
-    id: "ecommerce-starter",
-    title: "E-commerce Starter Store",
-    price: 85000,
-    category: "Software",
-    images: ["/samples/ecommerce.jpg", "/samples/ecommerce1.jpg"],
-    short: "Online shop to sell products with payments and catalog.",
-    description:
-      "Starter e-commerce setup: product catalog, cart, checkout flow, and admin for managing stock and orders.",
-    features: ["Product catalog", "Cart & checkout", "Admin panel", "Mobile friendly"],
-    videos: [],
-  },
-  {
-    id: "brand-pack",
-    title: "Brand Identity Pack",
-    price: 25000,
-    category: "Design",
-    images: ["/samples/branding.jpg", "/samples/brand2.jpg", "/samples/brand3.jpg"],
-    short: "Logo, brand colors, and basic brand kit for your business.",
-    description:
-      "Logo design, color palette, typography, and simple brand guidelines so your ICT or SME brand looks consistent.",
-    features: ["Logo", "Color system", "Social templates", "Brand guide PDF"],
-    videos: ["/samples/branding.mp4"],
-  },
-  {
-    id: "print-hp-laser",
-    title: "Office Laser Printer Package",
-    price: 24000,
-    category: "Printers",
-    images: ["/samples/post1.jpg", "/samples/post2.jpg"],
-    short: "Monochrome laser printer for offices and school admin.",
-    description:
-      "Reliable laser printing for invoices, letters, and reports. Network options and toner supply available.",
-    features: ["Laser print", "Office duty cycle", "Toner available", "Setup support"],
-    videos: [],
-  },
+  { id:"refurb-business-laptop", title:"Certified Refurbished Business Laptop", price:29500, category:"Laptops", brand:"HP / Lenovo", condition:"Certified refurbished", availability:"request_quote", startingPrice:true, images:["/products/hp-elitebook-840-g6.jpg"], short:"HP EliteBook or Lenovo ThinkPad; actual model and configuration confirmed on quotation.", description:"Business laptop options for school staff, SMEs and institutional teams. Listed price is an indicative starting target; confirm exact model, battery health, condition grade and warranty before order.", features:["Intel Core i5, 8th generation or equivalent","8GB DDR4 RAM","256GB SSD","14-inch Full HD display"], specs:{"Processor":"Core i5 8th generation or equivalent","Memory":"8GB DDR4","Storage":"256GB SSD","Display":"14-inch Full HD","Condition":"Certified refurbished"}, warranty:"Set by administrator after supplier confirmation", published:false, marketNotes:`Research ${researchedOn}: HP EliteBook 840 G6 i5 8th/8GB/256GB listed KES 33,000 at City Gadgets (condition refurbished; retailer page states 6-month warranty; VAT not stated). Target KES 29,500 is below this one reference and remains unverified. ${"https://www.citygadgetskenya.co.ke/product/refurbished-hp-elitebook-840-g6-core-i5-8th-gen-8gb-ram-256gb-ssd-in-kenya"}` },
+  { id:"new-corporate-laptop", title:"Brand New Corporate Laptop", price:75000, category:"Laptops", brand:"HP / Dell", condition:"Brand new", availability:"request_quote", published:false, images:["/products/hp-probook-440-g10.png"], short:"Corporate laptop configurations quoted against the selected current model.", description:"HP ProBook or Dell Latitude class systems for business and institutional use. Confirm exact generation, memory, OS licensing and stock with the supplier before purchase.", features:["Intel Core i5 12th/13th generation or equivalent","8GB or 16GB RAM options","512GB SSD","Windows 11 Pro only where supplied and licensed"], specs:{"Processor":"Core i5 12th/13th generation or equivalent","Memory":"8GB or 16GB","Storage":"512GB SSD","Operating system":"Windows 11 Pro only if licensed"}, warranty:"Set by administrator after supplier confirmation", marketNotes:"Indicative target from supplied brief; no model-specific current Kenyan price verified. Request supplier quote." },
+  { id:"office-lab-desktop-set", title:"Complete Office and Lab Desktop Set", price:30000, category:"Lab Equipment", brand:"HP / Dell", condition:"Refurbished or brand new configurations", availability:"request_quote", published:false, images:["/products/desktop-workstation.jpg"], short:"Desktop with monitor, keyboard and mouse; select refurbished or brand-new configuration.", description:"A complete workstation for offices and learning spaces. Public price is the refurbished starting target; brand-new option starts at KES 56,000 subject to selected model and component costs.", features:["Core i5 platform","8GB RAM","256GB SSD","19–22-inch monitor","Keyboard and mouse"], specs:{"Processor":"Core i5","Memory":"8GB","Storage":"256GB SSD","Monitor":"19–22 inch","Included":"Keyboard and mouse","Refurbished target":"KES 30,000","Brand-new target":"KES 56,000"}, marketNotes:"Separate condition options and pricing targets; neither target is a confirmed supplier quotation." },
+  { id:"school-lab-10pc", title:"10-PC School Computer Lab Starter Pack", price:255000, category:"Lab Equipment", brand:"Multi-brand", condition:"Configuration dependent", availability:"request_quote", published:false, images:["/products/desktop-workstation.jpg", "/products/tp-link-tl-sg108.jpg", "/products/apc-back-ups-600.jpg", "/products/cat6-305m-copper-box.png"], short:"Ten student computers with network, power protection and installation scope.", description:"Starter lab scope includes ten desktop or laptop computers, 16-port Gigabit switch, Cat6 cabling, power protection, installation and network configuration. Final price depends on computer type, site and cable runs.", features:["10 desktop or laptop computers","16-port Gigabit network switch","Cat6 cabling","Power protection","Installation and network configuration"], specs:{"Quantity":"10 student computers","Network":"16-port Gigabit switch","Services":"Installation and configuration"}, marketNotes:"KES 255,000 supplied as an indicative target; component-level supplier validation required. Quote by configuration and quantity." },
+  { id:"institution-ict-lab-20pc", title:"20-PC Complete Institutional ICT Lab Bundle", price:540000, category:"Lab Equipment", brand:"Multi-brand", condition:"Configuration dependent", availability:"request_quote", published:false, images:["/products/desktop-workstation.jpg", "/products/epson-eb-e01.png", "/products/smart-board-mx-65.png", "/products/tp-link-tl-sg108.jpg"], short:"Twenty student computers plus teacher workstation, projector and network setup.", description:"Institutional bundle with twenty student computers, teacher workstation, multimedia projector, 24-port switch, Wi-Fi access point, structured cabling, installation and configuration. Request a site-specific scope and bulk quote.", features:["20 student computers and one teacher workstation","Multimedia projector","24-port network switch and Wi-Fi access point","Structured cabling","Installation and configuration"], specs:{"Student computers":20,"Teacher workstation":1,"Network switch":"24-port","Services":"Installation and configuration"}, marketNotes:"KES 540,000 supplied as an indicative target; likely depends substantially on computer condition and projector. Component-level verification required." },
+  { id:"mono-laser-printer", title:"Monochrome Laser Printer", price:26000, category:"Printers", brand:"HP", condition:"Brand new model dependent", availability:"request_quote", published:false, images:["/products/hp-laser-107w.png"], short:"HP LaserJet Pro series; connection and duplex options depend on exact model.", description:"A monochrome office printer for routine school and SME documents. Confirm whether USB, Ethernet, Wi-Fi and automatic duplex are included in the selected model.", features:["HP LaserJet Pro series","Automatic duplex where supported","USB, network or Wi-Fi according to model"], specs:{"Print type":"Monochrome laser","Connectivity":"Model dependent","Automatic duplex":"Model dependent"}, marketNotes:`Research ${researchedOn}: HP LaserJet 107w listed KES 25,995 and HP LaserJet M501DN KES 60,495 at Kenyatronics; models/features differ. VAT inclusion not stated. ${"https://www.kenyatronics.com/browse/computers/printers?page=4"}` },
+  { id:"ecotank-aio", title:"EcoTank All-in-One Color Printer", price:30000, category:"Printers", brand:"Epson", condition:"Brand new model dependent", availability:"request_quote", published:false, images:["/products/epson-ecotank-l3250.jpg"], short:"Epson L3250/L5290 class print, scan and copy; confirm model-specific features.", description:"Refillable ink tank all-in-one printers for offices and schools. Wireless connectivity and fax/ADF features vary by selected model.", features:["Print, scan and copy","Refillable ink tanks","Wireless connectivity where supported"], specs:{"Example models":"Epson L3250 / L5290 or equivalent","Functions":"Print, scan and copy","Connectivity":"Model dependent"}, marketNotes:`Research ${researchedOn}: Epson L3250 listed KES 26,000 at Kenyatronics, KES 27,500 at Tech Street Kenya, and KES 31,000 VAT inclusive at MobileHub; current listings differ. Target KES 30,000 is close to observed band. ${"https://kenyatronics.com/view-product/epson-ecotank-l3250-a4-wi-fi-all-in-one-ink-tank-printer"} | ${"https://techstreetkenya.com/product/epson-l3250-wireless/"} | VAT inclusive source: ${"https://mobilehub.co.ke/product/epson-eco-tank-l3250-a4-wi-fi-all-in-one-ink-tank-printer"}` },
+  { id:"office-photocopier-mfp", title:"Heavy-Duty Office Photocopier and MFP", price:85000, category:"Printers", brand:"Kyocera / Canon", condition:"New or refurbished", availability:"request_quote", published:false, images:["/products/canon-imagerunner-1643i.jpg"], short:"A3/A4 copier and MFP configurations; exact model and condition on request.", description:"Higher-volume office copying, printing and scanning options. New and refurbished units must be quoted separately; ADF and network features depend on model.", features:["A3/A4 configurations","ADF where supported","Network printing and scanning where supported","New and refurbished options"], specs:{"Brand options":"Kyocera / Canon","Paper size":"A3/A4 model dependent","ADF":"Model dependent"}, marketNotes:"KES 85,000 target is not validated; different new/refurbished MFPs vary significantly. Use Request Quote until supplier confirms model, meter count, condition and consumables." },
+  { id:"enterprise-wifi-ap", title:"Enterprise Wi-Fi Access Point and Router", price:10500, category:"Networking", brand:"Ubiquiti / MikroTik / TP-Link Omada", condition:"Brand new model dependent", availability:"request_quote", published:false, images:["/products/unifi-u6-plus.jpg"], short:"Business Wi-Fi options; standard, PoE and Wi-Fi generation depend on model.", description:"Access point and router options for offices, schools and institutional networks. Coverage planning and PoE requirements should be confirmed for the site.", features:["UniFi, MikroTik or Omada options","Wi-Fi 5 or Wi-Fi 6 by model","PoE where supported"], specs:{"Wi-Fi generation":"Model dependent","PoE":"Model dependent","Coverage":"Site dependent"}, marketNotes:"Indicative target supplied by brief; no exact model or current price evidence verified. Request model-specific quote." },
+  { id:"gigabit-switch", title:"Gigabit Network Switch", price:3800, category:"Networking", brand:"TP-Link / D-Link", condition:"Brand new model dependent", availability:"request_quote", published:false, images:["/products/tp-link-tl-sg108.jpg"], short:"8-port and 24-port Gigabit Ethernet switch options.", description:"Unmanaged Gigabit Ethernet switches for office, lab and CCTV networks. Port count options have separate starting targets.", features:["Gigabit Ethernet","8-port target KES 3,800","24-port target KES 12,500"], specs:{"8-port target":"KES 3,800","24-port target":"KES 12,500","Ports":"8 or 24"}, marketNotes:`Research ${researchedOn}: 8-port TP-Link TL-SG108 price listing available from Networkswitch Kenya but current listed price not exposed in result; supplied targets need model-specific validation. ${"https://networkswitchkenya.co.ke/product/tp-link-tl-sg108-8-port-gigabit-switch"}` },
+  { id:"line-interactive-ups", title:"Line-Interactive UPS Power Backup", price:8500, category:"Networking", brand:"APC / Eaton", condition:"Brand new model dependent", availability:"request_quote", published:false, images:["/products/apc-back-ups-600.jpg"], short:"650VA and 1200VA options; AVR and surge functions depend on exact model.", description:"Power backup options for computers and network equipment. Confirm battery, output, AVR and warranty details for the chosen model.", features:["650VA target KES 8,500","1200VA target KES 15,500","AVR and surge protection where supported"], specs:{"650VA target":"KES 8,500","1200VA target":"KES 15,500","AVR":"Model dependent"}, marketNotes:"Targets supplied by brief; no exact model or current Kenyan retailer price verified." },
+  { id:"multimedia-projector", title:"High-Brightness Multimedia Projector", price:52000, category:"AV", brand:"Epson", condition:"Brand new model dependent", availability:"request_quote", published:false, images:["/products/epson-eb-e01.png"], short:"Epson EB-E01/X06 class, approximately 3,300–3,600 lumens by model.", description:"Classroom and meeting room projector options. Brightness, resolution and HDMI/VGA connections vary by exact model; validate room requirements before selection.", features:["Epson EB-E01 / X06 or equivalent","Approximately 3,300–3,600 lumens depending on model","HDMI and VGA where supported"], specs:{"Example models":"EB-E01 / X06","Brightness":"Approx. 3,300–3,600 lumens by model","Connectivity":"Model dependent"}, marketNotes:"KES 52,000 indicative target; exact current Kenyan price not verified. Confirm model and lamp/warranty terms." },
+  { id:"interactive-board-65", title:"65-inch Interactive Smart Board and Commercial Display", price:165000, category:"Classroom & Boardroom", brand:"Multi-brand", condition:"Brand new", availability:"on_order", published:false, images:["/products/smart-board-mx-65.png"], short:"4K interactive display; confirm Android, OPS and wireless features on selected model.", description:"Large format interactive display for classrooms and boardrooms. Available on order; model, included wall mount, OPS, software and installation scope are confirmed in the formal quotation.", features:["65-inch 4K UHD","Interactive touchscreen","Android and OPS compatibility where supported","Wireless presentation where supported"], specs:{"Size":"65 inch","Resolution":"4K UHD","Availability":"Available on order","Other functions":"Model dependent"}, marketNotes:"KES 165,000 supplied as an indicative target; no specific model or Kenyan price source verified. Available on order; quote required." },
+  { id:"keyboard-mouse-combo", title:"Wired USB Keyboard and Optical Mouse Combo", price:1350, category:"Accessories", brand:"Multi-brand", condition:"Brand new", availability:"request_quote", published:false, images:["/products/logitech-mk120.png"], short:"Full-size wired keyboard and optical mouse, USB plug-and-play.", description:"Basic wired input set for workstations and labs. Brand and exact model may vary by procurement lot.", features:["Full-size keyboard","Optical mouse","USB plug-and-play"], specs:{"Connection":"USB wired","Contents":"Keyboard and optical mouse"}, marketNotes:"KES 1,350 target from supplied brief; current model-specific price not validated." },
+  { id:"printer-ink-toner", title:"Genuine and Compatible Printer Toners and Ink Bottles", price:1500, category:"Consumables", brand:"HP / Epson / Kyocera / Canon", condition:"Genuine or compatible", availability:"request_quote", published:false, images:["/products/epson-103-ink-bottles.jpg", "/products/hp-151a-toner.png"], short:"Separate genuine and compatible supplies; confirm printer model before ordering.", description:"Ink bottles and toner cartridges supplied against exact printer model and cartridge reference. Genuine and compatible options are quoted separately to avoid mismatches.", features:["Ink bottle target from KES 1,500","Toner cartridge target from KES 2,800","Exact printer compatibility confirmed before order","Genuine and compatible options separated"], specs:{"Ink bottle target":"KES 1,500","Toner target":"KES 2,800","Supported brands":"HP, Epson, Kyocera, Canon","Compatibility":"Exact model required"}, marketNotes:"Targets supplied by brief. No SKU-level market comparison; do not sell until exact printer and cartridge codes are recorded." },
+  { id:"cat6-cable-connectors", title:"Cat6 Ethernet Cable Box and RJ45 Connectors", price:11500, category:"Networking", brand:"Multi-brand", condition:"New", availability:"request_quote", published:false, images:["/products/cat6-305m-copper-box.png"], short:"305-metre Cat6 box; confirm conductor material and connector quantity before supply.", description:"Structured cabling supply for networking and CCTV installations. Copper conductor claim must be confirmed from supplier datasheet; do not substitute CCA without disclosure.", features:["305-metre box","RJ45 connectors available","Suitable for networking and CCTV installations","Conductor specification verified per lot"], specs:{"Length":"305 metres","Conductor":"To verify from supplier documentation","Use":"Networking and CCTV"}, marketNotes:"KES 11,500 target from supplied brief; copper conductor specification and current supplier price unverified." },
 ];

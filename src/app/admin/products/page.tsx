@@ -27,6 +27,22 @@ type Product = {
   features: string[];
   videos: string[];
   specs?: Record<string, unknown>;
+  brand?: string;
+  condition?: string;
+  availability?: string;
+  published?: boolean;
+  featured?: boolean;
+  displayOrder?: number;
+  startingPrice?: boolean;
+  internalCost?: number | null;
+  targetPrice?: number | null;
+  bulkPrice?: number | null;
+  priceReviewedAt?: string | null;
+  marketNotes?: string;
+  supplierReference?: string;
+  warranty?: string;
+  seoTitle?: string;
+  seoDescription?: string;
   createdAt?: string;
   updatedAt?: string;
 };
@@ -50,6 +66,7 @@ const CATEGORIES = [
   "Services",
   "Design",
   "AV",
+  "Classroom & Boardroom",
   "Consumables",
 ];
 
@@ -70,11 +87,14 @@ export default function AdminProductsPage() {
     short: "",
     description: "",
     specs: "{}",
+    brand: "", condition: "", availability: "request_quote", published: true, featured: false, displayOrder: "0",
+    startingPrice: true, internalCost: "", targetPrice: "", bulkPrice: "", priceReviewedAt: "", marketNotes: "", supplierReference: "", warranty: "", seoTitle: "", seoDescription: "",
   });
   const [editing, setEditing] = useState<string | null>(null);
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
   const [videoUrlInput, setVideoUrlInput] = useState("");
   const [publicPathInput, setPublicPathInput] = useState("");
+  const [catalogFilter, setCatalogFilter] = useState({ category: "All", status: "All", brand: "All", condition: "All", availability: "All", featured: "All" });
 
   const imageInputRef = useRef<HTMLInputElement>(null);
 
@@ -140,6 +160,8 @@ export default function AdminProductsPage() {
       short: "",
       description: "",
       specs: "{}",
+      brand: "", condition: "", availability: "request_quote", published: true, featured: false, displayOrder: "0",
+      startingPrice: true, internalCost: "", targetPrice: "", bulkPrice: "", priceReviewedAt: "", marketNotes: "", supplierReference: "", warranty: "", seoTitle: "", seoDescription: "",
     });
     setEditing(null);
     setUploadingFiles([]);
@@ -271,6 +293,22 @@ export default function AdminProductsPage() {
       short: form.short || undefined,
       description: form.description || undefined,
       specs: parsedSpecs,
+      brand: form.brand || undefined,
+      condition: form.condition || undefined,
+      availability: form.availability,
+      published: form.published,
+      featured: form.featured,
+      displayOrder: Number(form.displayOrder) || 0,
+      startingPrice: form.startingPrice,
+      internalCost: form.internalCost ? Number(form.internalCost) : null,
+      targetPrice: form.targetPrice ? Number(form.targetPrice) : null,
+      bulkPrice: form.bulkPrice ? Number(form.bulkPrice) : null,
+      priceReviewedAt: form.priceReviewedAt || null,
+      marketNotes: form.marketNotes || undefined,
+      supplierReference: form.supplierReference || undefined,
+      warranty: form.warranty || undefined,
+      seoTitle: form.seoTitle || undefined,
+      seoDescription: form.seoDescription || undefined,
     };
   };
 
@@ -376,6 +414,8 @@ export default function AdminProductsPage() {
       short: p.short || "",
       description: p.description || "",
       specs: JSON.stringify(p.specs || {}, null, 2),
+      brand: p.brand || "", condition: p.condition || "", availability: p.availability || "request_quote", published: p.published !== false, featured: !!p.featured, displayOrder: String(p.displayOrder ?? 0),
+      startingPrice: p.startingPrice !== false, internalCost: String(p.internalCost ?? ""), targetPrice: String(p.targetPrice ?? ""), bulkPrice: String(p.bulkPrice ?? ""), priceReviewedAt: p.priceReviewedAt || "", marketNotes: p.marketNotes || "", supplierReference: p.supplierReference || "", warranty: p.warranty || "", seoTitle: p.seoTitle || "", seoDescription: p.seoDescription || "",
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -485,6 +525,22 @@ export default function AdminProductsPage() {
                 placeholder="48000"
               />
             </label>
+            <label className="block space-y-1"><span className="text-xs text-white/60">Brand</span><input className="w-full rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm" value={form.brand} onChange={(e) => setForm((f) => ({ ...f, brand: e.target.value }))} /></label>
+            <label className="block space-y-1"><span className="text-xs text-white/60">Condition</span><select className="w-full rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm" value={form.condition} onChange={(e) => setForm((f) => ({ ...f, condition: e.target.value }))}><option value="">Unspecified</option><option>Brand new</option><option>Certified refurbished</option><option>Refurbished</option><option>Illustrative</option></select></label>
+            <label className="block space-y-1"><span className="text-xs text-white/60">Availability</span><select className="w-full rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm" value={form.availability} onChange={(e) => setForm((f) => ({ ...f, availability: e.target.value }))}><option value="request_quote">Request quote</option><option value="available">Available (confirm stock)</option><option value="on_order">Available on order</option></select></label>
+            <label className="block space-y-1"><span className="text-xs text-white/60">Warranty (verified terms only)</span><input className="w-full rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm" value={form.warranty} onChange={(e) => setForm((f) => ({ ...f, warranty: e.target.value }))} /></label>
+            <label className="block space-y-1"><span className="text-xs text-white/60">Internal procurement estimate (KES)</span><input type="number" min="0" className="w-full rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm" value={form.internalCost} onChange={(e) => setForm((f) => ({ ...f, internalCost: e.target.value }))} /></label>
+            <label className="block space-y-1"><span className="text-xs text-white/60">Internal target selling price (KES)</span><input type="number" min="0" className="w-full rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm" value={form.targetPrice} onChange={(e) => setForm((f) => ({ ...f, targetPrice: e.target.value }))} /></label>
+            <label className="block space-y-1"><span className="text-xs text-white/60">Institutional/bulk price (KES)</span><input type="number" min="0" className="w-full rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm" value={form.bulkPrice} onChange={(e) => setForm((f) => ({ ...f, bulkPrice: e.target.value }))} /></label>
+            <label className="block space-y-1"><span className="text-xs text-white/60">Price reviewed on</span><input type="date" className="w-full rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm" value={form.priceReviewedAt} onChange={(e) => setForm((f) => ({ ...f, priceReviewedAt: e.target.value }))} /></label>
+            <label className="block space-y-1 sm:col-span-2"><span className="text-xs text-white/60">Private market research notes / source URL / VAT context</span><textarea rows={2} className="w-full rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm" value={form.marketNotes} onChange={(e) => setForm((f) => ({ ...f, marketNotes: e.target.value }))} /></label>
+            <label className="block space-y-1 sm:col-span-2"><span className="text-xs text-white/60">Supplier quotation reference (private)</span><input className="w-full rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm" value={form.supplierReference} onChange={(e) => setForm((f) => ({ ...f, supplierReference: e.target.value }))} /></label>
+            <label className="block space-y-1"><span className="text-xs text-white/60">SEO title</span><input className="w-full rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm" value={form.seoTitle} onChange={(e) => setForm((f) => ({ ...f, seoTitle: e.target.value }))} /></label>
+            <label className="block space-y-1"><span className="text-xs text-white/60">SEO description</span><input className="w-full rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm" value={form.seoDescription} onChange={(e) => setForm((f) => ({ ...f, seoDescription: e.target.value }))} /></label>
+            <label className="block space-y-1"><span className="text-xs text-white/60">Display order</span><input type="number" className="w-full rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm" value={form.displayOrder} onChange={(e) => setForm((f) => ({ ...f, displayOrder: e.target.value }))} /></label>
+            <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.published} onChange={(e) => setForm((f) => ({ ...f, published: e.target.checked }))} /> Published</label>
+            <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.featured} onChange={(e) => setForm((f) => ({ ...f, featured: e.target.checked }))} /> Featured</label>
+            <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.startingPrice} onChange={(e) => setForm((f) => ({ ...f, startingPrice: e.target.checked }))} /> Show as starting price</label>
             <label className="block space-y-1">
               <span className="text-xs text-white/60">Short description</span>
               <input
@@ -655,6 +711,12 @@ export default function AdminProductsPage() {
           <h2 className="text-lg font-semibold">
             Catalog {loading ? "…" : `(${products.length})`}
           </h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
+            {(["category", "status", "brand", "condition", "availability", "featured"] as const).map((key) => {
+              const values = key === "category" ? ["All", ...CATEGORIES] : key === "status" ? ["All", "Published", "Unpublished"] : key === "brand" ? ["All", ...new Set(products.map((p) => p.brand).filter(Boolean) as string[])] : key === "condition" ? ["All", ...new Set(products.map((p) => p.condition).filter(Boolean) as string[])] : key === "availability" ? ["All", "available", "on_order", "request_quote"] : ["All", "Featured", "Not featured"];
+              return <select key={key} aria-label={`Filter ${key}`} className="rounded-lg bg-black/40 border border-white/10 px-2 py-2 text-xs" value={catalogFilter[key]} onChange={(e) => setCatalogFilter((f) => ({ ...f, [key]: e.target.value }))}><option value="All">All {key}</option>{values.filter((v) => v !== "All").map((value) => <option key={value} value={key === "status" || key === "featured" ? value : value}>{value}</option>)}</select>;
+            })}
+          </div>
           {loading ? (
             <p className="text-white/50 text-sm">Loading from Supabase…</p>
           ) : products.length === 0 ? (
@@ -663,7 +725,7 @@ export default function AdminProductsPage() {
             </p>
           ) : (
             <div className="grid gap-3">
-              {products.map((p) => (
+              {products.filter((p) => (catalogFilter.category === "All" || p.category === catalogFilter.category) && (catalogFilter.status === "All" || (catalogFilter.status === "Published" ? p.published !== false : p.published === false)) && (catalogFilter.brand === "All" || p.brand === catalogFilter.brand) && (catalogFilter.condition === "All" || p.condition === catalogFilter.condition) && (catalogFilter.availability === "All" || p.availability === catalogFilter.availability) && (catalogFilter.featured === "All" || (catalogFilter.featured === "Featured" ? !!p.featured : !p.featured))).map((p) => (
                 <div
                   key={p.id}
                   className="flex flex-col sm:flex-row gap-4 rounded-xl border border-white/10 bg-white/5 p-3"
@@ -687,8 +749,9 @@ export default function AdminProductsPage() {
                       <div>
                         <p className="font-medium">{p.title}</p>
                         <p className="text-xs text-white/50">
-                          {p.id} · {p.category || "—"} · KSh {Number(p.price).toLocaleString("en-KE")}
+                          {p.id} · {p.category || "—"} · KSh {Number(p.price).toLocaleString("en-KE")} · {p.published === false ? "Unpublished" : "Published"}{p.featured ? " · Featured" : ""}{p.condition ? ` · ${p.condition}` : ""}
                         </p>
+                        {p.internalCost != null && p.targetPrice != null && Number(p.targetPrice) > 0 && <p className="text-xs text-amber-200/80 mt-1">Private gross margin: {(((Number(p.targetPrice) - Number(p.internalCost)) / Number(p.targetPrice)) * 100).toFixed(1)}% (target price less procurement estimate)</p>}
                         <p className="text-sm text-white/60 mt-1 line-clamp-2">{p.short}</p>
                       </div>
                       <div className="flex gap-2">
