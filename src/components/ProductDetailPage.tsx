@@ -34,6 +34,7 @@ export type Product = {
   availability?: string;
   startingPrice?: boolean;
   warranty?: string;
+  imageSources?: Record<string, { sourcePage?: string; rights?: string; notes?: string }>;
 };
 
 type QuoteItem = { product: Product; qty: number };
@@ -179,7 +180,7 @@ export default function ProductDetailPage() {
               Go Back
             </button>
             <Link
-              href="/ict-products"
+              href="/shop"
               className="px-6 py-3 bg-[var(--color-accent)] text-black rounded-full font-semibold hover:opacity-95 transition-opacity"
             >
               Browse Products
@@ -200,7 +201,7 @@ export default function ProductDetailPage() {
       <div className="border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <Link
-            href="/ict-products"
+            href="/shop"
             className="inline-flex items-center gap-2 text-[var(--color-accent)] hover:underline transition-all"
           >
             <ArrowLeft size={20} />
@@ -218,6 +219,12 @@ export default function ProductDetailPage() {
             <div className="relative aspect-square rounded-2xl overflow-hidden bg-black/20">
               <ProductImage productId={product.id} src={images[selectedImage]} alt={product.title} className="object-contain p-5" priority sizes="(max-width: 1024px) 100vw, 50vw" />
             </div>
+            {product.imageSources?.[images[selectedImage]]?.rights?.includes("CC BY-SA 4.0") && (
+              <p className="text-right text-xs text-white/60">
+                Photo: <a href={product.imageSources[images[selectedImage]].sourcePage} target="_blank" rel="noopener noreferrer" className="underline">IT Photography</a>
+                {" · "}<a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer" className="underline">CC BY-SA 4.0</a>
+              </p>
+            )}
 
             {/* Thumbnail Gallery */}
             {images && images.length > 1 && (

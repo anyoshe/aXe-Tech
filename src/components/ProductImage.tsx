@@ -24,10 +24,10 @@ export default function ProductImage({ productId, src, alt, className = "", size
   useEffect(() => {
     setFailedOriginal(false);
     setFailedFallback(false);
-  }, [original]);
+  }, [original, fallback]);
 
   const current = failedOriginal ? fallback : original;
-  if (!current || (failedOriginal && failedFallback)) {
+  if (!current || failedFallback || (failedOriginal && (!fallback || fallback === original))) {
     return <div className={`flex h-full w-full flex-col items-center justify-center gap-2 bg-slate-100 text-slate-400 ${className}`}><ImageOff size={24} /><span className="text-xs">Photo coming soon</span></div>;
   }
 
@@ -46,7 +46,10 @@ export default function ProductImage({ productId, src, alt, className = "", size
       priority={priority}
       unoptimized={current.startsWith("/products/")}
       className={className}
-      onError={() => failedOriginal ? setFailedFallback(true) : setFailedOriginal(true)}
+      onError={() => {
+        if (!failedOriginal && fallback && fallback !== original) setFailedOriginal(true);
+        else setFailedFallback(true);
+      }}
     />
   );
 }
