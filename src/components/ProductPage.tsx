@@ -1,11 +1,12 @@
 "use client";
 
 import { useMemo, useState, useEffect } from "react";
-import Image from "next/image";
+import ProductImage from "@/components/ProductImage";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { X, ShoppingCart, Trash2, Plus, Minus, Home, MessageCircle, Phone } from "lucide-react";
-import { isBase64, isUrl, normalizeImageList } from '@/utils/image-utils';
+import { isBase64, isUrl } from '@/utils/image-utils';
+import { productImageList } from "@/lib/product-images";
 
 /* -------------------------------------------
    UTILS
@@ -106,7 +107,7 @@ export default function ICTProductsPage() {
      CATEGORIES
   ------------------------------------------- */
   const categories = useMemo(() => {
-    const cats = Array.from(new Set(products.map((p) => p.category)));
+    const cats = Array.from(new Set(products.map((p) => p.category).filter((value): value is string => Boolean(value))));
     return ["All", ...cats];
   }, [products]);
   const brands = useMemo(() => ["All", ...Array.from(new Set(products.map((p) => p.brand).filter(Boolean) as string[]))], [products]);
@@ -130,6 +131,7 @@ export default function ICTProductsPage() {
 
     if (sortBy === "price-asc") list.sort((a, b) => a.price - b.price);
     else if (sortBy === "price-desc") list.sort((a, b) => b.price - a.price);
+    else list.sort((a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured)));
 
     return list;
   }, [products, query, category, sortBy, brand, condition, maxPrice]);
@@ -219,23 +221,18 @@ export default function ICTProductsPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
-        <div className="flex flex-col gap-6 mb-10">
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+          <div className="flex flex-col gap-6 mb-10">
+          <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-[#10241f] via-[#111916] to-[#0b1110] p-6 sm:p-9 lg:p-12 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-7">
             <div>
-              <p className="text-sm font-semibold text-[var(--color-accent)] uppercase tracking-wider">
-                Hardware catalogue
+              <p className="text-xs font-bold text-emerald-300 uppercase tracking-[0.2em]">
+                GetAxe Kenya · ICT catalogue
               </p>
-              <h1 className="text-3xl md:text-4xl font-bold mt-1">ICT Products</h1>
-              <p className="text-sm text-[var(--color-text-subtle)] mt-2 max-w-xl">
-                Laptops, lab gear, networking and accessories — priced for schools and businesses.
-                Build a quote and send it on WhatsApp.
+              <h1 className="text-4xl md:text-5xl font-bold mt-3 tracking-tight">Technology that gets work done.</h1>
+              <p className="text-sm sm:text-base text-white/65 mt-3 max-w-2xl leading-relaxed">
+                Browse ICT equipment for schools, offices and institutions. Build a product list and request a formal quote for your configuration.
               </p>
-              <div className="mt-3 flex flex-wrap gap-3 text-xs text-white/55">
-                <span>Tested supply</span>
-                <span>·</span>
-                <span>Quote on WhatsApp</span>
-                <span>·</span>
-                <Link href="/" className="hover:text-[var(--color-accent)]">← Home</Link>
+              <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-xs text-white/60">
+                <span>Procurement and delivery</span><span>Installation and configuration</span><span>Bulk and school quotes</span>
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -243,7 +240,7 @@ export default function ICTProductsPage() {
                 href="https://wa.me/254736889880?text=Hello%20GetAxe%2C%20I%20need%20an%20ICT%20product%20quote."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl bg-[var(--color-accent)] text-[var(--color-bg-dark)] font-semibold px-4 py-2.5 text-sm"
+                className="inline-flex items-center gap-2 rounded-xl bg-emerald-300 text-slate-950 font-semibold px-5 py-3 text-sm hover:bg-emerald-200 transition-colors"
               >
                 <MessageCircle className="w-4 h-4" /> WhatsApp quote
               </a>
@@ -256,18 +253,18 @@ export default function ICTProductsPage() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between bg-[#0f0f0f] p-4 rounded-xl border border-white/10">
-
+          <div className="rounded-2xl border border-white/10 bg-[#101312] p-4 sm:p-5 space-y-4">
+            <div className="flex flex-col lg:flex-row gap-3">
             <input
               type="search"
               placeholder="Search products..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full md:w-1/3 px-4 py-2 rounded-lg bg-[#111] border border-white/10 text-sm outline-none"
+              className="w-full lg:flex-1 px-4 py-3 rounded-xl bg-black/30 border border-white/10 text-sm outline-none focus:border-emerald-300/60"
             />
 
             <select
-              className="w-full md:w-1/4 px-4 py-2 bg-[#111] rounded-lg text-sm"
+              className="w-full lg:w-52 px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-sm"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             >
@@ -276,12 +273,11 @@ export default function ICTProductsPage() {
               ))}
             </select>
 
-            <select className="w-full md:w-auto px-4 py-2 bg-[#111] rounded-lg text-sm" value={brand} onChange={(e) => setBrand(e.target.value)} aria-label="Filter by brand">{brands.map((b) => <option key={b}>{b}</option>)}</select>
-            <select className="w-full md:w-auto px-4 py-2 bg-[#111] rounded-lg text-sm" value={condition} onChange={(e) => setCondition(e.target.value)} aria-label="Filter by condition">{conditions.map((c) => <option key={c}>{c}</option>)}</select>
-            <label className="text-xs text-white/60">Max KES {maxPrice.toLocaleString("en-KE")} <input type="range" min="1000" max="1000000" step="1000" value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))} aria-label="Maximum price" /></label>
+            <select className="w-full lg:w-44 px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-sm" value={brand} onChange={(e) => setBrand(e.target.value)} aria-label="Filter by brand">{brands.map((b) => <option key={b}>{b}</option>)}</select>
+            <select className="w-full lg:w-48 px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-sm" value={condition} onChange={(e) => setCondition(e.target.value)} aria-label="Filter by condition">{conditions.map((c) => <option key={c}>{c}</option>)}</select>
 
             <select
-              className="w-full md:w-1/4 px-4 py-2 bg-[#111] rounded-lg text-sm"
+              className="w-full lg:w-48 px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-sm"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
             >
@@ -292,18 +288,28 @@ export default function ICTProductsPage() {
 
             <button
               onClick={() => setDrawerOpen(true)}
-              className="hidden md:flex items-center gap-2 bg-[var(--color-accent)] text-black px-5 py-2 rounded-full font-semibold"
+              className="hidden md:flex items-center gap-2 bg-emerald-300 text-slate-950 px-5 py-3 rounded-xl font-semibold"
             >
               <ShoppingCart size={18} />
               Quote ({quoteItems.length})
             </button>
+            </div>
+            <div className="flex items-center gap-3">
+              <label className="shrink-0 text-xs text-white/60">Up to <span className="font-semibold text-white">KES {maxPrice.toLocaleString("en-KE")}</span></label>
+              <input className="w-full accent-emerald-300" type="range" min="1000" max="1000000" step="1000" value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))} aria-label="Maximum price" />
+              <button className="shrink-0 text-xs text-emerald-200 hover:text-white" onClick={() => { setQuery(""); setCategory("All"); setBrand("All"); setCondition("All"); setMaxPrice(1000000); setSortBy("featured"); }}>Reset</button>
+            </div>
+            <div className="flex gap-2 overflow-x-auto pb-1">
+              {categories.map((c) => <button key={c} onClick={() => setCategory(c)} className={`shrink-0 rounded-full px-4 py-2 text-xs font-semibold transition-colors ${category === c ? "bg-emerald-300 text-slate-950" : "bg-white/5 text-white/70 hover:bg-white/10"}`}>{c}</button>)}
+            </div>
           </div>
         </div>
 
         {/* -------------------------------------------
             PRODUCT GRID
         ------------------------------------------- */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="mb-4 flex items-center justify-between text-sm text-white/55"><span>{filtered.length} {filtered.length === 1 ? "product" : "products"}</span><span>Prices are indicative until confirmed by GetAxe</span></div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 lg:gap-6">
           {loading ? (
             <div className="p-8 col-span-full text-center">Loading products…</div>
           ) : loadError ? (
@@ -328,45 +334,27 @@ export default function ICTProductsPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35 }}
-                className="bg-[#0b0b0b] rounded-2xl overflow-hidden shadow-lg"
+                className="group bg-[#111615] border border-white/[0.08] rounded-2xl overflow-hidden shadow-lg shadow-black/10 hover:border-emerald-300/30 hover:-translate-y-0.5 transition-all duration-200 flex flex-col"
               >
-                <div className="relative w-full h-48 bg-black/20">
-                  <Image
-                    src={getImageSource(p.image ?? normalizeImageList(p.images ?? [])[0])}
-                    alt={p.title}
-                    fill
-                    className="object-cover"
-                    unoptimized={isBase64(p.image ?? normalizeImageList(p.images ?? [])[0] ?? '')}
-                  />
+                <div className="relative w-full aspect-[16/10] bg-gradient-to-br from-white to-slate-100 overflow-hidden">
+                  {p.featured && <span className="absolute top-3 left-3 z-10 rounded-full bg-emerald-300 px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-slate-950">Featured</span>}
+                  {p.availability === "on_order" && <span className="absolute top-3 right-3 z-10 rounded-full bg-slate-900/85 px-3 py-1 text-[10px] font-semibold text-white">Available on order</span>}
+                  <ProductImage productId={p.id} src={productImageList(p)[0]} alt={p.title} className="object-contain p-4 sm:p-6 transition-transform duration-300 group-hover:scale-[1.03]" sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw" />
                 </div>
 
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold">{p.title}</h3>
-                  <p className="text-sm text-white/70 mb-3">{p.short}</p>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-xl font-bold">{p.startingPrice !== false ? "From " : ""}{currency(p.price)}</div>
-                      <div className="text-[11px] text-white/45">Indicative; final price confirmed by quotation</div>
-                      <div className="text-xs text-white/50">{p.category}</div>
-                      <div className="text-xs text-white/50">{p.brand}{p.condition ? ` · ${p.condition}` : ""}{p.availability === "on_order" ? " · Available on order" : ""}</div>
-                      {p.specs && <ul className="mt-2 text-xs text-white/55">{Object.entries(p.specs).slice(0, 3).map(([k, v]) => <li key={k}>{k}: {String(v)}</li>)}</ul>}
+                <div className="p-5 flex flex-1 flex-col">
+                  <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wide text-white/45"><span>{p.category}</span>{p.condition && <span className="rounded-full bg-white/5 px-2.5 py-1 normal-case tracking-normal text-white/65">{p.condition}</span>}</div>
+                  <h3 className="mt-3 text-lg font-semibold leading-snug">{p.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-white/60 line-clamp-2">{p.short}</p>
+                  {p.specs && <ul className="mt-3 space-y-1 text-xs text-white/55">{Object.entries(p.specs).slice(0, 3).map(([k, v]) => <li key={k} className="truncate"><span className="text-white/40">{k}:</span> {String(v)}</li>)}</ul>}
+                  <div className="mt-auto pt-5">
+                    <div className="flex items-end justify-between gap-3 border-t border-white/[0.08] pt-4">
+                      <div><div className="text-xl font-bold">{p.startingPrice !== false ? "From " : ""}{currency(p.price)}</div><div className="mt-1 text-[10px] text-white/40">Indicative starting price</div></div>
+                      <span className="text-right text-[10px] leading-relaxed text-white/45">{p.brand}{p.availability === "on_order" ? " · On order" : ""}</span>
                     </div>
-
-                    <div className="flex flex-col items-end gap-2">
-                      <button
-                        onClick={() => addToQuote(p)}
-                        className="px-4 py-2 bg-[var(--color-primary)] rounded-full text-sm font-semibold"
-                      >
-                        Add to Quote
-                      </button>
-
-                      <Link
-                        href={`/ict-products/${p.id}`}
-                        className="text-sm text-[var(--color-accent)] hover:underline"
-                      >
-                        View details →
-                      </Link>
+                    <div className="mt-4 grid grid-cols-[1fr_auto] items-center gap-3">
+                      <button onClick={() => addToQuote(p)} className="rounded-xl bg-emerald-300 px-4 py-3 text-sm font-bold text-slate-950 hover:bg-emerald-200 transition-colors">Add to quote</button>
+                      <Link href={`/ict-products/${p.id}`} className="rounded-xl border border-white/15 px-4 py-3 text-sm font-semibold hover:bg-white/5">Details</Link>
                     </div>
                   </div>
                 </div>
@@ -429,14 +417,8 @@ export default function ICTProductsPage() {
                   <ul className="flex flex-col gap-6 mb-6">
                     {quoteItems.map((it) => (
                       <li key={it.product.id} className="flex gap-3">
-                        <div className="relative w-20 h-16 bg-black/30 rounded overflow-hidden">
-                          <Image
-                            src={getImageSource(it.product.image ?? normalizeImageList(it.product.images ?? [])[0])}
-                            alt={it.product.title}
-                            fill
-                            className="object-cover"
-                            unoptimized={isBase64(it.product.image ?? normalizeImageList(it.product.images ?? [])[0] ?? '')}
-                          />
+                        <div className="relative w-20 h-16 bg-white rounded overflow-hidden">
+                          <ProductImage productId={it.product.id} src={productImageList(it.product)[0]} alt={it.product.title} className="object-contain p-1" sizes="80px" />
                         </div>
 
                         <div className="flex-1">

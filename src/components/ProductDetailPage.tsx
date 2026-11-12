@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import Image from "next/image";
+import ProductImage from "@/components/ProductImage";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingCart, X, Plus, Minus, Trash2, Star, Shield, Battery, Cpu, HardDrive, ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { normalizeImageList } from '@/utils/image-utils';
+import { productImageList } from '@/lib/product-images';
 
 // -------------------------------------------
 // Types
@@ -50,35 +50,6 @@ const formatDate = (dateString: string) => {
     month: 'long',
     day: 'numeric'
   });
-};
-
-// Image Helper Functions
-const isBase64 = (str: string | undefined): boolean => {
-  if (!str) return false;
-  // Check for Base64 image pattern
-  return /^data:image\/[a-zA-Z]+;base64,/.test(str);
-};
-
-const isUrl = (str: string | undefined): boolean => {
-  if (!str) return false;
-  return str.startsWith('http') || str.startsWith('/');
-};
-
-const getImageSource = (image: string | undefined): string => {
-  if (!image) return '/placeholder.jpg';
-  
-  // If it's a Base64 string
-  if (isBase64(image)) {
-    return image; // Use directly as src
-  }
-  
-  // If it's a URL or path
-  if (isUrl(image)) {
-    return image;
-  }
-  
-  // Fallback placeholder
-  return '/placeholder.jpg';
 };
 
 // -------------------------------------------
@@ -222,7 +193,7 @@ export default function ProductDetailPage() {
   // -------------------------------------------
   // Main UI
   // -------------------------------------------
-  const images = normalizeImageList(product.images ?? []);
+  const images = productImageList(product);
   return (
     <div className="min-h-screen bg-[var(--color-bg-dark)] text-[var(--color-text-main)] pb-32 md:pb-10">
       {/* Header */}
@@ -245,21 +216,7 @@ export default function ProductDetailPage() {
           <div className="space-y-4">
             {/* Main Image */}
             <div className="relative aspect-square rounded-2xl overflow-hidden bg-black/20">
-              {isBase64(images[selectedImage]) ? (
-                <img
-                  src={getImageSource(images[selectedImage])}
-                  alt={product.title}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <Image
-                  src={getImageSource(images[selectedImage])}
-                  alt={product.title}
-                  fill
-                  className="object-cover"
-                  priority
-                />
-              )}
+              <ProductImage productId={product.id} src={images[selectedImage]} alt={product.title} className="object-contain p-5" priority sizes="(max-width: 1024px) 100vw, 50vw" />
             </div>
 
             {/* Thumbnail Gallery */}
@@ -275,20 +232,7 @@ export default function ProductDetailPage() {
                         : "border-transparent hover:border-white/30"
                     }`}
                   >
-                    {isBase64(image) ? (
-                      <img
-                        src={getImageSource(image)}
-                        alt={`${product.title} view ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <Image
-                        src={getImageSource(image)}
-                        alt={`${product.title} view ${index + 1}`}
-                        fill
-                        className="object-cover"
-                      />
-                    )}
+                    <ProductImage productId={product.id} src={image} alt={`${product.title} view ${index + 1}`} className="object-contain p-1" sizes="80px" />
                   </button>
                 ))}
               </div>
@@ -492,20 +436,7 @@ export default function ProductDetailPage() {
                         animate={{ opacity: 1, scale: 1 }}
                       >
                         <div className="relative w-16 h-16 bg-black/30 rounded overflow-hidden flex-shrink-0">
-                          {isBase64(normalizeImageList(it.product.images ?? [])[0]) ? (
-                            <img
-                              src={getImageSource(normalizeImageList(it.product.images ?? [])[0])}
-                              alt={it.product.title}
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <Image
-                              src={getImageSource(normalizeImageList(it.product.images ?? [])[0])}
-                              alt={it.product.title}
-                              fill
-                              className="object-cover"
-                            />
-                          )}
+                          <ProductImage productId={it.product.id} src={productImageList(it.product)[0]} alt={it.product.title} className="object-contain p-1" sizes="64px" />
                         </div>
 
                         <div className="flex-1 min-w-0">
