@@ -1,6 +1,7 @@
 "use client";
 
 import ProductVariantsAdmin from "@/components/admin/ProductVariantsAdmin";
+import ProductMediaAdmin from "@/components/admin/ProductMediaAdmin";
 
 import { useEffect, useState, useRef } from "react";
 import {
