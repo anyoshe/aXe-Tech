@@ -49,6 +49,7 @@ export default function ProductImage({
   }, [productId, src]);
 
   const current = candidates[index];
+  const isPublicStorageImage = current?.includes("/storage/v1/object/public/") ?? false;
 
   if (!current || index >= candidates.length) {
     return (
@@ -85,7 +86,7 @@ export default function ProductImage({
       fill
       sizes={sizes || "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"}
       priority={priority}
-      unoptimized={current.startsWith("/products/") || current.startsWith("/samples/")}
+      unoptimized={isPublicStorageImage || current.startsWith("/products/") || current.startsWith("/samples/")}
       className={fitClass}
       onError={onError}
     />
