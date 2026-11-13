@@ -6,11 +6,11 @@ import ProductImage from "@/components/ProductImage";
 import ProductConfigSelector from "@/components/ProductConfigSelector";
 import BuyingAssurance from "@/components/BuyingAssurance";
 import type { ProductVariant, ProductMedia } from "@/lib/product-variants";
-import { formatKes, availabilityLabel } from "@/lib/product-variants";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingCart, X, Plus, Minus, Trash2, ShieldCheck, ClipboardCheck, PackageCheck, Cpu, HardDrive, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { productImageList } from '@/lib/product-images';
+import { quoteLineIdentity, quoteSubtotal } from "@/lib/quote-lines";
 
 // -------------------------------------------
 // Types
@@ -73,6 +73,8 @@ export default function ProductDetailPage() {
   const [quoteItems, setQuoteItems] = useState<QuoteItem[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
+  const [sourcingOpen, setSourcingOpen] = useState(false);
+  const [sourcingMessage, setSourcingMessage] = useState("");
 
   // -------------------------------------------
   // Fetch product by ID
@@ -114,7 +116,6 @@ export default function ProductDetailPage() {
     const configLabel = selectedVariant
       ? selectedVariant.label
       : undefined;
-    const lineKey = selectedVariant ? `${prod.id}::${selectedVariant.id}` : prod.id;
     setQuoteItems((prev) => {
       const found = prev.find(
         (p) =>
@@ -122,8 +123,8 @@ export default function ProductDetailPage() {
           (selectedVariant ? p.variant?.id === selectedVariant.id : !p.variant)
       );
       if (found) return prev.map((p) => (p === found ? { ...p, qty: p.qty + 1 } : p));
-      const priced = selectedVariant?.price != null && selectedVariant.price > 0
-        ? { ...prod, price: selectedVariant.price }
+      const priced = selectedVariant
+        ? { ...prod, price: selectedVariant.price != null && selectedVariant.price > 0 ? selectedVariant.price : 0 }
         : prod;
       return [
         {
@@ -138,19 +139,17 @@ export default function ProductDetailPage() {
     setDrawerOpen(true);
   };
 
-  const changeQty = (productId: string, delta: number) =>
-    setQuoteItems((prev) =>
-      prev
-        .map((p) => (p.product.id === productId ? { ...p, qty: Math.max(1, p.qty + delta) } : p))
-        .filter(Boolean)
-    );
+  const quoteItemKey = (item: QuoteItem) => quoteLineIdentity(item.product.id, item.variant?.id);
+  const changeQty = (itemKey: string, delta: number) =>
+    setQuoteItems((prev) => prev.map((p) => (quoteItemKey(p) === itemKey ? { ...p, qty: Math.max(1, p.qty + delta) } : p)));
 
-  const removeFromQuote = (productId: string) =>
-    setQuoteItems((prev) => prev.filter((p) => p.product.id !== productId));
+  const removeFromQuote = (itemKey: string) =>
+    setQuoteItems((prev) => prev.filter((p) => quoteItemKey(p) !== itemKey));
 
   const clearQuote = () => setQuoteItems([]);
 
-  const quoteTotal = quoteItems.reduce((sum, it) => sum + it.product.price * it.qty, 0);
+  const quoteTotal = quoteSubtotal(quoteItems.map((it) => ({ productId: it.product.id, qty: it.qty, productPrice: it.product.price, variant: it.variant })));
+  const hasQuoteOnlyItems = quoteTotal === null;
 
   const buildMessage = () => {
     let msg = `Hello GetAxe,\nPlease provide a formal quotation for:\n\n`;
@@ -159,7 +158,7 @@ export default function ProductDetailPage() {
       msg += `${idx + 1}. ${it.product.title}${cfg ? ` [${cfg}]` : ""} — Qty: ${it.qty}`;
       if (it.variant?.price != null && it.variant.price > 0) {
         msg += ` — ${currency(it.variant.price)}`;
-      } else if (it.product.price) {
+      } else if (!it.variant && it.product.price) {
         msg += ` — indicative ${currency(it.product.price)}`;
       } else {
         msg += ` — request quote`;
@@ -172,7 +171,9 @@ export default function ProductDetailPage() {
       }
       msg += `\n`;
     });
-    msg += `\nIndicative estimate only: ${currency(quoteTotal)}\nPlease confirm model, availability, configuration and final price.\n\nThank you.`;
+    msg += hasQuoteOnlyItems
+      ? "\nAt least one selected item requires a quotation; no total is shown. Please confirm availability and final prices.\n\nThank you."
+      : `\nIndicative estimate only: ${currency(quoteTotal)}\nPlease confirm model, availability, configuration and final price.\n\nThank you.`;
     return msg;
   };
 
@@ -235,9 +236,10 @@ export default function ProductDetailPage() {
   // -------------------------------------------
   // Main UI
   // -------------------------------------------
-  const mediaUrls = (product.media || [])
+  const visibleMedia = (product.media || []).filter((m) => !m.variant_id || m.variant_id === selectedVariant?.id);
+  const mediaUrls = visibleMedia
     .slice()
-    .sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0))
+    .sort((a, b) => Number(!!b.is_main) - Number(!!a.is_main) || (a.display_order ?? 0) - (b.display_order ?? 0))
     .map((m) => m.public_url)
     .filter(Boolean);
   const images = mediaUrls.length ? mediaUrls : productImageList(product);
@@ -263,8 +265,11 @@ export default function ProductDetailPage() {
           <div className="space-y-4">
             {/* Main Image */}
             <div className="relative aspect-square rounded-2xl overflow-hidden bg-black/20">
-              <ProductImage productId={product.id} src={images[selectedImage]} alt={product.title} className="object-contain object-center p-4" priority sizes="(max-width: 1024px) 100vw, 50vw" />
+              <ProductImage productId={product.id} src={images[selectedImage]} alt={visibleMedia[selectedImage]?.alt_text || product.title} className="object-contain object-center p-4" priority sizes="(max-width: 1024px) 100vw, 50vw" />
             </div>
+            {visibleMedia[selectedImage]?.caption && <p className="text-xs text-white/60">{visibleMedia[selectedImage].caption}</p>}
+            {visibleMedia[selectedImage]?.image_type === "reference" && <p className="text-xs text-amber-200/70">Reference image. Actual stock may differ.</p>}
+            {visibleMedia[selectedImage]?.image_type === "actual_stock" && <p className="text-xs text-emerald-200/70">Photograph of actual stock</p>}
             {product.imageSources?.[images[selectedImage]]?.rights?.includes("CC BY-SA 4.0") && (
               <p className="text-right text-xs text-white/60">
                 Photo: <a href={product.imageSources[images[selectedImage]].sourcePage} target="_blank" rel="noopener noreferrer" className="underline">IT Photography</a>
@@ -407,8 +412,33 @@ export default function ProductDetailPage() {
                 Quick Quote
               </button>
             </div>
+            <button type="button" onClick={() => setSourcingOpen((v) => !v)} className="text-sm text-[var(--color-accent)] underline">Request a different configuration</button>
+            {sourcingOpen && <form className="grid sm:grid-cols-2 gap-2 rounded-xl border border-white/10 p-4" onSubmit={async (e) => {
+              e.preventDefault();
+              const form = new FormData(e.currentTarget);
+              const body = Object.fromEntries(form.entries());
+              const response = await fetch("/api/product-sourcing", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...body, product_category: product.category || "ICT", preferred_model: body.preferred_model || product.title, processor: selectedVariant?.processor, ram: selectedVariant?.ram, storage: selectedVariant?.storage }) });
+              const result = await response.json();
+              setSourcingMessage(response.ok ? "Request received. We will confirm sourcing and availability." : result.error || "Could not submit request");
+              if (response.ok) e.currentTarget.reset();
+            }}>
+              <input name="customer_name" required placeholder="Your name" className="rounded bg-black/40 p-2 text-sm" />
+              <input name="customer_contact" required placeholder="Phone / WhatsApp" className="rounded bg-black/40 p-2 text-sm" />
+              <input name="customer_email" type="email" placeholder="Email (optional)" className="rounded bg-black/40 p-2 text-sm" />
+              <input name="preferred_brand" placeholder="Preferred brand" className="rounded bg-black/40 p-2 text-sm" />
+              <input name="processor" placeholder="Processor" className="rounded bg-black/40 p-2 text-sm" />
+              <input name="ram" placeholder="RAM" className="rounded bg-black/40 p-2 text-sm" />
+              <input name="storage" placeholder="Storage" className="rounded bg-black/40 p-2 text-sm" />
+              <select name="condition_preference" className="rounded bg-black/40 p-2 text-sm"><option value="">Condition preference</option><option>New</option><option>Refurbished Grade A</option><option>Refurbished Grade B</option><option>Refurbished Grade C</option></select>
+              <input name="budget" type="number" min="0" placeholder="Budget KES (optional)" className="rounded bg-black/40 p-2 text-sm" />
+              <textarea name="additional_requirements" placeholder="Additional requirements" className="rounded bg-black/40 p-2 text-sm sm:col-span-2" />
+              <button className="rounded bg-[var(--color-accent)] px-4 py-2 text-sm text-black font-semibold sm:col-span-2">Send sourcing request</button>
+              {sourcingMessage && <p className="text-xs text-white/70 sm:col-span-2">{sourcingMessage}</p>}
+            </form>}
           </div>
         </div>
+
+      <div className="max-w-7xl mx-auto px-4"><BuyingAssurance /></div>
 
         {/* Videos Section */}
         {product.videos && product.videos.length > 0 && (
@@ -493,7 +523,7 @@ export default function ProductDetailPage() {
                   <ul className="flex flex-col gap-4 mb-6">
                     {quoteItems.map((it) => (
                       <motion.li 
-                        key={it.product.id} 
+                        key={quoteItemKey(it)}
                         className="flex gap-3 p-3 bg-white/5 rounded-lg"
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -506,10 +536,11 @@ export default function ProductDetailPage() {
                           <div className="flex justify-between items-start mb-2">
                             <div className="flex-1 min-w-0">
                               <div className="text-sm font-medium truncate">{it.product.title}</div>
-                              <div className="text-xs text-white/60">{currency(it.product.price)}</div>
+                              <div className="text-xs text-white/60">{it.variant ? (it.variant.price != null && it.variant.price > 0 ? currency(it.variant.price) : "Request a quote") : currency(it.product.price)}</div>
+                              {it.variant && <div className="text-xs text-white/50">{it.variant.label}{[it.variant.processor, it.variant.ram, it.variant.storage, it.variant.display, it.variant.condition_grade ? `Grade ${it.variant.condition_grade}` : null].filter(Boolean).join(" · ")}</div>}
                             </div>
                             <button
-                              onClick={() => removeFromQuote(it.product.id)}
+                              onClick={() => removeFromQuote(quoteItemKey(it))}
                               className="text-white/50 hover:text-red-400 transition-colors p-1"
                             >
                               <Trash2 size={16} />
@@ -518,20 +549,20 @@ export default function ProductDetailPage() {
 
                           <div className="flex items-center gap-3">
                             <button 
-                              onClick={() => changeQty(it.product.id, -1)} 
+                              onClick={() => changeQty(quoteItemKey(it), -1)}
                               className="p-1 bg-black/30 rounded hover:bg-black/50 transition-colors"
                             >
                               <Minus size={14} />
                             </button>
                             <div className="px-3 py-1 bg-black/50 rounded min-w-8 text-center">{it.qty}</div>
                             <button 
-                              onClick={() => changeQty(it.product.id, +1)} 
+                              onClick={() => changeQty(quoteItemKey(it), +1)}
                               className="p-1 bg-black/30 rounded hover:bg-black/50 transition-colors"
                             >
                               <Plus size={14} />
                             </button>
                             <div className="text-sm font-medium ml-auto">
-                              {currency(it.product.price * it.qty)}
+                              {it.variant && !(it.variant.price != null && it.variant.price > 0) ? "Quote required" : currency((it.variant?.price ?? it.product.price) * it.qty)}
                             </div>
                           </div>
                         </div>
@@ -542,7 +573,7 @@ export default function ProductDetailPage() {
                   <div className="border-t border-white/10 pt-4 space-y-4">
                     <div className="flex justify-between items-center text-lg">
                       <span className="text-white/60">Subtotal</span>
-                      <span className="font-bold text-[var(--color-accent)]">{currency(quoteTotal)}</span>
+                      <span className="font-bold text-[var(--color-accent)]">{quoteTotal === null ? "Quotation required" : currency(quoteTotal)}</span>
                     </div>
                     
                     {quoteItems.length > 1 && (

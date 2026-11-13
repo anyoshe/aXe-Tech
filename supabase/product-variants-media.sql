@@ -15,11 +15,20 @@ create table if not exists public.product_variants (
   os text,
   condition_grade text check (condition_grade is null or condition_grade in ('A','B','C')),
   battery_notes text,
+  functional_inspection text,
+  battery_assessment text,
+  display_condition text,
+  keyboard_touchpad_condition text,
+  ports_connectivity_checks text,
+  os_license_status text,
   price numeric(12, 2) check (price is null or price >= 0),
   currency text not null default 'KES',
   availability text not null default 'request_quote'
     check (availability in ('in_stock','on_order','request_quote','request_config','unavailable')),
   warranty text,
+  warranty_coverage text,
+  warranty_exclusions text,
+  after_sales_support text,
   accessories text,
   notes text,
   sort_order int not null default 0,
@@ -67,6 +76,15 @@ drop policy if exists "Public read product media" on public.product_media;
 create policy "Public read product media"
   on public.product_media for select to anon, authenticated
   using (true);
+
+-- Revoke legacy public mutation access to the product image bucket. API writes
+-- run server-side after requireAdminSession() and use the service role key.
+drop policy if exists "Public upload product images (setup)" on storage.objects;
+drop policy if exists "Public update product images (setup)" on storage.objects;
+drop policy if exists "Public delete product images (setup)" on storage.objects;
+drop policy if exists "Authenticated upload product images" on storage.objects;
+drop policy if exists "Authenticated update product images" on storage.objects;
+drop policy if exists "Authenticated delete product images" on storage.objects;
 
 comment on table public.product_variants is 'Configuration SKUs under a parent products row. Only admin-created rows appear.';
 comment on table public.product_media is 'Gallery metadata; files live in storage bucket product-images.';

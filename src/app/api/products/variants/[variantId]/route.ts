@@ -17,14 +17,23 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
     "sku", "label", "processor", "ram", "storage", "display", "os",
     "condition_grade", "battery_notes", "currency", "availability",
     "warranty", "accessories", "notes", "sort_order", "published",
+    "functional_inspection", "battery_assessment", "display_condition",
+    "keyboard_touchpad_condition", "ports_connectivity_checks", "os_license_status",
+    "warranty_coverage", "warranty_exclusions", "after_sales_support",
   ];
   for (const f of fields) {
     if (body[f] !== undefined) updates[f] = body[f];
   }
   if (body.price !== undefined) {
-    updates.price =
-      body.price === null || body.price === "" ? null : Number(body.price);
+    const price = body.price === null || body.price === "" ? null : Number(body.price);
+    if (price !== null && (!Number.isFinite(price) || price < 0)) return NextResponse.json({ error: "Price must be a valid non-negative number" }, { status: 400 });
+    updates.price = price;
   }
+  if (body.availability !== undefined && !["in_stock", "on_order", "request_quote", "request_config", "unavailable"].includes(body.availability)) return NextResponse.json({ error: "Invalid availability" }, { status: 400 });
+  if (body.condition_grade !== undefined && body.condition_grade !== null && !["A", "B", "C"].includes(body.condition_grade)) return NextResponse.json({ error: "Invalid condition grade" }, { status: 400 });
+  const capacity = /^\s*\d+(?:\.\d+)?\s*(?:GB|TB|MB)\b/i;
+  if (body.ram !== undefined && body.ram && !capacity.test(String(body.ram))) return NextResponse.json({ error: "RAM must include a valid capacity such as 8GB" }, { status: 400 });
+  if (body.storage !== undefined && body.storage && !capacity.test(String(body.storage))) return NextResponse.json({ error: "Storage must include a valid capacity such as 256GB SSD" }, { status: 400 });
 
   const sb = getSupabaseAdmin();
   const { data, error } = await sb

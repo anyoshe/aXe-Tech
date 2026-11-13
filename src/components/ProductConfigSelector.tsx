@@ -30,8 +30,6 @@ export default function ProductConfigSelector({ variants, basePrice, onVariantCh
     onVariantChange?.(v);
   }, [active, selectedId, onVariantChange]);
 
-  if (!active.length) return null;
-
   const selected = active.find((v) => v.id === selectedId) || active[0];
   const start = startingPriceFromVariants(active);
   const range = priceRangeFromVariants(active);
@@ -56,6 +54,8 @@ export default function ProductConfigSelector({ variants, basePrice, onVariantCh
       setSelectedId(list[0].id);
     }
   }, [proc, ram, ssd, grade, active, selectedId]);
+
+  if (!active.length) return null;
 
   function Chip({
     label,
@@ -199,6 +199,16 @@ export default function ProductConfigSelector({ variants, basePrice, onVariantCh
           {selected.battery_notes && (
             <p className="mt-1 text-xs text-white/50">Battery: {selected.battery_notes}</p>
           )}
+          {selected.os_license_status && <p className="mt-1 text-xs text-white/50">OS licensing: {selected.os_license_status}</p>}
+          {selected.functional_inspection && <p className="mt-1 text-xs text-white/50">Functional inspection: {selected.functional_inspection}</p>}
+          {selected.battery_assessment && <p className="mt-1 text-xs text-white/50">Battery assessment: {selected.battery_assessment}</p>}
+          {selected.display_condition && <p className="mt-1 text-xs text-white/50">Display: {selected.display_condition}</p>}
+          {selected.keyboard_touchpad_condition && <p className="mt-1 text-xs text-white/50">Keyboard/touchpad: {selected.keyboard_touchpad_condition}</p>}
+          {selected.ports_connectivity_checks && <p className="mt-1 text-xs text-white/50">Ports/connectivity: {selected.ports_connectivity_checks}</p>}
+          {selected.accessories && <p className="mt-1 text-xs text-white/50">Included accessories: {selected.accessories}</p>}
+          {selected.warranty_coverage && <p className="mt-1 text-xs text-white/50">Warranty coverage: {selected.warranty_coverage}</p>}
+          {selected.warranty_exclusions && <p className="mt-1 text-xs text-white/50">Warranty exclusions: {selected.warranty_exclusions}</p>}
+          {selected.after_sales_support && <p className="mt-1 text-xs text-white/50">After-sales support: {selected.after_sales_support}</p>}
         </div>
       )}
     </div>

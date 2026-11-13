@@ -17,10 +17,19 @@ export type ProductVariant = {
   os?: string | null;
   condition_grade?: "A" | "B" | "C" | null;
   battery_notes?: string | null;
+  functional_inspection?: string | null;
+  battery_assessment?: string | null;
+  display_condition?: string | null;
+  keyboard_touchpad_condition?: string | null;
+  ports_connectivity_checks?: string | null;
+  os_license_status?: string | null;
   price: number | null;
   currency?: string;
   availability: VariantAvailability;
   warranty?: string | null;
+  warranty_coverage?: string | null;
+  warranty_exclusions?: string | null;
+  after_sales_support?: string | null;
   accessories?: string | null;
   notes?: string | null;
   sort_order?: number;
@@ -97,7 +106,7 @@ export function availabilityLabel(a: VariantAvailability | string | undefined): 
 }
 
 export const CONDITION_GRADES = {
-  A: "Excellent cosmetic condition with minimal visible signs of use.",
-  B: "Good working condition with minor cosmetic signs of previous use.",
-  C: "Functional condition with more noticeable cosmetic wear.",
+  A: "Cosmetic grade A: minimal visible wear.",
+  B: "Cosmetic grade B: light visible wear.",
+  C: "Cosmetic grade C: more noticeable visible wear.",
 } as const;

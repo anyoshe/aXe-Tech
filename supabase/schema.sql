@@ -83,20 +83,11 @@ create policy "Public read product images"
   to anon, authenticated
   using (bucket_id = 'product-images');
 
+-- All writes are server-mediated by admin-protected API routes using the
+-- server-only service role key. Public visitors only need SELECT access.
 drop policy if exists "Public upload product images (setup)" on storage.objects;
-create policy "Public upload product images (setup)"
-  on storage.objects for insert
-  to anon, authenticated
-  with check (bucket_id = 'product-images');
-
 drop policy if exists "Public update product images (setup)" on storage.objects;
-create policy "Public update product images (setup)"
-  on storage.objects for update
-  to anon, authenticated
-  using (bucket_id = 'product-images');
-
 drop policy if exists "Public delete product images (setup)" on storage.objects;
-create policy "Public delete product images (setup)"
-  on storage.objects for delete
-  to anon, authenticated
-  using (bucket_id = 'product-images');
+drop policy if exists "Authenticated upload product images" on storage.objects;
+drop policy if exists "Authenticated update product images" on storage.objects;
+drop policy if exists "Authenticated delete product images" on storage.objects;

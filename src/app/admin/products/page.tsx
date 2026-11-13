@@ -1,6 +1,7 @@
 "use client";
 
 import ProductVariantsAdmin from "@/components/admin/ProductVariantsAdmin";
+import ProductMediaAdmin from "@/components/admin/ProductMediaAdmin";
 
 import { useEffect, useState, useRef } from "react";
 import {
@@ -707,6 +708,8 @@ export default function AdminProductsPage() {
             )}
           </div>
         </section>
+
+        {editing && <><ProductVariantsAdmin productId={editing} /><ProductMediaAdmin productId={editing} /></>}
 
         {/* List */}
         <section className="space-y-3">
