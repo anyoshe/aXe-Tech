@@ -280,7 +280,9 @@ export default function ProductDetailPage() {
             {/* Thumbnail Gallery */}
             {images && images.length > 1 && (
               <div className="flex gap-3 overflow-x-auto pb-2">
-                {images.map((image, index) => (
+                {images.map((image, index) => {
+                  const meta = (product.media || []).find((m) => m.public_url === image);
+                  return (
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
@@ -290,9 +292,13 @@ export default function ProductDetailPage() {
                         : "border-transparent hover:border-white/30"
                     }`}
                   >
-                    <ProductImage productId={product.id} src={image} alt={`${product.title} view ${index + 1}`} className="object-contain object-center p-1.5" sizes="80px" />
+                    <ProductImage productId={product.id} src={image} alt={meta?.alt_text || `${product.title} view ${index + 1}`} className="object-contain object-center p-1.5" sizes="80px" />
+                    {meta?.image_type === "actual_stock" && (
+                      <span className="absolute bottom-0 inset-x-0 bg-black/70 text-[8px] text-center text-emerald-200 py-0.5">Stock photo</span>
+                    )}
                   </button>
-                ))}
+                  );
+                })}
               </div>
             )}
 
