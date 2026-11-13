@@ -33,7 +33,10 @@ export default function ProductMediaAdmin({ productId }: Props) {
     });
     const result = await response.json();
     if (!response.ok) setMessage(result.error || "Update failed");
-    else await load();
+    else {
+      if (result.warning) setMessage(result.warning);
+      await load();
+    }
   }
 
   async function upload(files: FileList | File[] | null, replaceItem?: ProductMedia) {
@@ -42,7 +45,7 @@ export default function ProductMediaAdmin({ productId }: Props) {
     for (const file of Array.from(files)) {
       const form = new FormData();
       form.set("file", file);
-      form.set("variant_id", replaceItem?.variant_id || variantId);
+      form.set("variant_id", replaceItem ? replaceItem.variant_id || "" : variantId);
       form.set("image_type", replaceItem?.image_type || imageType);
       form.set("display_order", String(replaceItem?.display_order ?? media.length));
       form.set("is_main", String(replaceItem ? !!replaceItem.is_main : media.length === 0));
@@ -53,9 +56,11 @@ export default function ProductMediaAdmin({ productId }: Props) {
       const response = await fetch(`/api/products/${productId}/media`, { method: "POST", body: form });
       const result = await response.json();
       if (!response.ok) { setMessage(result.error || "Upload failed"); return; }
+      if (result.warning) setMessage(result.warning);
       if (replaceItem) {
         const removed = await fetch(`/api/products/${productId}/media?mediaId=${encodeURIComponent(replaceItem.id)}`, { method: "DELETE" });
-        if (!removed.ok) setMessage("Replacement uploaded, but old image cleanup failed. Review the gallery.");
+        const removedResult = await removed.json();
+        if (!removed.ok || removedResult.warning) setMessage(removedResult.warning || "Replacement uploaded, but old image cleanup failed. Review the gallery.");
       }
     }
     if (!replaceItem) setMessage("Images uploaded to Supabase Storage");
@@ -80,8 +85,11 @@ export default function ProductMediaAdmin({ productId }: Props) {
   async function remove(item: ProductMedia) {
     if (!confirm("Delete this product photograph?")) return;
     const response = await fetch(`/api/products/${productId}/media?mediaId=${encodeURIComponent(item.id)}`, { method: "DELETE" });
-    if (response.ok) await load();
-    else setMessage("Delete failed");
+    const result = await response.json();
+    if (response.ok) {
+      if (result.warning) setMessage(result.warning);
+      await load();
+    } else setMessage(result.error || "Delete failed");
   }
 
   return (

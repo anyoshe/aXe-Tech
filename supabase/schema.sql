@@ -38,8 +38,9 @@ create trigger products_set_updated_at
   for each row
   execute function public.set_updated_at();
 
--- RLS: open read for storefront; writes via service role (API routes) bypass RLS.
--- Tighten later when you add real user roles.
+-- RLS: public reads; all mutations use admin-protected server APIs and the
+-- server-only service role key. The production upgrade migration narrows reads
+-- to published products after the catalogue expansion adds that column.
 alter table public.products enable row level security;
 
 drop policy if exists "Public can read products" on public.products;
@@ -49,28 +50,11 @@ create policy "Public can read products"
   to anon, authenticated
   using (true);
 
--- Optional: allow anon insert during early setup (remove once admin is locked down)
 drop policy if exists "Anon can insert products (setup)" on public.products;
-create policy "Anon can insert products (setup)"
-  on public.products
-  for insert
-  to anon, authenticated
-  with check (true);
-
 drop policy if exists "Anon can update products (setup)" on public.products;
-create policy "Anon can update products (setup)"
-  on public.products
-  for update
-  to anon, authenticated
-  using (true)
-  with check (true);
-
 drop policy if exists "Anon can delete products (setup)" on public.products;
-create policy "Anon can delete products (setup)"
-  on public.products
-  for delete
-  to anon, authenticated
-  using (true);
+revoke insert, update, delete on public.products from anon, authenticated;
+grant select on public.products to anon, authenticated;
 
 -- Storage bucket for product images (optional but recommended over Base64)
 insert into storage.buckets (id, name, public)

@@ -70,12 +70,24 @@ alter table public.product_media enable row level security;
 drop policy if exists "Public read published variants" on public.product_variants;
 create policy "Public read published variants"
   on public.product_variants for select to anon, authenticated
-  using (published = true);
+  using (published = true and exists (
+    select 1 from public.products p
+    where p.id = product_variants.product_id and p.published = true
+  ));
 
 drop policy if exists "Public read product media" on public.product_media;
 create policy "Public read product media"
   on public.product_media for select to anon, authenticated
-  using (true);
+  using (
+    exists (select 1 from public.products p where p.id = product_media.product_id and p.published = true)
+    and (product_media.variant_id is null or exists (
+      select 1 from public.product_variants v
+      where v.id = product_media.variant_id and v.product_id = product_media.product_id and v.published = true
+    ))
+  );
+revoke insert, update, delete on public.product_variants, public.product_media from anon, authenticated;
+grant select on public.product_variants, public.product_media to anon, authenticated;
+grant all on public.product_variants, public.product_media to service_role;
 
 -- Revoke legacy public mutation access to the product image bucket. API writes
 -- run server-side after requireAdminSession() and use the service role key.

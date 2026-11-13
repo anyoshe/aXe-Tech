@@ -12,7 +12,7 @@ function notConfigured() {
   return NextResponse.json(
     {
       message:
-        "Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to .env.local (see SUPABASE_SETUP.md).",
+        "Supabase server access is not configured. Set NEXT_PUBLIC_SUPABASE_URL and the server-only SUPABASE_SERVICE_ROLE_KEY (see SUPABASE_SETUP.md).",
       products: [],
     },
     { status: 503 }
@@ -43,11 +43,41 @@ export async function GET() {
       );
     }
 
-    const products = ((data ?? []) as ProductRow[]).map(rowToProduct)
+    const rows = (data ?? []) as ProductRow[];
+    const variantsByProduct = new Map<string, { hasVariants: boolean; startingPrice: number | null }>();
+    const { data: variants, error: variantsError } = await supabase
+      .from("product_variants")
+      .select("product_id, published, availability, price");
+    if (!variantsError) {
+      for (const variant of variants ?? []) {
+        const current = variantsByProduct.get(variant.product_id) ?? { hasVariants: false, startingPrice: null };
+        current.hasVariants = true;
+        const price = Number(variant.price);
+        if (variant.published !== false && variant.availability !== "unavailable" && Number.isFinite(price) && price > 0) {
+          current.startingPrice = current.startingPrice == null ? price : Math.min(current.startingPrice, price);
+        }
+        variantsByProduct.set(variant.product_id, current);
+      }
+    } else if (variantsError.code !== "42P01" && !variantsError.message?.includes("product_variants")) {
+      console.error("[API] product variants pricing:", variantsError);
+      return NextResponse.json({ message: variantsError.message, products: [] }, { status: 500 });
+    }
+
+    const products = rows.map((row) => {
+      const product = rowToProduct(row);
+      const config = variantsByProduct.get(product.id);
+      if (config?.hasVariants) product.price = config.startingPrice ?? 0;
+      return product;
+    })
       .filter((product) => admin.session?.user?.role === "admin" || product.published !== false)
       .map((product) => {
         if (admin.session?.user?.role === "admin") return product;
-        const { internalCost: _cost, targetPrice: _target, bulkPrice: _bulk, marketNotes: _notes, supplierReference: _supplier, ...publicProduct } = product;
+        const publicProduct = { ...product };
+        delete publicProduct.internalCost;
+        delete publicProduct.targetPrice;
+        delete publicProduct.bulkPrice;
+        delete publicProduct.marketNotes;
+        delete publicProduct.supplierReference;
         return publicProduct;
       });
     return NextResponse.json(products);
@@ -162,6 +192,20 @@ try {
       if (k === "id") continue;
       if (v !== undefined) update[k] = v;
     }
+    // Product photos are managed by the media API. A missing image field must
+    // preserve current legacy references, including gallery uploads made while
+    // the admin form has stale product data loaded.
+    if (rest.images === undefined) delete update.images;
+    if (Array.isArray(rest.removeImages) && rest.removeImages.length) {
+      if (!rest.removeImages.every((url: unknown) => typeof url === "string")) {
+        return NextResponse.json({ message: "removeImages must contain image URLs" }, { status: 400 });
+      }
+      const { data: currentProduct, error: currentError } = await supabase.from("products").select("images").eq("id", id).maybeSingle();
+      if (currentError) return NextResponse.json({ message: currentError.message }, { status: 500 });
+      if (!currentProduct) return NextResponse.json({ message: `Product with ID '${id}' not found` }, { status: 404 });
+      const removeSet = new Set(rest.removeImages as string[]);
+      update.images = ((currentProduct.images as string[] | null) || []).filter((url) => !removeSet.has(url));
+    }
 
     const { data, error } = await supabase
       .from("products")
@@ -199,6 +243,8 @@ try {
     }
 
     const supabase = getSupabaseAdmin();
+    const { data: mediaRows, error: mediaError } = await supabase.from("product_media").select("storage_path").eq("product_id", id);
+    if (mediaError) return NextResponse.json({ message: mediaError.message }, { status: 500 });
     const { data, error } = await supabase
       .from("products")
       .delete()
@@ -212,7 +258,18 @@ try {
     if (!data) {
       return NextResponse.json({ message: `Product with ID '${id}' not found` }, { status: 404 });
     }
-
+    const candidatePaths = [...new Set((mediaRows || []).map((row) => row.storage_path).filter((path): path is string => Boolean(path)))];
+    let storagePaths = candidatePaths;
+    if (candidatePaths.length) {
+      const { data: remainingReferences, error: referenceError } = await supabase.from("product_media").select("storage_path").in("storage_path", candidatePaths);
+      if (referenceError) return NextResponse.json({ message: "Product deleted; Storage references need manual review", id, warning: referenceError.message }, { status: 200 });
+      const stillUsed = new Set((remainingReferences || []).map((row) => row.storage_path));
+      storagePaths = candidatePaths.filter((path) => !stillUsed.has(path));
+    }
+    if (storagePaths.length) {
+      const { error: storageError } = await supabase.storage.from("product-images").remove(storagePaths);
+      if (storageError) return NextResponse.json({ message: "Product deleted; Storage cleanup needs review", id, warning: storageError.message }, { status: 200 });
+    }
     return NextResponse.json({ message: "Product deleted", id });
   } catch (err) {
     const errorMsg = err instanceof Error ? err.message : String(err);
