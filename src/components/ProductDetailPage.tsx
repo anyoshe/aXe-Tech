@@ -48,6 +48,14 @@ export type Product = {
 };
 
 type QuoteItem = { product: Product; qty: number; variant?: ProductVariant | null; configLabel?: string };
+type SourcingField = {
+  name: string;
+  label: string;
+  placeholder?: string;
+  options?: string[];
+  required?: boolean;
+  type?: "text" | "number";
+};
 
 // -------------------------------------------
 // Utility Functions
@@ -104,6 +112,68 @@ function normalizedDescription(value: string) {
   return value
     .replace(/^(#{1,6})(?=\S)/gm, "$1 ")
     .replace(/^(#{1,6}\s+)#{1,6}\s+/gm, "$1");
+}
+
+function sourcingFieldsFor(product: Product): SourcingField[] {
+  const category = `${product.category || ""} ${product.title}`.toLowerCase();
+  if (/\btoner|ink bottle|cartridge|consumables\b/.test(category)) {
+    return [
+      { name: "consumable_printer_model", label: "Printer make and model", placeholder: "e.g. HP LaserJet Pro M404dn", required: true },
+      { name: "consumable_code", label: "Cartridge / ink code", placeholder: "Enter the cartridge or ink code if known", required: true },
+      { name: "consumable_type", label: "Supply type", options: ["Original / genuine", "Compatible", "Either"], required: true },
+      { name: "consumable_color", label: "Color", placeholder: "Black, cyan, magenta, yellow, or set" },
+      { name: "consumable_quantity", label: "Quantity", type: "number", placeholder: "Number of cartridges or bottles" },
+    ];
+  }
+  if (/\bprinter|printers|photocopier\b/.test(category)) {
+    return [
+      { name: "printer_color", label: "Print output", options: ["Monochrome", "Color", "No preference"], required: true },
+      { name: "printer_functions", label: "Functions", options: ["Print only", "Print, scan and copy", "Print, scan, copy and fax", "No preference"], required: true },
+      { name: "printer_connectivity", label: "Connectivity", options: ["USB", "Wi-Fi", "Ethernet", "Wi-Fi and Ethernet", "No preference"], required: true },
+      { name: "printer_paper_size", label: "Paper size", options: ["A4", "A3", "A4 and A3", "No preference"] },
+      { name: "printer_duplex", label: "Automatic duplex", options: ["Required", "Not required", "No preference"] },
+      { name: "printer_volume", label: "Expected monthly print volume", placeholder: "Approximate pages per month" },
+      { name: "printer_consumables", label: "Consumables", placeholder: "Ink/toner preference or required cartridge code" },
+    ];
+  }
+  if (/\blaptop|notebook\b/.test(category)) {
+    return [
+      { name: "laptop_use", label: "Main use", options: ["Office / business", "School / study", "Programming", "Design / engineering", "General use", "Other"], required: true },
+      { name: "processor", label: "Processor", options: ["No preference", "Core i3 / Ryzen 3 class", "Core i5 / Ryzen 5 class", "Core i7 / Ryzen 7 class", "Other"], required: true },
+      { name: "ram", label: "Memory (RAM)", options: ["No preference", "8 GB", "16 GB", "32 GB", "Other"], required: true },
+      { name: "storage", label: "Storage", options: ["No preference", "256 GB SSD", "512 GB SSD", "1 TB SSD", "Other"], required: true },
+      { name: "laptop_display", label: "Screen size / resolution", placeholder: "e.g. 14-inch Full HD" },
+      { name: "laptop_os", label: "Operating system", options: ["No preference", "Windows 11 Pro", "Windows 11 Home", "Linux", "Other"] },
+      { name: "laptop_graphics", label: "Graphics requirements", placeholder: "Integrated or dedicated graphics / software needs" },
+    ];
+  }
+  if (/\bdesktop|workstation\b/.test(category)) {
+    return [
+      { name: "desktop_use", label: "Main use", options: ["Office / business", "School / study", "Programming", "Design / engineering", "General use", "Other"], required: true },
+      { name: "processor", label: "Processor", options: ["No preference", "Core i3 / Ryzen 3 class", "Core i5 / Ryzen 5 class", "Core i7 / Ryzen 7 class", "Other"], required: true },
+      { name: "ram", label: "Memory (RAM)", options: ["No preference", "8 GB", "16 GB", "32 GB", "Other"], required: true },
+      { name: "storage", label: "Storage", options: ["No preference", "256 GB SSD", "512 GB SSD", "1 TB SSD", "Other"], required: true },
+      { name: "desktop_monitor", label: "Monitor", placeholder: "e.g. 22-inch Full HD; state if needed" },
+      { name: "desktop_accessories", label: "Included accessories", placeholder: "Keyboard, mouse, webcam, speakers, etc." },
+      { name: "desktop_graphics", label: "Graphics requirements", placeholder: "Integrated or dedicated graphics / software needs" },
+    ];
+  }
+  if (/\bcomputer lab|school lab|institutional.*lab|lab.*bundle|lab starter\b/.test(category)) {
+    return [
+      { name: "lab_quantity", label: "Number of computers", placeholder: "e.g. 20", type: "number", required: true },
+      { name: "lab_computer_type", label: "Computer type", options: ["Desktop", "Laptop", "Mix of desktops and laptops", "No preference"], required: true },
+      { name: "processor", label: "Target processor / performance", placeholder: "e.g. Core i5 class or no preference" },
+      { name: "ram", label: "Memory per computer", placeholder: "e.g. 8 GB or 16 GB" },
+      { name: "storage", label: "Storage per computer", placeholder: "e.g. 256 GB SSD" },
+      { name: "lab_infrastructure", label: "Network and power requirements", placeholder: "Switches, Wi-Fi, cabling, UPS or power backup" },
+      { name: "lab_software", label: "Software / licensing", placeholder: "Required applications, operating system or licenses" },
+      { name: "lab_installation", label: "Site and installation", placeholder: "Site location, installation or training needs" },
+    ];
+  }
+  return [
+    { name: "configuration_type", label: "Configuration or product type", placeholder: "Describe the model or setup you need", required: true },
+    { name: "configuration_use", label: "Main use / intended application", placeholder: "How the product will be used" },
+  ];
 }
 
 function splitProductDescription(value: string) {
@@ -372,6 +442,7 @@ export default function ProductDetailPage() {
   });
   const descriptionSections = splitProductDescription(product.description || "");
   const priceRange = priceRangeFromVariants(availableVariants);
+  const sourcingFields = sourcingFieldsFor(product);
   return (
     <div className="min-h-screen bg-[var(--color-bg-dark)] text-[var(--color-text-main)] pb-32 md:pb-10">
       {/* Header */}
@@ -493,21 +564,6 @@ export default function ProductDetailPage() {
                 </section>
             )}
 
-            {technicalInfo.length > 0 && (
-                <section className="order-8 min-w-0 space-y-4 lg:order-4">
-                  <h2 className="text-xl font-semibold flex items-center gap-2">
-                    <HardDrive className="w-5 h-5 text-[var(--color-accent)]" /> Technical information
-                  </h2>
-                  <dl className="divide-y divide-white/[0.08] border-y border-white/[0.08]">
-                    {technicalInfo.map(({ label, value }) => (
-                      <div key={label} className="grid grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] gap-3 py-3 text-sm">
-                        <dt className="text-white/50">{label}</dt>
-                        <dd className="break-words text-right leading-relaxed text-white/85">{formatSpecValue(value)}</dd>
-                      </div>
-                    ))}
-                  </dl>
-                </section>
-            )}
           </div>
 
           {/* Purchase decisions */}
@@ -619,30 +675,93 @@ export default function ProductDetailPage() {
               <p className="text-sm leading-relaxed text-white/60">Schools, businesses and teams can request a written quotation with quantities and requirements confirmed for their order.</p>
               <p className="text-sm leading-relaxed text-white/60">Before ordering, confirm the selected configuration, availability, condition, warranty terms and final price in the formal quotation.</p>
             </section>
-            <div className="order-14 min-w-0 lg:order-8">
-            <button type="button" onClick={() => setSourcingOpen((v) => !v)} className="text-sm text-[var(--color-accent)] underline underline-offset-2">Request a different configuration</button>
-            {sourcingOpen && <form className="mt-3 grid min-w-0 sm:grid-cols-2 gap-2 rounded-xl border border-white/10 p-4" onSubmit={async (e) => {
-              e.preventDefault();
-              const form = new FormData(e.currentTarget);
-              const body = Object.fromEntries(form.entries());
-              const response = await fetch("/api/product-sourcing", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...body, product_category: product.category || "ICT", preferred_model: body.preferred_model || product.title, processor: selectedVariant?.processor, ram: selectedVariant?.ram, storage: selectedVariant?.storage }) });
-              const result = await response.json();
-              setSourcingMessage(response.ok ? "Request received. We will confirm sourcing and availability." : result.error || "Could not submit request");
-              if (response.ok) e.currentTarget.reset();
-            }}>
-              <input name="customer_name" required placeholder="Your name" className="rounded bg-black/40 p-2 text-sm" />
-              <input name="customer_contact" required placeholder="Phone / WhatsApp" className="rounded bg-black/40 p-2 text-sm" />
-              <input name="customer_email" type="email" placeholder="Email (optional)" className="rounded bg-black/40 p-2 text-sm" />
-              <input name="preferred_brand" placeholder="Preferred brand" className="rounded bg-black/40 p-2 text-sm" />
-              <input name="processor" placeholder="Processor" className="rounded bg-black/40 p-2 text-sm" />
-              <input name="ram" placeholder="RAM" className="rounded bg-black/40 p-2 text-sm" />
-              <input name="storage" placeholder="Storage" className="rounded bg-black/40 p-2 text-sm" />
-              <select name="condition_preference" className="rounded bg-black/40 p-2 text-sm"><option value="">Condition preference</option><option>New</option><option>Refurbished Grade A</option><option>Refurbished Grade B</option><option>Refurbished Grade C</option></select>
-              <input name="budget" type="number" min="0" placeholder="Budget KES (optional)" className="rounded bg-black/40 p-2 text-sm" />
-              <textarea name="additional_requirements" placeholder="Additional requirements" className="rounded bg-black/40 p-2 text-sm sm:col-span-2" />
-              <button className="rounded bg-[var(--color-accent)] px-4 py-2 text-sm text-black font-semibold sm:col-span-2">Send sourcing request</button>
-              {sourcingMessage && <p className="text-xs text-white/70 sm:col-span-2">{sourcingMessage}</p>}
-            </form>}
+            {technicalInfo.length > 0 && (
+              <section className="order-15 min-w-0 space-y-4 border-t border-white/10 pt-4 lg:order-8">
+                <h2 className="text-xl font-semibold flex items-center gap-2">
+                  <HardDrive className="w-5 h-5 text-[var(--color-accent)]" /> Technical information
+                </h2>
+                <dl className="divide-y divide-white/[0.08] border-y border-white/[0.08]">
+                  {technicalInfo.map(({ label, value }) => (
+                    <div key={label} className="grid grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] gap-3 py-3 text-sm">
+                      <dt className="text-white/50">{label}</dt>
+                      <dd className="break-words text-right leading-relaxed text-white/85">{formatSpecValue(value)}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </section>
+            )}
+            <div className="order-16 min-w-0 lg:order-9">
+              <button
+                type="button"
+                onClick={() => setSourcingOpen((v) => !v)}
+                className="text-sm text-[var(--color-accent)] underline underline-offset-2"
+                aria-expanded={sourcingOpen}
+              >
+                Request a different configuration
+              </button>
+              {sourcingOpen && <form className="mt-3 grid min-w-0 gap-2 rounded-xl border border-white/10 p-4 sm:grid-cols-2" onSubmit={async (e) => {
+                e.preventDefault();
+                const form = e.currentTarget;
+                const formData = new FormData(form);
+                const body = Object.fromEntries(formData.entries());
+                const categoryDetails = sourcingFields
+                  .filter(({ name }) => !["processor", "ram", "storage"].includes(name))
+                  .map(({ name, label }) => {
+                    const value = formData.get(name)?.toString().trim();
+                    return value ? `${label}: ${value}` : "";
+                  })
+                  .filter(Boolean);
+                const additionalRequirements = [
+                  body.additional_requirements?.toString().trim(),
+                  ...categoryDetails,
+                ].filter(Boolean).join("\n");
+                try {
+                  const response = await fetch("/api/product-sourcing", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      ...body,
+                      product_category: product.category || "ICT",
+                      preferred_model: body.preferred_model || product.title,
+                      processor: body.processor || selectedVariant?.processor,
+                      ram: body.ram || selectedVariant?.ram,
+                      storage: body.storage || selectedVariant?.storage,
+                      additional_requirements: additionalRequirements,
+                    }),
+                  });
+                  const result = await response.json();
+                  setSourcingMessage(response.ok ? "Request received. We will confirm sourcing and availability." : result.error || "Could not submit request");
+                  if (response.ok) form.reset();
+                } catch {
+                  setSourcingMessage("Could not submit request. Please check your connection and try again.");
+                }
+              }}>
+                <input name="customer_name" required placeholder="Your name" aria-label="Your name" className="rounded bg-black/40 p-2 text-sm" />
+                <input name="customer_contact" required placeholder="Phone / WhatsApp" aria-label="Phone or WhatsApp" className="rounded bg-black/40 p-2 text-sm" />
+                <input name="customer_email" type="email" placeholder="Email (optional)" aria-label="Email (optional)" className="rounded bg-black/40 p-2 text-sm" />
+                <input name="preferred_brand" placeholder="Preferred brand (optional)" aria-label="Preferred brand (optional)" className="rounded bg-black/40 p-2 text-sm" />
+                {sourcingFields.map((field) => (
+                  field.options ? (
+                    <label key={field.name} className="grid gap-1 text-xs text-white/60">
+                      {field.label}
+                      <select name={field.name} required={field.required} defaultValue="" className="rounded bg-black/40 p-2 text-sm text-white">
+                        <option value="" disabled>Select {field.label.toLowerCase()}</option>
+                        {field.options.map((option) => <option key={option} value={option}>{option}</option>)}
+                      </select>
+                    </label>
+                  ) : (
+                    <label key={field.name} className="grid gap-1 text-xs text-white/60">
+                      {field.label}
+                      <input name={field.name} type={field.type || "text"} min={field.type === "number" ? 1 : undefined} required={field.required} placeholder={field.placeholder || field.label} className="rounded bg-black/40 p-2 text-sm text-white" />
+                    </label>
+                  )
+                ))}
+                <select name="condition_preference" aria-label="Condition preference" className="rounded bg-black/40 p-2 text-sm text-white"><option value="">Condition preference</option><option>New</option><option>Refurbished Grade A</option><option>Refurbished Grade B</option><option>Refurbished Grade C</option></select>
+                <input name="budget" type="number" min="0" placeholder="Budget KES (optional)" aria-label="Budget KES (optional)" className="rounded bg-black/40 p-2 text-sm" />
+                <textarea name="additional_requirements" placeholder="Anything else we should know?" aria-label="Additional requirements" className="rounded bg-black/40 p-2 text-sm sm:col-span-2" />
+                <button className="rounded bg-[var(--color-accent)] px-4 py-2 text-sm text-black font-semibold sm:col-span-2">Send sourcing request</button>
+                {sourcingMessage && <p role="status" className="text-xs text-white/70 sm:col-span-2">{sourcingMessage}</p>}
+              </form>}
             </div>
           </div>
         </div>
