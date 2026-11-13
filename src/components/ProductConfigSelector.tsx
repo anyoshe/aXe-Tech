@@ -13,9 +13,11 @@ import {
 type Props = {
   variants: ProductVariant[];
   onVariantChange?: (v: ProductVariant | null) => void;
+  showSelectedDetails?: boolean;
+  showPricing?: boolean;
 };
 
-export default function ProductConfigSelector({ variants, onVariantChange }: Props) {
+export default function ProductConfigSelector({ variants, onVariantChange, showSelectedDetails = true, showPricing = true }: Props) {
   const active = useMemo(
     () => (variants || []).filter((v) => v.published !== false && v.availability !== "unavailable"),
     [variants]
@@ -82,7 +84,7 @@ export default function ProductConfigSelector({ variants, onVariantChange }: Pro
 
   return (
     <div className="space-y-5">
-      <div>
+      {showPricing && <div>
         <p className="text-sm text-white/50">Pricing</p>
         <p className="mt-1 text-2xl font-bold text-white">
           {start != null
@@ -94,7 +96,7 @@ export default function ProductConfigSelector({ variants, onVariantChange }: Pro
         <p className="mt-1 text-xs text-white/45">
           Indicative pricing. Final price confirmed on written quotation for the selected configuration.
         </p>
-      </div>
+      </div>}
 
       {processors.length > 1 && (
         <div>
@@ -167,12 +169,12 @@ export default function ProductConfigSelector({ variants, onVariantChange }: Pro
                 }`}
               >
                 <div className="flex items-start justify-between gap-2">
-                  <span className="text-sm font-medium text-white">{v.label}</span>
+                  <span className="min-w-0 break-words text-sm font-medium text-white">{v.label}</span>
                   <span className="text-sm font-semibold text-emerald-200/90 shrink-0">
                     {v.price != null && v.price > 0 ? formatKes(v.price) : "Quote"}
                   </span>
                 </div>
-                <p className="mt-1 text-[11px] text-white/45">
+                <p className="mt-1 break-words text-[11px] text-white/45">
                   {[v.processor, v.ram, v.storage, v.condition_grade ? `Grade ${v.condition_grade}` : null]
                     .filter(Boolean)
                     .join(" · ")}
@@ -184,7 +186,7 @@ export default function ProductConfigSelector({ variants, onVariantChange }: Pro
         </div>
       </div>
 
-      {selected && (
+      {showSelectedDetails && selected && (
         <div className="rounded-xl border border-white/10 bg-black/30 p-4 text-sm">
           <p className="font-semibold text-white">Selected</p>
           <p className="mt-1 text-white/70">{selected.label}</p>

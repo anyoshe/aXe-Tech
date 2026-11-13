@@ -11,6 +11,9 @@ import { ShoppingCart, X, Plus, Minus, Trash2, ShieldCheck, ClipboardCheck, Pack
 import Link from "next/link";
 import { productImageList } from '@/lib/product-images';
 import { quoteLineIdentity, quoteSubtotal } from "@/lib/quote-lines";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { availabilityLabel, priceRangeFromVariants } from "@/lib/product-variants";
 
 // -------------------------------------------
 // Types
@@ -51,6 +54,105 @@ type QuoteItem = { product: Product; qty: number; variant?: ProductVariant | nul
 // -------------------------------------------
 const currency = (n: number | string) =>
   typeof n === "number" ? "KSh " + n.toLocaleString("en-KE") : String(n);
+
+const formatSpecValue = (value: ProductSpecsValue): string => {
+  if (typeof value === "boolean") return value ? "Yes" : "No";
+  if (value && typeof value === "object") {
+    return Object.entries(value).map(([key, item]) => `${key}: ${formatSpecValue(item)}`).join(" · ");
+  }
+  return String(value);
+};
+
+const canonicalSpecLabel = (key: string) => {
+  const normalized = key.toLowerCase().replace(/[^a-z0-9]/g, "");
+  if (normalized.includes("processor") || normalized === "cpu") return "Processor";
+  if (normalized.includes("memory") || normalized === "ram") return "Memory";
+  if (normalized.includes("storage") || normalized.includes("drive") || normalized === "disk") return "Storage";
+  if (normalized.includes("display") || normalized === "screen") return "Display";
+  if (normalized === "os" || normalized.includes("operatingsystem")) return "Operating system";
+  if (normalized === "condition") return "Condition";
+  return key.replace(/([A-Z])/g, " $1").trim();
+};
+
+function technicalEntries(specs: ProductSpecs | undefined, variant: ProductVariant | null, condition?: string) {
+  const entries = new Map<string, { label: string; value: ProductSpecsValue }>();
+  for (const [key, value] of Object.entries(specs || {})) {
+    const label = canonicalSpecLabel(key);
+    if (label === "Condition" && condition) continue;
+    entries.set(label.toLowerCase(), { label, value });
+  }
+  if (variant) {
+    const variantSpecs: Array<[string, string | null | undefined]> = [
+      ["Processor", variant.processor],
+      ["Memory", variant.ram],
+      ["Storage", variant.storage],
+      ["Display", variant.display],
+      ["Operating system", variant.os],
+    ];
+    for (const [label, value] of variantSpecs) {
+      if (value) entries.set(label.toLowerCase(), { label, value });
+    }
+  }
+  return [...entries.values()];
+}
+
+function normalizedContent(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+function normalizedDescription(value: string) {
+  return value
+    .replace(/^(#{1,6})(?=\S)/gm, "$1 ")
+    .replace(/^(#{1,6}\s+)#{1,6}\s+/gm, "$1");
+}
+
+function splitProductDescription(value: string) {
+  const sections = {
+    details: [] as string[],
+    highlights: [] as string[],
+    configurations: [] as string[],
+    purchasing: [] as string[],
+  };
+  for (const section of normalizedDescription(value).split(/(?=^#{1,6}\s)/m)) {
+    const heading = section.match(/^#{1,6}\s+(.+)$/m)?.[1] || "";
+    const normalizedHeading = heading.toLowerCase();
+    const target = /\b(highlights?|features?)\b/.test(normalizedHeading)
+      ? sections.highlights
+      : /\b(configurations?|variants?)\b/.test(normalizedHeading)
+        ? sections.configurations
+        : /\b(condition|inspection|purchas|availability|warrant|bulk|quotation|quotes?|shipping|delivery|accessories)\b/.test(normalizedHeading)
+          ? sections.purchasing
+          : sections.details;
+    target.push(section.trim());
+  }
+  return {
+    details: sections.details.join("\n\n"),
+    highlights: sections.highlights.join("\n\n"),
+    configurations: sections.configurations.join("\n\n"),
+    purchasing: sections.purchasing.join("\n\n"),
+  };
+}
+
+function ProductMarkdown({ content }: { content: string }) {
+  return (
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
+      components={{
+        h1: ({ children }) => <h2 className="mt-6 mb-2 text-lg font-semibold text-white first:mt-0">{children}</h2>,
+        h2: ({ children }) => <h2 className="mt-6 mb-2 text-lg font-semibold text-white first:mt-0">{children}</h2>,
+        h3: ({ children }) => <h3 className="mt-5 mb-2 text-base font-semibold text-white first:mt-0">{children}</h3>,
+        p: ({ children }) => <p className="mb-3 last:mb-0">{children}</p>,
+        ul: ({ children }) => <ul className="mb-3 list-disc space-y-1 pl-5 last:mb-0">{children}</ul>,
+        ol: ({ children }) => <ol className="mb-3 list-decimal space-y-1 pl-5 last:mb-0">{children}</ol>,
+        li: ({ children }) => <li className="pl-1">{children}</li>,
+        strong: ({ children }) => <strong className="font-semibold text-white/85">{children}</strong>,
+        a: ({ children, href }) => <a href={href} className="text-[var(--color-accent)] underline underline-offset-2">{children}</a>,
+      }}
+    >
+      {content}
+    </ReactMarkdown>
+  );
+}
 
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString('en-KE', {
@@ -247,6 +349,29 @@ export default function ProductDetailPage() {
     .sort((a, b) => Number(!!b.is_main) - Number(!!a.is_main) || (a.display_order ?? 0) - (b.display_order ?? 0));
   const mediaUrls = orderedMedia.map((m) => m.public_url).filter(Boolean);
   const images = mediaUrls.length ? mediaUrls : productImageList(product);
+  const availableVariants = (product.variants || []).filter((variant) => variant.published !== false && variant.availability !== "unavailable");
+  const hasInspectionDisclosures = Boolean([
+    selectedVariant?.condition_grade,
+    selectedVariant?.functional_inspection,
+    selectedVariant?.battery_assessment,
+    selectedVariant?.battery_notes,
+    selectedVariant?.display_condition,
+    selectedVariant?.keyboard_touchpad_condition,
+    selectedVariant?.ports_connectivity_checks,
+    selectedVariant?.os_license_status,
+    selectedVariant?.accessories,
+  ].some(Boolean));
+  const technicalInfo = technicalEntries(product.specs, selectedVariant, product.condition);
+  const highlightFeatures = (product.features || []).filter((feature) => {
+    const normalizedFeature = normalizedContent(feature);
+    return !technicalInfo.some(({ value }) => {
+      const normalizedValue = normalizedContent(formatSpecValue(value));
+      return normalizedFeature.length > 0 && normalizedValue.length > 2 &&
+        (normalizedFeature.includes(normalizedValue) || normalizedValue.includes(normalizedFeature));
+    });
+  });
+  const descriptionSections = splitProductDescription(product.description || "");
+  const priceRange = priceRangeFromVariants(availableVariants);
   return (
     <div className="min-h-screen bg-[var(--color-bg-dark)] text-[var(--color-text-main)] pb-32 md:pb-10">
       {/* Header */}
@@ -264,9 +389,10 @@ export default function ProductDetailPage() {
 
       {/* Product Content */}
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Image Gallery */}
-          <div className="space-y-4">
+        <div className="grid grid-cols-1 gap-y-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-stretch lg:gap-x-8">
+          <div className="contents lg:flex lg:min-w-0 lg:flex-col lg:gap-10">
+            {/* Image Gallery */}
+            <div className="order-1 min-w-0 space-y-4 lg:order-1">
             {/* Main Image */}
             <div className="relative aspect-square rounded-2xl overflow-hidden bg-black/20">
               <ProductImage productId={product.id} src={images[selectedImage]} alt={orderedMedia[selectedImage]?.alt_text || product.title} className="object-contain object-center p-4" priority sizes="(max-width: 1024px) 100vw, 50vw" />
@@ -306,108 +432,175 @@ export default function ProductDetailPage() {
               </div>
             )}
 
-            {/* Trust Badges */}
-            <div className="grid grid-cols-3 gap-4 pt-4">
-              <div className="text-center p-3 bg-white/5 rounded-lg">
-                <ShieldCheck className="w-6 h-6 text-[var(--color-accent)] mx-auto mb-2" />
-                <p className="text-xs text-white/70">Written quote</p>
-              </div>
-              <div className="text-center p-3 bg-white/5 rounded-lg">
-                <ClipboardCheck className="w-6 h-6 text-[var(--color-accent)] mx-auto mb-2" />
-                <p className="text-xs text-white/70">Scope confirmed</p>
-              </div>
-              <div className="text-center p-3 bg-white/5 rounded-lg">
-                <PackageCheck className="w-6 h-6 text-[var(--color-accent)] mx-auto mb-2" />
-                <p className="text-xs text-white/70">Terms disclosed</p>
+              {/* Trust Badges */}
+              <div className="grid grid-cols-3 gap-3 border-t border-white/10 pt-5">
+                <div className="text-center px-2 py-2">
+                  <ShieldCheck className="w-5 h-5 text-[var(--color-accent)] mx-auto mb-2" />
+                  <p className="text-xs text-white/70">Written quote</p>
+                </div>
+                <div className="text-center px-2 py-2">
+                  <ClipboardCheck className="w-5 h-5 text-[var(--color-accent)] mx-auto mb-2" />
+                  <p className="text-xs text-white/70">Scope confirmed</p>
+                </div>
+                <div className="text-center px-2 py-2">
+                  <PackageCheck className="w-5 h-5 text-[var(--color-accent)] mx-auto mb-2" />
+                  <p className="text-xs text-white/70">Terms disclosed</p>
+                </div>
               </div>
             </div>
+
+            {/* Product description and technical information */}
+            <div className="order-4 min-w-0 space-y-8 border-t border-white/10 pt-6 lg:order-2 lg:pt-8">
+              {(product.short || product.createdAt) && (
+                <section className="space-y-3">
+                  <h2 className="text-xl font-semibold tracking-tight text-white">Product overview</h2>
+                  {product.short && <p className="text-base font-medium leading-relaxed text-white/90">{product.short}</p>}
+                  {product.createdAt && <p className="text-xs text-white/40">Added {formatDate(product.createdAt)}</p>}
+                </section>
+              )}
+            </div>
+
+            {descriptionSections.details && (
+              <section className="order-9 min-w-0 border-t border-white/10 pt-6 lg:order-5 lg:pt-8">
+                <h2 className="mb-3 text-xl font-semibold tracking-tight text-white">More about this product</h2>
+                <div className="product-description text-sm leading-7 text-white/65">
+                  <ProductMarkdown content={descriptionSections.details} />
+                </div>
+              </section>
+            )}
+
+            {(descriptionSections.highlights || highlightFeatures.length > 0) && (
+                <section className="order-7 min-w-0 space-y-4 lg:order-3">
+                  {descriptionSections.highlights ? (
+                    <div className="product-description text-sm leading-7 text-white/65">
+                      <ProductMarkdown content={descriptionSections.highlights} />
+                    </div>
+                  ) : (
+                    <>
+                      <h2 className="text-xl font-semibold flex items-center gap-2">
+                        <Cpu className="w-5 h-5 text-[var(--color-accent)]" /> Key highlights
+                      </h2>
+                      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
+                        {highlightFeatures.map((feature, index) => (
+                          <li key={`${feature}-${index}`} className="flex gap-3 border-t border-white/[0.08] py-3 text-sm leading-relaxed text-white/75">
+                            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-accent)]" />
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+                </section>
+            )}
+
+            {technicalInfo.length > 0 && (
+                <section className="order-8 min-w-0 space-y-4 lg:order-4">
+                  <h2 className="text-xl font-semibold flex items-center gap-2">
+                    <HardDrive className="w-5 h-5 text-[var(--color-accent)]" /> Technical information
+                  </h2>
+                  <dl className="divide-y divide-white/[0.08] border-y border-white/[0.08]">
+                    {technicalInfo.map(({ label, value }) => (
+                      <div key={label} className="grid grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] gap-3 py-3 text-sm">
+                        <dt className="text-white/50">{label}</dt>
+                        <dd className="break-words text-right leading-relaxed text-white/85">{formatSpecValue(value)}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </section>
+            )}
           </div>
 
-          {/* Product Details */}
-          <div className="space-y-6">
+          {/* Purchase decisions */}
+          <div className="contents lg:flex lg:min-w-0 lg:flex-col lg:gap-6">
             {/* Category & Title */}
-            <div>
+            <div className="order-2 min-w-0 lg:order-1">
               <span className="inline-block px-3 py-1 bg-[var(--color-accent)]/20 text-[var(--color-accent)] rounded-full text-sm font-medium mb-3">
                 {product.category}
               </span>
               <h1 className="text-3xl md:text-4xl font-bold leading-tight">{product.title}</h1>
-              <p className="text-lg text-white/70 mt-2">{product.short}</p>
+              {product.brand && <p className="mt-3 text-sm text-white/55">Brand: {product.brand}</p>}
+              {product.condition && <p className="mt-2 inline-flex rounded-full border border-white/10 px-3 py-1 text-xs text-white/65">{product.condition}</p>}
             </div>
 
-            {/* Price / configurations */}
-            {product.hasVariants || (product.variants && product.variants.length > 0) ? (
-              <ProductConfigSelector
+            {/* Price and quote status */}
+            <div className="order-3 min-w-0 space-y-2 lg:order-2">
+              <p className="text-xs font-semibold uppercase tracking-wide text-white/45">Price</p>
+              <p className="text-3xl font-bold text-[var(--color-accent)]">
+                {availableVariants.length > 0
+                  ? priceRange.min != null
+                    ? priceRange.max != null && priceRange.max !== priceRange.min
+                      ? `From ${currency(priceRange.min)} – ${currency(priceRange.max)}`
+                      : `From ${currency(priceRange.min)}`
+                    : "Request a quote"
+                  : product.price > 0 ? `${product.startingPrice !== false ? "From " : ""}${currency(product.price)}` : "Request a quote"}
+              </p>
+              <p className="text-xs leading-relaxed text-white/50">Indicative pricing. Final price and availability are confirmed in a formal quotation.</p>
+            </div>
+
+            {/* Configuration choice */}
+            {product.hasVariants || (product.variants && product.variants.length > 0) || descriptionSections.configurations ? (
+              <section className="order-5 min-w-0 lg:order-3">
+                <h2 className="mb-3 text-base font-semibold text-white">Available configurations</h2>
+                <ProductConfigSelector
                 variants={product.variants || []}
                 onVariantChange={setSelectedVariant}
+                showSelectedDetails={false}
+                showPricing={false}
               />
-            ) : (
-              <>
-                <div className="flex items-center gap-4">
-                  <div className="text-3xl font-bold text-[var(--color-accent)]">
-                    {product.price > 0 ? `${product.startingPrice !== false ? "From " : ""}${currency(product.price)}` : "Request a quote"}
+                {descriptionSections.configurations && (
+                  <div className="product-description mt-4 text-sm leading-7 text-white/65">
+                    <ProductMarkdown
+                      content={descriptionSections.configurations.replace(/^#{1,6}\s+available configurations\s*$/gim, "").trim()}
+                    />
                   </div>
-                  {product.createdAt && (
-                    <span className="text-sm text-white/50">
-                      Added {formatDate(product.createdAt)}
-                    </span>
-                  )}
-                </div>
-                <p className="text-xs text-white/55">Indicative starting price only. Final configuration, availability and price are confirmed in a formal quotation.</p>
-                <div className="flex flex-wrap gap-2 text-sm text-white/70">{product.brand && <span>Brand: {product.brand}</span>}{product.condition && <span>· {product.condition}</span>}{product.availability === "on_order" && <span>· Available on order</span>}{product.availability === "available" && <span>· Confirm stock</span>}</div>
-                {product.warranty && <p className="text-sm text-white/65">Warranty: {product.warranty}</p>}
-              </>
-            )}
+                )}
+              </section>
+            ) : null}
 
-            {/* Description */}
-            <div className="prose prose-invert max-w-none">
-              <p className="text-white/80 leading-relaxed">{product.description}</p>
+            {hasInspectionDisclosures && <section className="order-10 min-w-0 space-y-3 border-t border-white/10 pt-4 lg:order-4">
+              <h2 className="text-base font-semibold text-white">Refurbished condition & inspection</h2>
+              {selectedVariant?.condition_grade && <p className="text-sm text-white/65">Cosmetic grade: Grade {selectedVariant.condition_grade}</p>}
+              {selectedVariant?.functional_inspection && <p className="text-sm leading-relaxed text-white/65">Functional inspection: {selectedVariant.functional_inspection}</p>}
+              {(selectedVariant?.battery_assessment || selectedVariant?.battery_notes) && <p className="text-sm leading-relaxed text-white/65">Battery: {selectedVariant.battery_assessment || selectedVariant.battery_notes}</p>}
+              {selectedVariant?.display_condition && <p className="text-sm leading-relaxed text-white/65">Display condition: {selectedVariant.display_condition}</p>}
+              {selectedVariant?.keyboard_touchpad_condition && <p className="text-sm leading-relaxed text-white/65">Keyboard & touchpad: {selectedVariant.keyboard_touchpad_condition}</p>}
+              {selectedVariant?.ports_connectivity_checks && <p className="text-sm leading-relaxed text-white/65">Ports & connectivity: {selectedVariant.ports_connectivity_checks}</p>}
+              {selectedVariant?.os_license_status && <p className="text-sm leading-relaxed text-white/65">OS licensing: {selectedVariant.os_license_status}</p>}
+              {selectedVariant?.accessories && <p className="text-sm leading-relaxed text-white/65">Included accessories: {selectedVariant.accessories}</p>}
+            </section>}
+
+            <div className="order-11 min-w-0 space-y-3 border-y border-white/10 py-4 lg:order-5">
+              <p className="text-xs font-semibold uppercase tracking-wide text-white/45">Availability</p>
+              <p className="text-sm font-medium text-white/85">
+                {selectedVariant
+                  ? availabilityLabel(selectedVariant.availability)
+                  : product.availability === "available"
+                    ? "Confirm stock"
+                    : product.availability === "on_order"
+                      ? "Available on order"
+                      : "Confirm availability in quote"}
+              </p>
+              {(selectedVariant?.warranty || product.warranty) && (
+                <p className="text-sm leading-relaxed text-white/60">Warranty: {selectedVariant?.warranty || product.warranty}</p>
+              )}
+              {selectedVariant?.warranty_coverage && <p className="text-sm leading-relaxed text-white/60">Coverage: {selectedVariant.warranty_coverage}</p>}
+              {selectedVariant?.warranty_exclusions && <p className="text-sm leading-relaxed text-white/60">Exclusions: {selectedVariant.warranty_exclusions}</p>}
+              {selectedVariant?.after_sales_support && <p className="text-sm leading-relaxed text-white/60">After-sales support: {selectedVariant.after_sales_support}</p>}
             </div>
 
-            {/* Key Features */}
-            {product.features && product.features.length > 0 && (
-              <div className="space-y-3">
-                <h3 className="text-xl font-semibold flex items-center gap-2">
-                  <Cpu className="w-5 h-5 text-[var(--color-accent)]" />
-                  Key Features
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  {product.features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
-                      <div className="w-2 h-2 bg-[var(--color-accent)] rounded-full"></div>
-                      <span className="text-white/80">{feature}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Technical Specifications */}
-            {product.specs && Object.keys(product.specs).length > 0 && (
-              <div className="space-y-3">
-                <h3 className="text-xl font-semibold flex items-center gap-2">
-                  <HardDrive className="w-5 h-5 text-[var(--color-accent)]" />
-                  Technical Specifications
-                </h3>
-                <div className="bg-white/5 rounded-lg p-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {Object.entries(product.specs).map(([key, value]) => (
-                      <div key={key} className="flex justify-between py-2 border-b border-white/10 last:border-b-0">
-                        <span className="text-white/60 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}:</span>
-                        <span className="text-white/90 font-medium">
-                          {typeof value === 'boolean' ? (value ? 'Yes' : 'No') : String(value)}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
+            {descriptionSections.purchasing && (
+              <div className="order-12 min-w-0 border-t border-white/10 pt-4 text-sm leading-7 text-white/65 lg:order-6">
+                <div className="product-description">
+                  <ProductMarkdown content={descriptionSections.purchasing} />
                 </div>
               </div>
             )}
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-6">
+            <div className="order-6 flex min-w-0 flex-col gap-3 pt-2 sm:flex-row lg:order-6">
               <button
                 onClick={() => addToQuote(product)}
-                className="flex-1 px-8 py-4 bg-[var(--color-accent)] text-black rounded-full font-semibold hover:opacity-95 transition-all duration-300 transform hover:scale-105"
+                className="min-h-12 flex-1 px-6 py-3 bg-[var(--color-accent)] text-black rounded-full font-semibold hover:opacity-95 transition-all duration-300"
               >
                 Add to Quote
               </button>
@@ -416,13 +609,19 @@ export default function ProductDetailPage() {
                   addToQuote(product);
                   setDrawerOpen(true);
                 }}
-                className="flex-1 px-8 py-4 border border-[var(--color-accent)] text-[var(--color-accent)] rounded-full font-semibold hover:bg-[var(--color-accent)]/10 transition-all"
+                className="min-h-12 flex-1 px-6 py-3 border border-[var(--color-accent)] text-[var(--color-accent)] rounded-full font-semibold hover:bg-[var(--color-accent)]/10 transition-all"
               >
                 Quick Quote
               </button>
             </div>
-            <button type="button" onClick={() => setSourcingOpen((v) => !v)} className="text-sm text-[var(--color-accent)] underline">Request a different configuration</button>
-            {sourcingOpen && <form className="grid sm:grid-cols-2 gap-2 rounded-xl border border-white/10 p-4" onSubmit={async (e) => {
+            <section className="order-13 min-w-0 space-y-2 border-t border-white/10 pt-4 lg:order-7">
+              <h2 className="text-sm font-semibold text-white">Institutional and bulk quotations</h2>
+              <p className="text-sm leading-relaxed text-white/60">Schools, businesses and teams can request a written quotation with quantities and requirements confirmed for their order.</p>
+              <p className="text-sm leading-relaxed text-white/60">Before ordering, confirm the selected configuration, availability, condition, warranty terms and final price in the formal quotation.</p>
+            </section>
+            <div className="order-14 min-w-0 lg:order-8">
+            <button type="button" onClick={() => setSourcingOpen((v) => !v)} className="text-sm text-[var(--color-accent)] underline underline-offset-2">Request a different configuration</button>
+            {sourcingOpen && <form className="mt-3 grid min-w-0 sm:grid-cols-2 gap-2 rounded-xl border border-white/10 p-4" onSubmit={async (e) => {
               e.preventDefault();
               const form = new FormData(e.currentTarget);
               const body = Object.fromEntries(form.entries());
@@ -444,6 +643,7 @@ export default function ProductDetailPage() {
               <button className="rounded bg-[var(--color-accent)] px-4 py-2 text-sm text-black font-semibold sm:col-span-2">Send sourcing request</button>
               {sourcingMessage && <p className="text-xs text-white/70 sm:col-span-2">{sourcingMessage}</p>}
             </form>}
+            </div>
           </div>
         </div>
 
