@@ -3,6 +3,10 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import ProductImage from "@/components/ProductImage";
+import ProductConfigSelector from "@/components/ProductConfigSelector";
+import BuyingAssurance from "@/components/BuyingAssurance";
+import type { ProductVariant, ProductMedia } from "@/lib/product-variants";
+import { formatKes, availabilityLabel } from "@/lib/product-variants";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingCart, X, Plus, Minus, Trash2, ShieldCheck, ClipboardCheck, PackageCheck, Cpu, HardDrive, ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -35,9 +39,11 @@ export type Product = {
   startingPrice?: boolean;
   warranty?: string;
   imageSources?: Record<string, { sourcePage?: string; rights?: string; notes?: string }>;
+  variants?: ProductVariant[];
+  media?: ProductMedia[];
 };
 
-type QuoteItem = { product: Product; qty: number };
+type QuoteItem = { product: Product; qty: number; variant?: ProductVariant | null; configLabel?: string };
 
 // -------------------------------------------
 // Utility Functions
@@ -66,6 +72,7 @@ export default function ProductDetailPage() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quoteItems, setQuoteItems] = useState<QuoteItem[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
 
   // -------------------------------------------
   // Fetch product by ID
@@ -104,10 +111,29 @@ export default function ProductDetailPage() {
   // Quote Handlers
   // -------------------------------------------
   const addToQuote = (prod: Product) => {
+    const configLabel = selectedVariant
+      ? selectedVariant.label
+      : undefined;
+    const lineKey = selectedVariant ? `${prod.id}::${selectedVariant.id}` : prod.id;
     setQuoteItems((prev) => {
-      const found = prev.find((p) => p.product.id === prod.id);
-      if (found) return prev.map((p) => (p.product.id === prod.id ? { ...p, qty: p.qty + 1 } : p));
-      return [{ product: prod, qty: 1 }, ...prev];
+      const found = prev.find(
+        (p) =>
+          p.product.id === prod.id &&
+          (selectedVariant ? p.variant?.id === selectedVariant.id : !p.variant)
+      );
+      if (found) return prev.map((p) => (p === found ? { ...p, qty: p.qty + 1 } : p));
+      const priced = selectedVariant?.price != null && selectedVariant.price > 0
+        ? { ...prod, price: selectedVariant.price }
+        : prod;
+      return [
+        {
+          product: priced,
+          qty: 1,
+          variant: selectedVariant,
+          configLabel,
+        },
+        ...prev,
+      ];
     });
     setDrawerOpen(true);
   };
@@ -129,7 +155,22 @@ export default function ProductDetailPage() {
   const buildMessage = () => {
     let msg = `Hello GetAxe,\nPlease provide a formal quotation for:\n\n`;
     quoteItems.forEach((it, idx) => {
-      msg += `${idx + 1}. ${it.product.title} — Qty: ${it.qty} — ${currency(it.product.price)}\n`;
+      const cfg = it.configLabel || it.variant?.label;
+      msg += `${idx + 1}. ${it.product.title}${cfg ? ` [${cfg}]` : ""} — Qty: ${it.qty}`;
+      if (it.variant?.price != null && it.variant.price > 0) {
+        msg += ` — ${currency(it.variant.price)}`;
+      } else if (it.product.price) {
+        msg += ` — indicative ${currency(it.product.price)}`;
+      } else {
+        msg += ` — request quote`;
+      }
+      if (it.variant) {
+        const bits = [it.variant.processor, it.variant.ram, it.variant.storage, it.variant.condition_grade ? `Grade ${it.variant.condition_grade}` : ""]
+          .filter(Boolean)
+          .join(", ");
+        if (bits) msg += `\n   Specs: ${bits}`;
+      }
+      msg += `\n`;
     });
     msg += `\nIndicative estimate only: ${currency(quoteTotal)}\nPlease confirm model, availability, configuration and final price.\n\nThank you.`;
     return msg;
@@ -194,7 +235,12 @@ export default function ProductDetailPage() {
   // -------------------------------------------
   // Main UI
   // -------------------------------------------
-  const images = productImageList(product);
+  const mediaUrls = (product.media || [])
+    .slice()
+    .sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0))
+    .map((m) => m.public_url)
+    .filter(Boolean);
+  const images = mediaUrls.length ? mediaUrls : productImageList(product);
   return (
     <div className="min-h-screen bg-[var(--color-bg-dark)] text-[var(--color-text-main)] pb-32 md:pb-10">
       {/* Header */}
@@ -273,20 +319,30 @@ export default function ProductDetailPage() {
               <p className="text-lg text-white/70 mt-2">{product.short}</p>
             </div>
 
-            {/* Price */}
-            <div className="flex items-center gap-4">
-              <div className="text-3xl font-bold text-[var(--color-accent)]">
-                {product.startingPrice !== false ? "From " : ""}{currency(product.price)}
-              </div>
-              {product.createdAt && (
-                <span className="text-sm text-white/50">
-                  Added {formatDate(product.createdAt)}
-                </span>
-              )}
-            </div>
-            <p className="text-xs text-white/55">Indicative starting price only. Final configuration, availability and price are confirmed in a formal quotation.</p>
-            <div className="flex flex-wrap gap-2 text-sm text-white/70">{product.brand && <span>Brand: {product.brand}</span>}{product.condition && <span>· {product.condition}</span>}{product.availability === "on_order" && <span>· Available on order</span>}{product.availability === "available" && <span>· Confirm stock</span>}</div>
-            {product.warranty && <p className="text-sm text-white/65">Warranty: {product.warranty}</p>}
+            {/* Price / configurations */}
+            {product.variants && product.variants.length > 0 ? (
+              <ProductConfigSelector
+                variants={product.variants}
+                basePrice={product.price}
+                onVariantChange={setSelectedVariant}
+              />
+            ) : (
+              <>
+                <div className="flex items-center gap-4">
+                  <div className="text-3xl font-bold text-[var(--color-accent)]">
+                    {product.startingPrice !== false ? "From " : ""}{currency(product.price)}
+                  </div>
+                  {product.createdAt && (
+                    <span className="text-sm text-white/50">
+                      Added {formatDate(product.createdAt)}
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-white/55">Indicative starting price only. Final configuration, availability and price are confirmed in a formal quotation.</p>
+                <div className="flex flex-wrap gap-2 text-sm text-white/70">{product.brand && <span>Brand: {product.brand}</span>}{product.condition && <span>· {product.condition}</span>}{product.availability === "on_order" && <span>· Available on order</span>}{product.availability === "available" && <span>· Confirm stock</span>}</div>
+                {product.warranty && <p className="text-sm text-white/65">Warranty: {product.warranty}</p>}
+              </>
+            )}
 
             {/* Description */}
             <div className="prose prose-invert max-w-none">

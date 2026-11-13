@@ -212,3 +212,22 @@ supabase/partners-crm-v6.sql
 
 Optional email: set `RESEND_API_KEY` and `NOTIFY_FROM_EMAIL` on Vercel.  
 Marketer lead fee: `MARKETER_LEAD_FEE_KES` (default 500).
+
+## Product variants & media gallery
+
+Run in SQL Editor:
+
+```text
+supabase/product-variants-media.sql
+```
+
+- Bucket: `product-images` (public)
+- Tables: `product_variants`, `product_media`
+- Admin: `/admin/products` → open a product → **Configurations (variants)**
+- Upload images: existing `/api/upload` and `/api/products/[id]/media`
+
+HP EliteBook reference (spec only — do not publish manufacturer photos without licence clearance):
+
+- https://support.hp.com/emea_africa-en/product/product-specs/hp-elitebook-840-g6-notebook-pc/26609796/
+
+Upload original stock photos via admin into Supabase Storage.

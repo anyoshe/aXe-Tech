@@ -35,7 +35,34 @@ export async function GET(_request: Request, context: Ctx) {
     }
     const product = rowToProduct(data as ProductRow);
     const { internalCost: _cost, targetPrice: _target, bulkPrice: _bulk, marketNotes: _notes, supplierReference: _supplier, ...publicProduct } = product;
-    return NextResponse.json(publicProduct);
+
+    // Optional catalogue enhancement tables (run product-variants-media.sql)
+    let variants: unknown[] = [];
+    let media: unknown[] = [];
+    try {
+      let vq = supabase
+        .from("product_variants")
+        .select("*")
+        .eq("product_id", id)
+        .order("sort_order", { ascending: true });
+      if (!admin.session) vq = vq.eq("published", true);
+      const { data: vdata } = await vq;
+      variants = vdata || [];
+    } catch {
+      variants = [];
+    }
+    try {
+      const { data: mdata } = await supabase
+        .from("product_media")
+        .select("*")
+        .eq("product_id", id)
+        .order("display_order", { ascending: true });
+      media = mdata || [];
+    } catch {
+      media = [];
+    }
+
+    return NextResponse.json({ ...publicProduct, variants, media });
   } catch (err) {
     const errorMsg = err instanceof Error ? err.message : String(err);
     return NextResponse.json({ message: errorMsg }, { status: 500 });

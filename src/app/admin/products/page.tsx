@@ -1,5 +1,7 @@
 "use client";
 
+import ProductVariantsAdmin from "@/components/admin/ProductVariantsAdmin";
+
 import { useEffect, useState, useRef } from "react";
 import {
   ImageIcon,
