@@ -3,10 +3,9 @@
 import ProductVariantsAdmin from "@/components/admin/ProductVariantsAdmin";
 import ProductMediaAdmin from "@/components/admin/ProductMediaAdmin";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import {
   ImageIcon,
-  Upload,
   X,
   Loader2,
   Video,
@@ -17,7 +16,6 @@ import {
   RefreshCw,
   Database,
 } from "lucide-react";
-import { convertToBase64, isBase64, isUrl } from "@/utils/image-utils";
 
 type Product = {
   id: string;
@@ -50,15 +48,6 @@ type Product = {
   updatedAt?: string;
 };
 
-type UploadingFile = {
-  file: File;
-  preview: string;
-  uploading: boolean;
-  error?: string;
-  url?: string;
-  type: "image" | "video";
-};
-
 const CATEGORIES = [
   "Laptops",
   "Lab Equipment",
@@ -78,7 +67,6 @@ export default function AdminProductsPage() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
-  const [uploadingFiles, setUploadingFiles] = useState<UploadingFile[]>([]);
   const [form, setForm] = useState({
     id: "",
     title: "",
@@ -90,16 +78,15 @@ export default function AdminProductsPage() {
     short: "",
     description: "",
     specs: "{}",
-    brand: "", condition: "", availability: "request_quote", published: true, featured: false, displayOrder: "0",
+    brand: "", condition: "", availability: "request_quote", published: false, featured: false, displayOrder: "0",
     startingPrice: true, internalCost: "", targetPrice: "", bulkPrice: "", priceReviewedAt: "", marketNotes: "", supplierReference: "", warranty: "", seoTitle: "", seoDescription: "",
   });
   const [editing, setEditing] = useState<string | null>(null);
+  const [removedLegacyImages, setRemovedLegacyImages] = useState<string[]>([]);
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
   const [videoUrlInput, setVideoUrlInput] = useState("");
-  const [publicPathInput, setPublicPathInput] = useState("");
   const [catalogFilter, setCatalogFilter] = useState({ category: "All", status: "All", brand: "All", condition: "All", availability: "All", featured: "All" });
 
-  const imageInputRef = useRef<HTMLInputElement>(null);
 
   const parseFormList = (s?: string | null): string[] => {
     if (!s) return [];
@@ -163,70 +150,12 @@ export default function AdminProductsPage() {
       short: "",
       description: "",
       specs: "{}",
-      brand: "", condition: "", availability: "request_quote", published: true, featured: false, displayOrder: "0",
+      brand: "", condition: "", availability: "request_quote", published: false, featured: false, displayOrder: "0",
       startingPrice: true, internalCost: "", targetPrice: "", bulkPrice: "", priceReviewedAt: "", marketNotes: "", supplierReference: "", warranty: "", seoTitle: "", seoDescription: "",
     });
     setEditing(null);
-    setUploadingFiles([]);
+    setRemovedLegacyImages([]);
     setVideoUrlInput("");
-    setPublicPathInput("");
-  };
-
-  /** Prefer public paths (/samples/...) or http(s) URLs; Base64 still allowed as fallback */
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files?.length) return;
-
-    const newFiles: UploadingFile[] = Array.from(files).map((file) => ({
-      file,
-      preview: URL.createObjectURL(file),
-      uploading: true,
-      type: "image" as const,
-    }));
-    setUploadingFiles((prev) => [...prev, ...newFiles]);
-
-    for (const fileObj of newFiles) {
-      try {
-        const base64Image = await convertToBase64(fileObj.file, 300);
-        setUploadingFiles((prev) =>
-          prev.map((f) =>
-            f.file === fileObj.file ? { ...f, uploading: false, url: base64Image } : f
-          )
-        );
-        const current = parseFormList(form.images);
-        setForm((prev) => ({
-          ...prev,
-          images: stringifyFormList([...current, base64Image]),
-        }));
-        showMessage("Image ready (will save to Supabase with product)");
-      } catch (error) {
-        setUploadingFiles((prev) =>
-          prev.map((f) =>
-            f.file === fileObj.file
-              ? {
-                  ...f,
-                  uploading: false,
-                  error: error instanceof Error ? error.message : "Failed",
-                }
-              : f
-          )
-        );
-        showMessage("Failed to process image", "error");
-      }
-    }
-    if (imageInputRef.current) imageInputRef.current.value = "";
-  };
-
-  const addPublicPath = () => {
-    let path = publicPathInput.trim();
-    if (!path) return;
-    if (!path.startsWith("/") && !path.startsWith("http")) {
-      path = `/samples/${path.replace(/^samples\//, "")}`;
-    }
-    const current = parseFormList(form.images);
-    setForm((prev) => ({ ...prev, images: stringifyFormList([...current, path]) }));
-    setPublicPathInput("");
-    showMessage(`Added image path: ${path}`);
   };
 
   const handleAddVideoUrl = () => {
@@ -261,13 +190,6 @@ export default function AdminProductsPage() {
     showMessage("Video URL added");
   };
 
-  const removeImageFromList = (urlToRemove: string) => {
-    setForm((prev) => ({
-      ...prev,
-      images: stringifyFormList(parseFormList(prev.images).filter((u) => u !== urlToRemove)),
-    }));
-  };
-
   const removeVideoFromList = (urlToRemove: string) => {
     setForm((prev) => ({
       ...prev,
@@ -290,8 +212,8 @@ export default function AdminProductsPage() {
       title: form.title.trim(),
       price: Number(form.price),
       category: form.category || undefined,
-      images: parseFormList(form.images),
       videos: parseFormList(form.videos),
+      removeImages: removedLegacyImages,
       features,
       short: form.short || undefined,
       description: form.description || undefined,
@@ -316,8 +238,9 @@ export default function AdminProductsPage() {
   };
 
   const handleCreate = async () => {
-    if (!form.title || !form.price) {
-      showMessage("Title and price are required", "error");
+    const price = Number(form.price || 0);
+    if (!form.title.trim() || !Number.isFinite(price) || price < 0) {
+      showMessage("Enter a title and a valid non-negative price (use 0 for quote-only)", "error");
       return;
     }
     setSaving(true);
@@ -374,7 +297,7 @@ export default function AdminProductsPage() {
       const r = await fetch(`/api/products?id=${encodeURIComponent(id)}`, { method: "DELETE" });
       const result = await r.json();
       if (r.ok) {
-        showMessage("Product deleted");
+        showMessage(result.warning || "Product deleted", result.warning ? "error" : "success");
         if (editing === id) resetForm();
         fetchProducts();
       } else {
@@ -406,6 +329,7 @@ export default function AdminProductsPage() {
 
   const startEdit = (p: Product) => {
     setEditing(p.id);
+    setRemovedLegacyImages([]);
     setForm({
       id: p.id,
       title: p.title,
@@ -421,11 +345,6 @@ export default function AdminProductsPage() {
       startingPrice: p.startingPrice !== false, internalCost: String(p.internalCost ?? ""), targetPrice: String(p.targetPrice ?? ""), bulkPrice: String(p.bulkPrice ?? ""), priceReviewedAt: p.priceReviewedAt || "", marketNotes: p.marketNotes || "", supplierReference: p.supplierReference || "", warranty: p.warranty || "", seoTitle: p.seoTitle || "", seoDescription: p.seoDescription || "",
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const imagePreviewSrc = (src: string) => {
-    if (isBase64(src) || isUrl(src) || src.startsWith("/")) return src;
-    return src;
   };
 
   return (
@@ -472,7 +391,7 @@ export default function AdminProductsPage() {
             <p className="font-medium">Cannot load products</p>
             <p className="mt-1 text-amber-100/80">{loadError}</p>
             <p className="mt-2 text-xs text-white/50">
-              Check .env.local Supabase keys and that you ran supabase/schema.sql
+              Check the server Supabase URL and service-role environment setting, then verify the catalogue migration was applied.
             </p>
           </div>
         )}
@@ -579,68 +498,20 @@ export default function AdminProductsPage() {
               <ImageIcon className="w-4 h-4" /> Images
             </h3>
             <p className="text-xs text-white/50">
-              Prefer paths like <code className="text-emerald-400">/samples/dell7400.jpeg</code> from{" "}
-              <code>public/</code>, or https URLs. File upload stores compressed data with the product row in
-              Supabase.
+              Product photos are managed in the Supabase Storage gallery below after you create or select a product.
+              Existing catalogue image references are preserved when product details are saved.
             </p>
-            <div className="flex flex-col sm:flex-row gap-2">
-              <input
-                className="flex-1 rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-sm"
-                value={publicPathInput}
-                onChange={(e) => setPublicPathInput(e.target.value)}
-                placeholder="/samples/HP-eliteboo-840-g6.jpeg"
-              />
-              <button
-                type="button"
-                onClick={addPublicPath}
-                className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-sm"
-              >
-                <Plus className="w-4 h-4" /> Add path
-              </button>
-              <button
-                type="button"
-                onClick={() => imageInputRef.current?.click()}
-                className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-emerald-600/80 hover:bg-emerald-600 text-sm"
-              >
-                <Upload className="w-4 h-4" /> Upload file
-              </button>
-              <input
-                ref={imageInputRef}
-                type="file"
-                accept="image/*"
-                multiple
-                className="hidden"
-                onChange={handleImageUpload}
-              />
-            </div>
-            <div className="flex flex-wrap gap-3">
-              {parseFormList(form.images).map((src, i) => (
-                <div key={i} className="relative w-24 h-24 rounded-lg overflow-hidden border border-white/10 group">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={imagePreviewSrc(src)} alt="" className="w-full h-full object-cover" />
-                  <button
-                    type="button"
-                    onClick={() => removeImageFromList(src)}
-                    className="absolute top-1 right-1 p-1 rounded bg-black/70 opacity-0 group-hover:opacity-100"
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
-                  <span className="absolute bottom-0 inset-x-0 text-[9px] bg-black/70 px-1 truncate">
-                    {isBase64(src) ? "data" : src.startsWith("/") ? "public" : "url"}
-                  </span>
-                </div>
-              ))}
-              {uploadingFiles
-                .filter((f) => f.type === "image" && f.uploading)
-                .map((f, i) => (
-                  <div
-                    key={`up-${i}`}
-                    className="w-24 h-24 rounded-lg border border-white/10 flex items-center justify-center"
-                  >
-                    <Loader2 className="w-5 h-5 animate-spin text-white/50" />
+            {parseFormList(form.images).filter((src) => !removedLegacyImages.includes(src)).length > 0 && (
+              <div className="space-y-2">
+                <p className="text-xs text-white/45">Legacy product image references</p>
+                {parseFormList(form.images).filter((src) => !removedLegacyImages.includes(src)).map((src) => (
+                  <div key={src} className="flex items-center gap-2 rounded bg-black/30 px-2 py-1 text-xs">
+                    <span className="min-w-0 flex-1 truncate">{src}</span>
+                    <button type="button" onClick={() => setRemovedLegacyImages((current) => [...current, src])} className="text-red-300">Remove reference</button>
                   </div>
                 ))}
-            </div>
+              </div>
+            )}
           </div>
 
           {/* Videos */}
@@ -739,7 +610,7 @@ export default function AdminProductsPage() {
                     {p.images?.[0] ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
-                        src={imagePreviewSrc(p.images[0])}
+                        src={p.images[0]}
                         alt={p.title}
                         className="w-full h-full object-cover"
                       />

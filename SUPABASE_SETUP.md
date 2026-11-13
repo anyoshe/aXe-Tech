@@ -1,6 +1,6 @@
 # Supabase setup for aXe-Tech (ICT products)
 
-Products no longer use MongoDB. Follow these steps once.
+Products use Supabase. The commands below describe a new-project bootstrap; do not rerun the bootstrap schema against the existing production catalogue.
 
 ## 1. Create a Supabase project
 
@@ -15,7 +15,7 @@ Products no longer use MongoDB. Follow these steps once.
 2. Paste the contents of `supabase/schema.sql`
 3. Click **Run**
 
-This creates the `products` table, indexes, RLS policies, and a `product-images` storage bucket.
+This creates the base `products` table and bucket. For a new project, continue with `supabase/ict-catalogue-expansion.sql` and `supabase/product-variants-media.sql`, then apply the catalogue migration below. For the existing production project, apply only the reviewed migration after confirming its preflight requirements; do not rerun `supabase/schema.sql`.
 
 ## 3. Copy API keys
 
@@ -62,19 +62,16 @@ curl -X POST http://localhost:3000/api/products/seed
 
 Add the same three Supabase env vars in **Vercel → Project → Settings → Environment Variables**, then redeploy.
 
-## Security (after it works)
+## Catalogue security
 
-The SQL file includes open write policies for **setup only**. Later:
-
-1. Remove the “Anon can insert/update/delete products” policies
-2. Keep public **SELECT**
-3. Only write from API routes using `SUPABASE_SERVICE_ROLE_KEY`
-4. Protect `/admin/products` with NextAuth
+- Public reads are limited to published products, variants and media after the catalogue expansion/migration has been applied.
+- Product, variant and media mutations go through APIs protected by the NextAuth `admin` role and use the server-only `SUPABASE_SERVICE_ROLE_KEY`.
+- Never put the service-role key in a `NEXT_PUBLIC_` variable or browser code.
+- For the existing production database, apply `supabase/migrations/20261113_catalogue_security_and_sourcing.sql` in the Supabase SQL Editor after the pre-deployment checks. Do not rerun `supabase/schema.sql`.
 
 ## Images
 
-- **Short term:** admin can still store image URLs or small Base64 strings in `images text[]`
-- **Better:** upload files to the `product-images` bucket and save the public URL in `images`
+Use `/admin/products` → select a product → **Product photo gallery**. Uploads are validated and stored in the existing public `product-images` bucket; image metadata is recorded in `product_media`. Do not add Base64 image payloads or arbitrary external image URLs through the product form.
 
 ## Vercel environment variables
 
@@ -215,7 +212,7 @@ Marketer lead fee: `MARKETER_LEAD_FEE_KES` (default 500).
 
 ## Product variants & media gallery
 
-Run in SQL Editor:
+For a new project only, after `schema.sql` and `ict-catalogue-expansion.sql`, run in SQL Editor:
 
 ```text
 supabase/product-variants-media.sql
@@ -224,7 +221,14 @@ supabase/product-variants-media.sql
 - Bucket: `product-images` (public)
 - Tables: `product_variants`, `product_media`
 - Admin: `/admin/products` → open a product → **Configurations (variants)**
-- Upload images: existing `/api/upload` and `/api/products/[id]/media`
+- Upload images: `/api/products/[id]/media` (the `/api/upload` compatibility endpoint is also admin-protected and requires a product ID).
+
+## Existing production catalogue deployment
+
+1. Verify the `product-images` bucket exists and is public, and confirm the expected product/variant/media columns and zero invalid media-to-variant links.
+2. Review current `pg_policies` entries for `products`, `product_variants`, `product_media`, and `storage.objects` for bucket `product-images`.
+3. Apply `supabase/migrations/20261113_catalogue_security_and_sourcing.sql` once in the SQL Editor. It checks prerequisites in a transaction and creates the sourcing table, disclosure columns, composite media/variant foreign key, read policies and table grants.
+4. Verify the resulting policies/grants and test public reads plus admin-only writes before loading the catalogue.
 
 HP EliteBook reference (spec only — do not publish manufacturer photos without licence clearance):
 

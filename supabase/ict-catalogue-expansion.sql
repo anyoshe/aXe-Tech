@@ -25,3 +25,15 @@ create index if not exists products_brand_idx on public.products (brand);
 comment on column public.products.internal_cost is 'Private procurement estimate. Never return through public API.';
 comment on column public.products.target_price is 'Private target selling price. Never return through public API.';
 comment on column public.products.bulk_price is 'Private/institutional pricing. Never return through public API.';
+
+-- Public catalogue access; writes stay in admin-protected server APIs.
+alter table public.products enable row level security;
+drop policy if exists "Public can read products" on public.products;
+drop policy if exists "Public can read published products" on public.products;
+create policy "Public can read published products" on public.products
+  for select to anon, authenticated using (published = true);
+drop policy if exists "Anon can insert products (setup)" on public.products;
+drop policy if exists "Anon can update products (setup)" on public.products;
+drop policy if exists "Anon can delete products (setup)" on public.products;
+revoke insert, update, delete on public.products from anon, authenticated;
+grant select on public.products to anon, authenticated;

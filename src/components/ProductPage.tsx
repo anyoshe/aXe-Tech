@@ -172,10 +172,10 @@ export default function ICTProductsPage() {
 
   const clearQuote = () => setQuoteItems([]);
 
-  const quoteTotal = quoteItems.reduce(
-    (sum, it) => sum + it.product.price * it.qty,
-    0
-  );
+  const quoteHasUnpricedItems = quoteItems.some((it) => it.product.price <= 0);
+  const quoteTotal = quoteHasUnpricedItems
+    ? null
+    : quoteItems.reduce((sum, it) => sum + it.product.price * it.qty, 0);
 
   /* -------------------------------------------
      SEND QUOTE ACTIONS
@@ -183,11 +183,9 @@ export default function ICTProductsPage() {
   const buildMessage = () => {
     let msg = "Hello GetAxe,\nPlease provide a formal quotation for:\n\n";
     quoteItems.forEach((it, idx) => {
-      msg += `${idx + 1}. ${it.product.title} — Qty: ${it.qty} — ${currency(
-        it.product.price
-      )}\n`;
+      msg += `${idx + 1}. ${it.product.title} — Qty: ${it.qty} — ${it.product.price > 0 ? currency(it.product.price) : "Price on request"}\n`;
     });
-    msg += `\nIndicative estimate only: ${currency(quoteTotal)}\nPlease confirm model, availability, configuration and final price.\n\nThank you.`;
+    msg += `\n${quoteTotal == null ? "Please provide pricing for all requested items." : `Indicative estimate only: ${currency(quoteTotal)}`}\nPlease confirm model, availability, configuration and final price.\n\nThank you.`;
     return msg;
   };
 
@@ -391,7 +389,7 @@ export default function ICTProductsPage() {
                   {p.specs && <ul className="mt-4 space-y-1.5 border-t border-white/[0.07] pt-3 text-xs text-slate-300">{Object.entries(p.specs).slice(0, 3).map(([k, v]) => <li key={k} className="truncate"><span className="text-slate-500">{k}:</span> {String(v)}</li>)}</ul>}
                   <div className="mt-auto pt-5">
                     <div className="flex items-end justify-between gap-3 border-t border-white/[0.08] pt-4">
-                      <div><div className="text-xl font-bold tracking-tight text-white">{p.startingPrice !== false ? "From " : ""}{currency(p.price)}</div><div className="mt-1 text-[10px] text-slate-500">Indicative starting price</div></div>
+                      <div><div className="text-xl font-bold tracking-tight text-white">{p.price > 0 ? `${p.startingPrice !== false ? "From " : ""}${currency(p.price)}` : "Request a quote"}</div><div className="mt-1 text-[10px] text-slate-500">{p.price > 0 ? "Indicative starting price" : "Pricing on request"}</div></div>
                       <span className="text-right text-[10px] leading-relaxed text-slate-400">{p.brand}{p.availability === "on_order" ? " · On order" : ""}</span>
                     </div>
                     <div className="mt-4 grid grid-cols-[1fr_auto] items-center gap-3">
@@ -467,7 +465,7 @@ export default function ICTProductsPage() {
                           <div className="flex justify-between">
                             <div>
                               <div className="text-sm font-medium">{it.product.title}</div>
-                              <div className="text-xs text-white/60">{currency(it.product.price)}</div>
+                              <div className="text-xs text-white/60">{it.product.price > 0 ? currency(it.product.price) : "Price on request"}</div>
                             </div>
 
                             <button
@@ -495,7 +493,7 @@ export default function ICTProductsPage() {
                   <div className="border-t border-white/10 pt-4">
                     <div className="flex justify-between mb-3">
                       <span className="text-white/60">Subtotal</span>
-                      <span className="font-semibold">{currency(quoteTotal)}</span>
+                      <span className="font-semibold">{quoteTotal == null ? "Pricing on request" : currency(quoteTotal)}</span>
                     </div>
                     <button
                       onClick={clearQuote}

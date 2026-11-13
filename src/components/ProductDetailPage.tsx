@@ -41,6 +41,7 @@ export type Product = {
   imageSources?: Record<string, { sourcePage?: string; rights?: string; notes?: string }>;
   variants?: ProductVariant[];
   media?: ProductMedia[];
+  hasVariants?: boolean;
 };
 
 type QuoteItem = { product: Product; qty: number; variant?: ProductVariant | null; configLabel?: string };
@@ -75,6 +76,10 @@ export default function ProductDetailPage() {
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
   const [sourcingOpen, setSourcingOpen] = useState(false);
   const [sourcingMessage, setSourcingMessage] = useState("");
+
+  useEffect(() => {
+    setSelectedImage(0);
+  }, [selectedVariant?.id]);
 
   // -------------------------------------------
   // Fetch product by ID
@@ -237,11 +242,10 @@ export default function ProductDetailPage() {
   // Main UI
   // -------------------------------------------
   const visibleMedia = (product.media || []).filter((m) => !m.variant_id || m.variant_id === selectedVariant?.id);
-  const mediaUrls = visibleMedia
+  const orderedMedia = visibleMedia
     .slice()
-    .sort((a, b) => Number(!!b.is_main) - Number(!!a.is_main) || (a.display_order ?? 0) - (b.display_order ?? 0))
-    .map((m) => m.public_url)
-    .filter(Boolean);
+    .sort((a, b) => Number(!!b.is_main) - Number(!!a.is_main) || (a.display_order ?? 0) - (b.display_order ?? 0));
+  const mediaUrls = orderedMedia.map((m) => m.public_url).filter(Boolean);
   const images = mediaUrls.length ? mediaUrls : productImageList(product);
   return (
     <div className="min-h-screen bg-[var(--color-bg-dark)] text-[var(--color-text-main)] pb-32 md:pb-10">
@@ -265,11 +269,11 @@ export default function ProductDetailPage() {
           <div className="space-y-4">
             {/* Main Image */}
             <div className="relative aspect-square rounded-2xl overflow-hidden bg-black/20">
-              <ProductImage productId={product.id} src={images[selectedImage]} alt={visibleMedia[selectedImage]?.alt_text || product.title} className="object-contain object-center p-4" priority sizes="(max-width: 1024px) 100vw, 50vw" />
+              <ProductImage productId={product.id} src={images[selectedImage]} alt={orderedMedia[selectedImage]?.alt_text || product.title} className="object-contain object-center p-4" priority sizes="(max-width: 1024px) 100vw, 50vw" />
             </div>
-            {visibleMedia[selectedImage]?.caption && <p className="text-xs text-white/60">{visibleMedia[selectedImage].caption}</p>}
-            {visibleMedia[selectedImage]?.image_type === "reference" && <p className="text-xs text-amber-200/70">Reference image. Actual stock may differ.</p>}
-            {visibleMedia[selectedImage]?.image_type === "actual_stock" && <p className="text-xs text-emerald-200/70">Photograph of actual stock</p>}
+            {orderedMedia[selectedImage]?.caption && <p className="text-xs text-white/60">{orderedMedia[selectedImage].caption}</p>}
+            {orderedMedia[selectedImage]?.image_type === "reference" && <p className="text-xs text-amber-200/70">Reference image. Actual stock may differ.</p>}
+            {orderedMedia[selectedImage]?.image_type === "actual_stock" && <p className="text-xs text-emerald-200/70">Photograph of actual stock</p>}
             {product.imageSources?.[images[selectedImage]]?.rights?.includes("CC BY-SA 4.0") && (
               <p className="text-right text-xs text-white/60">
                 Photo: <a href={product.imageSources[images[selectedImage]].sourcePage} target="_blank" rel="noopener noreferrer" className="underline">IT Photography</a>
@@ -331,17 +335,16 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Price / configurations */}
-            {product.variants && product.variants.length > 0 ? (
+            {product.hasVariants || (product.variants && product.variants.length > 0) ? (
               <ProductConfigSelector
-                variants={product.variants}
-                basePrice={product.price}
+                variants={product.variants || []}
                 onVariantChange={setSelectedVariant}
               />
             ) : (
               <>
                 <div className="flex items-center gap-4">
                   <div className="text-3xl font-bold text-[var(--color-accent)]">
-                    {product.startingPrice !== false ? "From " : ""}{currency(product.price)}
+                    {product.price > 0 ? `${product.startingPrice !== false ? "From " : ""}${currency(product.price)}` : "Request a quote"}
                   </div>
                   {product.createdAt && (
                     <span className="text-sm text-white/50">

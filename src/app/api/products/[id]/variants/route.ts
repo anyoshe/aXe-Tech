@@ -14,6 +14,8 @@ export async function GET(_req: NextRequest, ctx: Ctx) {
   const sb = getSupabaseAdmin();
   const session = await getServerSession(authOptions);
   const isAdmin = session?.user?.role === "admin";
+  const { data: product } = await sb.from("products").select("published").eq("id", id).maybeSingle();
+  if (!product || (product.published === false && !isAdmin)) return NextResponse.json({ variants: [] });
 
   let q = sb
     .from("product_variants")
@@ -31,7 +33,9 @@ export async function GET(_req: NextRequest, ctx: Ctx) {
     }
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
-  return NextResponse.json({ variants: data || [] });
+  const variants = data || [];
+  if (!isAdmin) for (const variant of variants) delete variant.notes;
+  return NextResponse.json({ variants });
 }
 
 export async function POST(req: NextRequest, ctx: Ctx) {

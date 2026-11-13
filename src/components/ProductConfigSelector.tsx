@@ -12,11 +12,10 @@ import {
 
 type Props = {
   variants: ProductVariant[];
-  basePrice?: number;
   onVariantChange?: (v: ProductVariant | null) => void;
 };
 
-export default function ProductConfigSelector({ variants, basePrice, onVariantChange }: Props) {
+export default function ProductConfigSelector({ variants, onVariantChange }: Props) {
   const active = useMemo(
     () => (variants || []).filter((v) => v.published !== false && v.availability !== "unavailable"),
     [variants]
@@ -90,9 +89,7 @@ export default function ProductConfigSelector({ variants, basePrice, onVariantCh
             ? range.max != null && range.max !== range.min
               ? `From ${formatKes(start)} – ${formatKes(range.max)}`
               : `From ${formatKes(start)}`
-            : basePrice
-              ? `From ${formatKes(basePrice)}`
-              : "Request a quote"}
+            : "Request a quote"}
         </p>
         <p className="mt-1 text-xs text-white/45">
           Indicative pricing. Final price confirmed on written quotation for the selected configuration.

@@ -25,9 +25,9 @@ ADMIN_EMAIL=
 ADMIN_PASSWORD=
 ```
 
-2. In Supabase SQL Editor, run:
-   - `supabase/schema.sql` (products + storage)
-   - `supabase/school-erp.sql` (ERP tables)
+2. For a **new** Supabase project, in SQL Editor run the product bootstrap files in order: `supabase/schema.sql`, `supabase/ict-catalogue-expansion.sql`, `supabase/product-variants-media.sql`, then `supabase/migrations/20261113_catalogue_security_and_sourcing.sql`. Run `supabase/school-erp.sql` only if you need the ERP tables.
+
+   For the existing production catalogue, do **not** rerun `supabase/schema.sql`; review and apply only the catalogue migration after its preflight checks.
 
 3. Install and run:
 

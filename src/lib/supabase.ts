@@ -1,9 +1,9 @@
+import "server-only";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
 /**
  * Server-side Supabase client (API routes, server components).
- * Uses the service role key when available so admin writes work
- * without fighting Row Level Security during setup.
+ * Requires the server-only service role key for API-side database operations.
  *
  * Env (add to .env.local and Vercel):
  *   NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co
@@ -147,7 +147,7 @@ export function productToRow(body: Partial<ProductApi> & { id: string; title: st
   };
 }
 
-function assertConfig() {
+function assertPublicConfig() {
   if (!supabaseUrl || !anonKey) {
     throw new Error(
       "Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in .env.local"
@@ -155,21 +155,26 @@ function assertConfig() {
   }
 }
 
-/** Prefer service role on the server for admin CRUD */
+function assertAdminConfig() {
+  if (!supabaseUrl || !serviceRoleKey) {
+    throw new Error("Server-side Supabase writes require SUPABASE_SERVICE_ROLE_KEY; set it only in server environment secrets.");
+  }
+}
+
+/** Service-role client for server-side operations only. */
 export function getSupabaseAdmin(): SupabaseClient {
-  assertConfig();
-  const key = serviceRoleKey || anonKey;
-  return createClient(supabaseUrl, key, {
+  assertAdminConfig();
+  return createClient(supabaseUrl, serviceRoleKey, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 }
 
 /** Browser / public client (anon key only) */
 export function getSupabaseBrowser(): SupabaseClient {
-  assertConfig();
+  assertPublicConfig();
   return createClient(supabaseUrl, anonKey);
 }
 
 export function isSupabaseConfigured(): boolean {
-  return Boolean(supabaseUrl && anonKey);
+  return Boolean(supabaseUrl && serviceRoleKey);
 }
