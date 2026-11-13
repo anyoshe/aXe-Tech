@@ -1,11 +1,12 @@
 "use client";
 
-<<<<<<< HEAD
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import type { ProductMedia, ProductVariant } from "@/lib/product-variants";
 
-export default function ProductMediaAdmin({ productId }: { productId: string }) {
+type Props = { productId: string };
+
+export default function ProductMediaAdmin({ productId }: Props) {
   const [media, setMedia] = useState<ProductMedia[]>([]);
   const [variants, setVariants] = useState<ProductVariant[]>([]);
   const [variantId, setVariantId] = useState("");
@@ -13,37 +14,54 @@ export default function ProductMediaAdmin({ productId }: { productId: string }) 
   const [message, setMessage] = useState("");
 
   const load = useCallback(async () => {
-    const [mr, vr] = await Promise.all([fetch(`/api/products/${productId}/media`), fetch(`/api/products/${productId}/variants`)]);
-    const [md, vd] = await Promise.all([mr.json(), vr.json()]);
-    setMedia(md.media || []);
-    setVariants(vd.variants || []);
+    const [mediaResponse, variantResponse] = await Promise.all([
+      fetch(`/api/products/${productId}/media`),
+      fetch(`/api/products/${productId}/variants`),
+    ]);
+    const [mediaData, variantData] = await Promise.all([mediaResponse.json(), variantResponse.json()]);
+    setMedia(mediaData.media || []);
+    setVariants(variantData.variants || []);
   }, [productId]);
-  useEffect(() => { load(); }, [load]);
 
-  async function upload(files: FileList | null) {
+  useEffect(() => { void load(); }, [load]);
+
+  async function update(item: ProductMedia, updates: Record<string, unknown>) {
+    const response = await fetch(`/api/products/${productId}/media`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ mediaId: item.id, ...updates }),
+    });
+    const result = await response.json();
+    if (!response.ok) setMessage(result.error || "Update failed");
+    else await load();
+  }
+
+  async function upload(files: FileList | File[] | null, replaceItem?: ProductMedia) {
     if (!files?.length) return;
     setMessage("");
     for (const file of Array.from(files)) {
       const form = new FormData();
       form.set("file", file);
-      form.set("variant_id", variantId);
-      form.set("image_type", imageType);
-      form.set("display_order", String(media.length));
-      form.set("is_main", String(media.length === 0));
-      form.set("alt_text", file.name.replace(/\.[^.]+$/, ""));
+      form.set("variant_id", replaceItem?.variant_id || variantId);
+      form.set("image_type", replaceItem?.image_type || imageType);
+      form.set("display_order", String(replaceItem?.display_order ?? media.length));
+      form.set("is_main", String(replaceItem ? !!replaceItem.is_main : media.length === 0));
+      form.set("alt_text", replaceItem?.alt_text || file.name.replace(/\.[^.]+$/, ""));
+      if (replaceItem?.caption) form.set("caption", replaceItem.caption);
+      if (replaceItem?.source_url) form.set("source_url", replaceItem.source_url);
+      if (replaceItem?.attribution) form.set("attribution", replaceItem.attribution);
       const response = await fetch(`/api/products/${productId}/media`, { method: "POST", body: form });
       const result = await response.json();
       if (!response.ok) { setMessage(result.error || "Upload failed"); return; }
+      if (replaceItem) {
+        const removed = await fetch(`/api/products/${productId}/media?mediaId=${encodeURIComponent(replaceItem.id)}`, { method: "DELETE" });
+        if (!removed.ok) setMessage("Replacement uploaded, but old image cleanup failed. Review the gallery.");
+      }
     }
-    setMessage("Images uploaded to Supabase Storage");
+    if (!replaceItem) setMessage("Images uploaded to Supabase Storage");
     await load();
   }
 
-  async function update(item: ProductMedia, updates: Record<string, unknown>) {
-    const response = await fetch(`/api/products/${productId}/media`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ mediaId: item.id, ...updates }) });
-    const result = await response.json();
-    if (!response.ok) setMessage(result.error || "Update failed"); else await load();
-  }
   async function move(index: number, delta: number) {
     const next = index + delta;
     if (next < 0 || next >= media.length) return;
@@ -51,204 +69,49 @@ export default function ProductMediaAdmin({ productId }: { productId: string }) 
     const second = media[next];
     const firstOrder = first.display_order ?? index;
     const secondOrder = second.display_order ?? next;
-    await Promise.all([
-      fetch(`/api/products/${productId}/media`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ mediaId: first.id, display_order: secondOrder }) }),
-      fetch(`/api/products/${productId}/media`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ mediaId: second.id, display_order: firstOrder }) }),
+    const responses = await Promise.all([
+      update(first, { display_order: secondOrder }),
+      update(second, { display_order: firstOrder }),
     ]);
     await load();
+    return responses;
   }
+
   async function remove(item: ProductMedia) {
     if (!confirm("Delete this product photograph?")) return;
     const response = await fetch(`/api/products/${productId}/media?mediaId=${encodeURIComponent(item.id)}`, { method: "DELETE" });
-    if (response.ok) await load(); else setMessage("Delete failed");
-  }
-
-  async function replace(item: ProductMedia, file: File) {
-    const form = new FormData();
-    form.set("file", file);
-    form.set("variant_id", item.variant_id || "");
-    form.set("image_type", item.image_type || "reference");
-    form.set("display_order", String(item.display_order || 0));
-    form.set("is_main", String(!!item.is_main));
-    form.set("alt_text", item.alt_text || "");
-    form.set("caption", item.caption || "");
-    form.set("source_url", item.source_url || "");
-    form.set("attribution", item.attribution || "");
-    const uploaded = await fetch(`/api/products/${productId}/media`, { method: "POST", body: form });
-    if (!uploaded.ok) { const result = await uploaded.json(); setMessage(result.error || "Replacement upload failed"); return; }
-    const removed = await fetch(`/api/products/${productId}/media?mediaId=${encodeURIComponent(item.id)}`, { method: "DELETE" });
-    if (!removed.ok) setMessage("New image uploaded, but old image cleanup failed. Review the gallery.");
-    await load();
-  }
-
-  return <section className="mt-6 rounded-xl border border-white/10 bg-black/30 p-4 space-y-4">
-    <h3 className="font-semibold">Product photo gallery</h3>
-    <p className="text-xs text-white/55">Uploads are stored in the Supabase product-images bucket. Reference images are illustrative and are not represented as actual stock.</p>
-    <div className="flex flex-wrap gap-2">
-      <select value={variantId} onChange={(e) => setVariantId(e.target.value)} className="rounded bg-black/50 p-2 text-sm"><option value="">Parent product</option>{variants.map((v) => <option key={v.id} value={v.id}>{v.label}</option>)}</select>
-      <select value={imageType} onChange={(e) => setImageType(e.target.value)} className="rounded bg-black/50 p-2 text-sm"><option value="reference">Reference photograph</option><option value="actual_stock">Actual stock photograph</option><option value="detail">Detail photograph</option><option value="other">Other</option></select>
-      <label className="rounded bg-emerald-700 px-4 py-2 text-sm cursor-pointer">Upload images<input className="hidden" type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif" onChange={(e) => { upload(e.target.files); e.currentTarget.value = ""; }} /></label>
-    </div>
-    {message && <p className="text-xs text-amber-200">{message}</p>}
-    <div className="grid sm:grid-cols-2 gap-3">{media.map((item, index) => <article key={item.id} className="rounded-lg border border-white/10 p-3 space-y-2">
-      <Image src={item.public_url} alt={item.alt_text || ""} width={480} height={240} unoptimized className="h-36 w-full rounded bg-black object-contain" />
-      <p className="text-xs">{item.image_type === "actual_stock" ? "Actual stock" : item.image_type === "reference" ? "Reference image" : item.image_type}</p>
-      <input aria-label="Alt text" placeholder="Alt text" defaultValue={item.alt_text || ""} onBlur={(e) => update(item, { alt_text: e.target.value })} className="w-full rounded bg-black/50 p-2 text-xs" />
-      <input aria-label="Caption" placeholder="Caption" defaultValue={item.caption || ""} onBlur={(e) => update(item, { caption: e.target.value })} className="w-full rounded bg-black/50 p-2 text-xs" />
-      <input aria-label="Source URL" placeholder="Source URL" defaultValue={item.source_url || ""} onBlur={(e) => update(item, { source_url: e.target.value })} className="w-full rounded bg-black/50 p-2 text-xs" />
-      <input aria-label="Attribution" placeholder="Attribution" defaultValue={item.attribution || ""} onBlur={(e) => update(item, { attribution: e.target.value })} className="w-full rounded bg-black/50 p-2 text-xs" />
-      <div className="flex gap-2"><button type="button" disabled={index === 0} onClick={() => move(index, -1)} className="text-xs">↑</button><button type="button" disabled={index === media.length - 1} onClick={() => move(index, 1)} className="text-xs">↓</button><button type="button" onClick={() => update(item, { is_main: true })} className="text-xs">{item.is_main ? "Main image" : "Set main"}</button><button type="button" onClick={() => remove(item)} className="ml-auto text-xs text-red-300">Delete</button></div>
-      <label className="text-xs text-emerald-200 cursor-pointer">Replace image<input type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="hidden" onChange={(e) => { const file = e.currentTarget.files?.[0]; if (file) replace(item, file); e.currentTarget.value = ""; }} /></label>
-    </article>)}</div>
-  </section>;
-=======
-import { useEffect, useRef, useState } from "react";
-import type { ProductMedia } from "@/lib/product-variants";
-
-type Props = { productId: string };
-
-export default function ProductMediaAdmin({ productId }: Props) {
-  const [media, setMedia] = useState<ProductMedia[]>([]);
-  const [msg, setMsg] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [imageType, setImageType] = useState("reference");
-  const [altText, setAltText] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  async function load() {
-    const r = await fetch(`/api/products/${productId}/media`);
-    const d = await r.json();
-    setMedia(d.media || []);
-  }
-
-  useEffect(() => {
-    load();
-  }, [productId]);
-
-  async function onUpload(files: FileList | null) {
-    if (!files?.length) return;
-    setUploading(true);
-    setMsg(null);
-    for (const file of Array.from(files)) {
-      const fd = new FormData();
-      fd.append("file", file);
-      fd.append("image_type", imageType);
-      fd.append("alt_text", altText || file.name);
-      fd.append("is_main", media.length === 0 ? "true" : "false");
-      fd.append("display_order", String(media.length));
-      const r = await fetch(`/api/products/${productId}/media`, { method: "POST", body: fd });
-      const d = await r.json();
-      if (!r.ok) {
-        setMsg(d.error || "Upload failed");
-        setUploading(false);
-        return;
-      }
-    }
-    setMsg("Uploaded to Supabase Storage (product-images)");
-    setUploading(false);
-    if (inputRef.current) inputRef.current.value = "";
-    load();
-  }
-
-  async function setMain(id: string) {
-    // Re-upload metadata path: patch via delete+not ideal; use products update through media POST public_url
-    const item = media.find((m) => m.id === id);
-    if (!item) return;
-    const fd = new FormData();
-    fd.append("public_url", item.public_url);
-    fd.append("is_main", "true");
-    fd.append("image_type", item.image_type || "reference");
-    fd.append("alt_text", item.alt_text || "");
-    // simpler: call products PUT images order - for now delete others main via API only on insert
-    // Update all: fetch PATCH not implemented — reorder by re-inserting main
-    await fetch(`/api/products/${productId}/media?mediaId=${id}`, { method: "DELETE" });
-    const fd2 = new FormData();
-    fd2.append("public_url", item.public_url);
-    fd2.append("is_main", "true");
-    fd2.append("image_type", item.image_type || "reference");
-    fd2.append("alt_text", item.alt_text || "");
-    fd2.append("display_order", "0");
-    await fetch(`/api/products/${productId}/media`, { method: "POST", body: fd2 });
-    load();
-  }
-
-  async function remove(id: string) {
-    if (!confirm("Remove this image from gallery (and Storage file if stored)?")) return;
-    await fetch(`/api/products/${productId}/media?mediaId=${id}`, { method: "DELETE" });
-    load();
+    if (response.ok) await load();
+    else setMessage("Delete failed");
   }
 
   return (
-    <div className="mt-6 rounded-xl border border-white/10 bg-black/30 p-4 space-y-4">
-      <h3 className="text-sm font-semibold text-white">Product gallery (Supabase Storage)</h3>
-      <p className="text-xs text-white/50">
-        Uploads go to the <code className="text-white/70">product-images</code> bucket. Mark photos as{" "}
-        <strong className="text-white/70">reference</strong> (model) or <strong className="text-white/70">actual stock</strong>.
-        Do not upload manufacturer images unless you have reuse rights.
-      </p>
-
-      <div className="flex flex-wrap gap-2 items-end">
-        <label className="text-xs text-white/60">
-          Type
-          <select
-            value={imageType}
-            onChange={(e) => setImageType(e.target.value)}
-            className="mt-1 block rounded-lg bg-black/40 border border-white/10 px-2 py-1.5"
-          >
-            <option value="reference">Reference / model</option>
-            <option value="actual_stock">Actual stock unit</option>
-            <option value="detail">Detail</option>
-            <option value="other">Other</option>
-          </select>
-        </label>
-        <label className="text-xs text-white/60 flex-1 min-w-[12rem]">
-          Alt text
-          <input
-            value={altText}
-            onChange={(e) => setAltText(e.target.value)}
-            placeholder="Describe the photo"
-            className="mt-1 w-full rounded-lg bg-black/40 border border-white/10 px-2 py-1.5"
-          />
-        </label>
-        <label className="text-xs font-medium text-black bg-[var(--color-accent)] rounded-lg px-3 py-2 cursor-pointer">
-          {uploading ? "Uploading…" : "Upload images"}
-          <input
-            ref={inputRef}
-            type="file"
-            accept="image/*"
-            multiple
-            className="hidden"
-            disabled={uploading}
-            onChange={(e) => onUpload(e.target.files)}
-          />
-        </label>
+    <section className="mt-6 rounded-xl border border-white/10 bg-black/30 p-4 space-y-4">
+      <h3 className="font-semibold">Product photo gallery</h3>
+      <p className="text-xs text-white/55">Uploads use the Supabase product-images bucket. Reference images are illustrative and are not represented as actual stock.</p>
+      <div className="flex flex-wrap gap-2">
+        <select value={variantId} onChange={(e) => setVariantId(e.target.value)} className="rounded bg-black/50 p-2 text-sm">
+          <option value="">Parent product</option>{variants.map((variant) => <option key={variant.id} value={variant.id}>{variant.label}</option>)}
+        </select>
+        <select value={imageType} onChange={(e) => setImageType(e.target.value)} className="rounded bg-black/50 p-2 text-sm">
+          <option value="reference">Reference photograph</option><option value="actual_stock">Actual stock photograph</option><option value="detail">Detail photograph</option><option value="other">Other</option>
+        </select>
+        <label className="rounded bg-emerald-700 px-4 py-2 text-sm cursor-pointer">Upload images<input className="hidden" type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif" onChange={(e) => { void upload(e.currentTarget.files); e.currentTarget.value = ""; }} /></label>
       </div>
-
-      {media.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {media.map((m) => (
-            <div key={m.id} className="relative rounded-lg border border-white/10 overflow-hidden bg-black/40">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={m.public_url} alt={m.alt_text || ""} className="h-28 w-full object-contain bg-white/5" />
-              <div className="p-2 text-[10px] text-white/60 space-y-1">
-                <p>{m.image_type}{m.is_main ? " · MAIN" : ""}</p>
-                <div className="flex gap-2">
-                  {!m.is_main && (
-                    <button type="button" className="underline" onClick={() => setMain(m.id)}>
-                      Set main
-                    </button>
-                  )}
-                  <button type="button" className="text-red-300 underline" onClick={() => remove(m.id)}>
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-      {msg && <p className="text-xs text-emerald-300">{msg}</p>}
-    </div>
+      {message && <p className="text-xs text-amber-200">{message}</p>}
+      <div className="grid sm:grid-cols-2 gap-3">
+        {media.map((item, index) => (
+          <article key={item.id} className="rounded-lg border border-white/10 p-3 space-y-2">
+            <Image src={item.public_url} alt={item.alt_text || ""} width={480} height={240} unoptimized className="h-36 w-full rounded bg-black object-contain" />
+            <p className="text-xs">{item.image_type === "actual_stock" ? "Actual stock" : item.image_type === "reference" ? "Reference image" : item.image_type}</p>
+            <input aria-label="Alt text" placeholder="Alt text" defaultValue={item.alt_text || ""} onBlur={(e) => void update(item, { alt_text: e.target.value })} className="w-full rounded bg-black/50 p-2 text-xs" />
+            <input aria-label="Caption" placeholder="Caption" defaultValue={item.caption || ""} onBlur={(e) => void update(item, { caption: e.target.value })} className="w-full rounded bg-black/50 p-2 text-xs" />
+            <input aria-label="Source URL" placeholder="Source URL" defaultValue={item.source_url || ""} onBlur={(e) => void update(item, { source_url: e.target.value })} className="w-full rounded bg-black/50 p-2 text-xs" />
+            <input aria-label="Attribution" placeholder="Attribution" defaultValue={item.attribution || ""} onBlur={(e) => void update(item, { attribution: e.target.value })} className="w-full rounded bg-black/50 p-2 text-xs" />
+            <div className="flex gap-2"><button type="button" disabled={index === 0} onClick={() => void move(index, -1)} className="text-xs">↑</button><button type="button" disabled={index === media.length - 1} onClick={() => void move(index, 1)} className="text-xs">↓</button><button type="button" onClick={() => void update(item, { is_main: true })} className="text-xs">{item.is_main ? "Main image" : "Set main"}</button><button type="button" onClick={() => void remove(item)} className="ml-auto text-xs text-red-300">Delete</button></div>
+            <label className="text-xs text-emerald-200 cursor-pointer">Replace image<input type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="hidden" onChange={(e) => { const file = e.currentTarget.files?.[0]; if (file) void upload([file], item); e.currentTarget.value = ""; }} /></label>
+          </article>
+        ))}
+      </div>
+    </section>
   );
->>>>>>> origin/main
 }
