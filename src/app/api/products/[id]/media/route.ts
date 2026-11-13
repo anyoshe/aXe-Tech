@@ -3,7 +3,11 @@ import { getSupabaseAdmin, isSupabaseConfigured } from "@/lib/supabase";
 import { requireAdminSession } from "@/lib/require-admin";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/nextauth";
-import { hasValidProductImageSignature, MAX_PRODUCT_IMAGE_BYTES, PRODUCT_IMAGE_EXTENSIONS } from "@/lib/product-media-validation";
+import {
+  hasValidProductImageSignature,
+  PRODUCT_IMAGE_EXTENSIONS,
+} from "@/lib/product-media-validation";
+import { MAX_COMPRESSED_PRODUCT_IMAGE_BYTES } from "@/lib/product-image-limits";
 
 type Ctx = { params: Promise<{ id: string }> };
 
@@ -47,7 +51,9 @@ export async function POST(req: NextRequest, ctx: Ctx) {
   const formData = await req.formData();
   const file = formData.get("file") as File | null;
   if (!file || file.size === 0) return NextResponse.json({ error: "A managed image upload is required" }, { status: 400 });
-  if (file.size > MAX_PRODUCT_IMAGE_BYTES) return NextResponse.json({ error: "File exceeds 5MB" }, { status: 413 });
+  if (file.size >= MAX_COMPRESSED_PRODUCT_IMAGE_BYTES) {
+    return NextResponse.json({ error: "Image must be optimized to under 100 KB before upload" }, { status: 413 });
+  }
   if (!/^image\/(jpeg|png|webp|gif)$/.test(file.type)) return NextResponse.json({ error: "Only JPEG, PNG, WebP or GIF images are accepted" }, { status: 415 });
 
   const sb = getSupabaseAdmin();

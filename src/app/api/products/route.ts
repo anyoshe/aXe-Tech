@@ -63,10 +63,30 @@ export async function GET() {
       return NextResponse.json({ message: variantsError.message, products: [] }, { status: 500 });
     }
 
+    const { data: productMedia, error: mediaError } = await supabase
+      .from("product_media")
+      .select("product_id, public_url, is_main, display_order")
+      .is("variant_id", null)
+      .order("is_main", { ascending: false })
+      .order("display_order", { ascending: true });
+    if (mediaError && mediaError.code !== "42P01" && !mediaError.message?.includes("product_media")) {
+      console.error("[API] product media:", mediaError);
+      return NextResponse.json({ message: mediaError.message, products: [] }, { status: 500 });
+    }
+
+    const imagesByProduct = new Map<string, string[]>();
+    for (const media of productMedia || []) {
+      const images = imagesByProduct.get(media.product_id) || [];
+      if (media.public_url && !images.includes(media.public_url)) images.push(media.public_url);
+      imagesByProduct.set(media.product_id, images);
+    }
+
     const products = rows.map((row) => {
       const product = rowToProduct(row);
       const config = variantsByProduct.get(product.id);
       if (config?.hasVariants) product.price = config.startingPrice ?? 0;
+      const managedImages = imagesByProduct.get(product.id);
+      if (managedImages?.length) product.images = managedImages;
       return product;
     })
       .filter((product) => admin.session?.user?.role === "admin" || product.published !== false)
